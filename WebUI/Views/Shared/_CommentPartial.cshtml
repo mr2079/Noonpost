@@ -1,0 +1,32 @@
+﻿@model CreateCommentViewModel
+@{
+    var articleId = ViewData["ArticleId"];
+    var userId = ViewData["UserId"];
+    //var parentId = ViewData["ParentId"];
+}
+
+
+<!--Leave-comments-->
+<div class="title">
+    <h5>نوشتن یک دیدگاه</h5>
+</div>
+<form asp-controller="Article"
+      asp-action="CreateComment"
+      class="widget-form mb-5" method="post">
+        <input type="hidden" asp-for="ArticleId" value="@articleId" />
+        <input type="hidden" asp-for="UserId" value="@userId" />
+        @*<input type="hidden" asp-for="ParentId" value="@parentId" />*@
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <textarea asp-for=CommentText></textarea>
+                <span asp-validation-for="CommentText"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <button type="submit" name="submit" class="btn-custom">
+                ثبت دیدگاه
+            </button>
+        </div>
+    </div>
+</form>

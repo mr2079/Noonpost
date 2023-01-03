@@ -1,0 +1,215 @@
+﻿@model Article
+@{
+    var commentModel = new CreateCommentViewModel();
+}
+
+<style>
+    .comment-item:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    .widget-comments {
+        margin-bottom: 0 !important;
+    }
+
+    .field-validation-error {
+        color: #F67280;
+        font-size: .8rem;
+        padding: 10px 20px 0 20px;
+    }
+</style>
+
+<section class="section pt-55 ">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-8 mb-20">
+                <!--Post-single-->
+                <div class="post-single">
+                    <div class="post-single-image">
+                        <img src="~/images/articles/@Model.ImageName" alt="@Model.Title">
+                    </div>
+                    <div class="post-single-content">
+                        <h4>@Model.Title</h4>
+                        <div class="post-single-info">
+                            <ul class="list-inline">
+                                @if (Model.User.ImageName != null)
+                                {
+                                    <li>
+                                        <a asp-controller="Author"
+                                       asp-action="Index"
+                                       asp-route-authorId="@Model.User.UserId">
+                                            <img src="~/images/users/@Model.User.ImageName"
+                                             alt="@(Model.User.FirstName+" "+Model.User.LastName)">
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    <a asp-controller="Author"
+                                       asp-action="Index"
+                                       asp-route-authorId="@Model.User.UserId">@(Model.User.FirstName + " " + Model.User.LastName)</a>
+                                </li>
+                                <li class="dot"></li>
+                                <li>@Model.CreateDate.ToShamsi()</li>
+                                <li class="dot"></li>
+                                <li>3 دیدگاه</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="post-single-body">
+                        @Html.Raw(Model.Text)
+                    </div>
+
+                    <div class="post-single-footer">
+                        @if (Model.Tags != null)
+                        {
+                            <div class="tags">
+                                <ul class="list-inline">
+                                    @foreach (var tag in Model.Tags.Split("-"))
+                                    {
+                                        <li>
+                                            <a asp-controller="Home"
+                                            asp-action="Search"
+                                            asp-route-filter="@tag">@tag</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!--/-->
+                <!--widget-comments-->
+                <div class="widget mb-50">
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        ViewData["ArticleId"] = Model.ArticleId;
+                        ViewData["UserId"] = User.Identity.Name;
+                        <partial name="_CommentPartial" model=commentModel view-data="ViewData" />
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            برای نوشتن دیدگاه خود ابتدا <a asp-controller="Account" asp-action="Login">وارد شوید</a>
+                            <br />
+                            در صورتی که حساب کاربری ندارید ابتدا <a asp-controller="Account" asp-action="Register">ثبت نام کنید</a>
+                        </div>
+                    }
+
+                    @if (Model.Comments.Count() > 0)
+                    {
+                        <div class="title">
+                            <h5>@Model.Comments.Count() دیدگاه</h5>
+                        </div>
+                        <ul class="widget-comments">
+                            @foreach (var comment in Model.Comments
+                           .OrderByDescending(c => c.CreateDate))
+                            {
+                                <li class="comment-item">
+                                    @if (comment.User.ImageName != null)
+                                    {
+                                        <img src="~/images/users/@comment.User.ImageName"
+                                 alt="@(comment.User.FirstName+" "+comment.User.LastName)">
+                                    }
+                                    <div class="content">
+                                        <ul class="info list-inline">
+                                            <li>@(comment.User.FirstName + " " + comment.User.LastName)</li>
+                                            <li class="dot"></li>
+                                            <li>@comment.CreateDate.ToShamsi()</li>
+                                        </ul>
+                                        <p>@Html.Raw(comment.Text)</p>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            هیچ دیدگاهی وجود ندارد
+                            <br />
+                            شما اولین نفر باشید
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-4 max-width">
+                <!--widget-author-->
+                <div class="widget">
+                    <div class="widget-author">
+                        @if (Model.User.ImageName != null)
+                        {
+                            <a asp-controller="Author"
+                           asp-action="Index"
+                           asp-route-authorId="@Model.User.UserId" class="image">
+                                <img src="~/images/users/@Model.User.ImageName"
+                                 alt="@(Model.User.FirstName+" "+Model.User.LastName)">
+                            </a>
+                        }
+                        <h6>
+                            <span>@(Model.User.FirstName + " " + Model.User.LastName)</span>
+                        </h6>
+                        @if (Model.User.Email != null)
+                        {
+                            <p>@Model.User.Email</p>
+                        }
+                        @*@if (Model.User.Description != null)
+                        {
+                        <div class="user-description">
+                        @Html.Raw(Model.User.Description)
+                        </div>
+                        }*@
+                        @*<div class="social-media">
+                        <ul class="list-inline">
+                        <li>
+                        <a href="#" class="color-facebook">
+                        <i class="fab fa-facebook"></i>
+                        </a>
+                        </li>
+                        <li>
+                        <a href="#" class="color-instagram">
+                        <i class="fab fa-instagram"></i>
+                        </a>
+                        </li>
+                        <li>
+                        <a href="#" class="color-twitter">
+                        <i class="fab fa-twitter"></i>
+                        </a>
+                        </li>
+                        <li>
+                        <a href="#" class="color-youtube">
+                        <i class="fab fa-youtube"></i>
+                        </a>
+                        </li>
+                        <li>
+                        <a href="#" class="color-pinterest">
+                        <i class="fab fa-pinterest"></i>
+                        </a>
+                        </li>
+                        </ul>
+                        </div>*@
+                    </div>
+                </div>
+                @await Component.InvokeAsync("LatestArticlesComponent")
+                @await Component.InvokeAsync("TagsComponent")
+                <!--/-->
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ChangeImageScriptPartial");
+    }
+    <script src="~/assets/js/ckeditor.min.js"></script>
+    <script src="~/assets/js/translations/fa.min.js"></script>
+    <script>
+        ClassicEditor.create(document.querySelector("#CommentText"), {
+            language: 'fa'
+        });
+    </script>
+}

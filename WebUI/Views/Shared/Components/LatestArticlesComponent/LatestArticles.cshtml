@@ -1,0 +1,40 @@
+﻿@model ICollection<LatestArticleViewModel>
+@{
+    int i = 1;
+}
+
+<div class="widget ">
+    <div class="section-title">
+        <h5>نوشته های اخیر</h5>
+    </div>
+    <ul class="widget-latest-posts">
+        @foreach (var article in Model)
+        {
+            <li class="last-post">
+                <div class="image">
+                    <a asp-controller="Article"
+                            asp-action="Show"
+                            asp-route-articleId ="@article.ArticleId">
+                        <img src="~/images/articles/@article.ImageName" 
+                        alt="@article.Title">
+                    </a>
+                </div>
+                <div class="nb">@i</div>
+                <div class="content">
+                    <p>
+                        <a asp-controller="Article"
+                            asp-action="Show"
+                            asp-route-articleId ="@article.ArticleId">
+                            @article.Title
+                        </a>
+                    </p>
+                    <small>
+                        <span class="icon_clock_alt"></span> 
+                        @article.CreateDate.ToShamsi()
+                    </small>
+                </div>
+            </li>
+            i++;
+        }
+    </ul>
+</div>

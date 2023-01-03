@@ -1,0 +1,127 @@
+﻿@model Tuple<List<Article>, List<Article>, int>
+
+<style>
+    .ellipsis-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .hero-content h2 {
+        direction: rtl;
+    }
+</style>
+
+<!--carousel-hero-->
+<section class="section carousel-hero">
+    <div class="owl-carousel">
+        @foreach (var slider in Model.Item1)
+        {
+            <div class="hero d-flex align-items-center " style="background-image: url('../images/articles/@slider.ImageName')">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 offset-lg-2 col-md-10 offset-md-1">
+                            <div class="hero-content">
+                                <h2>
+                                    <a asp-controller="Article"
+                                   asp-action="Show"
+                                   asp-route-articleId="@slider.ArticleId">@slider.Title</a>
+                                </h2>
+
+                                <div class="post-card-info">
+                                    <ul class="list-inline">
+                                        @*<li>
+                                    <a href="author.html">
+                                    <img src="~/images/users/@slider.User.ImageName"
+                                    alt="@(slider.User.FirstName + " " + slider.User.LastName)">
+                                    </a>
+                                    </li>*@
+                                        <li>
+                                            <a asp-controller="Author"
+                                            asp-action="Index"
+                                            asp-route-authorId ="@slider.User.UserId">@(slider.User.FirstName + " " + slider.User.LastName)</a>
+                                        </li>
+                                        <li class="dot"></li>
+                                        <li>@slider.CreateDate.ToShamsi()</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+<!--/-->
+<!--grid-layout-->
+<section class="section pt-85">
+    <div class="container-fluid">
+        <div class="row">
+            @foreach (var article in Model.Item2)
+            {
+                <div class="col-lg-6 col-md-6">
+                    <div class="post-card">
+                        <div class="post-card-image">
+                            <a asp-controller="Article"
+                           asp-action="Show"
+                           asp-route-articleId="@article.ArticleId">
+                                <img src="~/images/articles/@article.ImageName" alt="@article.Title">
+                            </a>
+                        </div>
+                        <div class="post-card-content">
+                            <h5>
+                                <a asp-controller="Article"
+                               asp-action="Show"
+                               asp-route-articleId="@article.ArticleId">@article.Title</a>
+                            </h5>
+                            <div class="short-description ellipsis-2">@Html.Raw(article.Text.Substring(0, 120))</div>
+                            <div class="post-card-info">
+                                <ul class="list-inline">
+                                    <li>
+                                        <a asp-controller="Author"
+                                        asp-action="Index"
+                                        asp-route-authorId="@article.User.UserId">
+                                            <img src="~/images/users/@article.User.ImageName"
+                                             alt="@(article.User.FirstName + " " + article.User.LastName)">
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Author"
+                                       asp-action="Index"
+                                       asp-route-authorId="@article.User.UserId">@(article.User.FirstName + " " + article.User.LastName)</a>
+                                    </li>
+                                    <li class="dot"></li>
+                                    <li>@article.CreateDate.ToShamsi()</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!--pagination-->
+            <div class="col-lg-12">
+                <div class="pagination mt--10">
+                    <ul class="list-inline">
+                        @for (int i = 1; i < Model.Item3+1; i++)
+                        {
+                            <li class="active">
+                                <a asp-controller="Home"
+                                asp-action="Index"
+                                asp-route-page="@i">@i</a>
+                            </li>
+                        }
+                        @*<li>
+                        <a href="#">
+                        <i class="arrow_carrot-2left"></i>
+                        </a>
+                        </li>*@
+                    </ul>
+                </div>
+                <!--/-->
+            </div>
+        </div>
+    </div>
+</section>
+<!--/-->

@@ -1,0 +1,71 @@
+﻿@model UserPanelInfoViewModel
+
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">ویرایش اطلاعات</h5>
+                <button type="button" class=" close close-modal" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="sign widget w-100">
+
+                    <div asp-validation-summary="ModelOnly"></div>
+
+                    <form asp-controller="User" asp-action="UpdateUserInfo"
+                          class="sign-form widget-form contact_form " method="post" enctype="multipart/form-data">
+                        <input asp-for=UserId type="hidden">
+
+                        <div class="form-group select-user-img">
+                            <div class="user-img-box user-avatar">
+                                <img id="selectedImg" src="~/images/users/@Model.ImageName" />
+                            </div>
+                            <input asp-for=Image onchange="readURL(this)" class="user-img-input" type="file">
+                        </div>
+
+                        <div class="form-group">
+                            <input asp-for=FirstName class="form-control" placeholder="نام">
+                            <span asp-validation-for=FirstName></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input asp-for=LastName class="form-control" placeholder="نام خانوادگی">
+                            <span asp-validation-for=LastName></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input asp-for=Mobile class="form-control" placeholder="شماره موبایل">
+                            <span asp-validation-for=Mobile></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input asp-for=Email class="form-control" placeholder="آدرس ایمیل">
+                            <span asp-validation-for=Email></span>
+                        </div>
+
+                        <div class="form-group">
+                            <textarea asp-for=Description></textarea>
+                            <span asp-validation-for=Description></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input asp-for=Password class="form-control" placeholder="کلمه عبور جدید">
+                            <span asp-validation-for=Password></span>
+                        </div>
+
+                        <div class="form-group">
+                            <input asp-for=RePassword class="form-control" placeholder="تکرار کلمه عبور جدید">
+                            <span asp-validation-for=RePassword></span>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn-custom">تایید</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

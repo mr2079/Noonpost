@@ -1,0 +1,178 @@
+﻿@model UserPanelInfoViewModel
+@{
+    ViewData["IsUserPanel"] = true.ToString();
+}
+
+<style>
+    .close-modal {
+        position: absolute !important;
+        left: 0 !important;
+    }
+
+    .w-100 {
+        width: 100%;
+    }
+
+    .field-validation-error {
+        color: #F67280;
+        font-size: .8rem;
+        padding: 10px 20px 0 20px;
+    }
+
+    .validation-summary-errors {
+        color: #F67280;
+        font-size: .8rem;
+        margin-bottom: 20px;
+        padding: 0 20px;
+    }
+
+    .info-box {
+        font-size: .8rem;
+    }
+
+    .select-user-img {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .user-img-box {
+        margin-bottom: 1rem;
+    }
+
+        .user-img-box img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+    .no-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 0 30px 50px 30px;
+    }
+
+        .no-content img {
+            max-width: 300px;
+        }
+
+        .user-avatar {
+        width: 100px;
+        height: 100px;
+        overflow: hidden;
+        border-radius: 50%;
+        margin: 0 auto 20px auto;
+    }
+
+    .user-avatar img {
+        width: 100%;
+        object-fit: cover;
+    }
+</style>
+
+<section class="section author full-space mb-40 pt-55">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <!--widget-author-->
+                <div class="widget-author inner-width">
+                    @if (Model.ImageName != null)
+                    {
+                        <div class="user-avatar">
+                        <a asp-controller="User" asp-action="Index" asp-route-userId="@Model.UserId" class="image">
+                            <img src="~/images/users/@Model.ImageName" alt="@(Model.FirstName+" "+Model.LastName)">
+                        </a>
+                        </div>
+                    }
+                    <h6><span>@(Model.FirstName + " " + Model.LastName)</span></h6>
+                    <p>@Model.Mobile</p>
+                    @if (Model.Email != null)
+                    {
+                        <p>@Model.Email</p>
+                    }
+                    @if (Model.Description != null)
+                    {
+                        <div class="user-description">
+                            @Html.Raw(Model.Description)
+                        </div>
+                        <br />
+                    }
+                    @if (Model.Articles.Count() > 0)
+                    {
+                        <div class="link">@ViewData["ArticlesCount"] مقاله</div>
+                    }
+                    else
+                    {
+                        <div class="link">هیچ مقاله&zwnj;ای وجود ندارد</div>
+                    }
+                    <a asp-controller="Article" asp-action="Create" class="categorie">ایجاد مقاله</a>
+                    <div class="link">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="nav-button" data-toggle="modal" data-target="#exampleModalCenter">
+                            ویرایش اطلاعات
+                        </button>
+                    </div>
+                    @*<div class="social-media">
+                    <ul class="list-inline">
+                    <li>
+                    <a href="#" class="color-facebook">
+                    <i class="fab fa-facebook"></i>
+                    </a>
+                    </li>
+                    <li>
+                    <a href="#" class="color-instagram">
+                    <i class="fab fa-instagram"></i>
+                    </a>
+                    </li>
+                    <li>
+                    <a href="#" class="color-twitter">
+                    <i class="fab fa-twitter"></i>
+                    </a>
+                    </li>
+                    <li>
+                    <a href="#" class="color-youtube">
+                    <i class="fab fa-youtube"></i>
+                    </a>
+                    </li>
+                    <li>
+                    <a href="#" class="color-pinterest">
+                    <i class="fab fa-pinterest"></i>
+                    </a>
+                    </li>
+                    </ul>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model.Articles.Count > 0)
+{
+    <partial name="_ArticlesListPartial" model="@Model.Articles" view-data="ViewData" />
+}
+else
+{
+    <div class="no-content">
+        <img src="~/assets/img/no-content.gif" />
+    </div>
+}
+
+<partial name="_EditUserInfoModalPartial" />
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ChangeImageScriptPartial");
+    }
+    <script src="~/assets/js/ckeditor.min.js"></script>
+    <script src="~/assets/js/translations/fa.min.js"></script>
+    <script>
+        ClassicEditor.create(document.querySelector("#Description"), {
+            language: 'fa'
+        });
+    </script>
+}

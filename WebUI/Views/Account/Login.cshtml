@@ -1,0 +1,89 @@
+﻿@model LoginViewModel
+@{
+}
+
+<style>
+    .field-validation-error {
+        color: #F67280;
+        font-size: .8rem;
+        padding: 10px 20px 0 20px;
+    }
+
+    .validation-summary-errors {
+        color: #F67280;
+        font-size: .8rem;
+        margin-bottom: 20px;
+        padding: 0 20px;
+    }
+
+    .info-box {
+        font-size: .8rem;
+    }
+</style>
+
+<section class="section pt-55 mb-50">
+    <div class="container-fluid">
+        <div class="sign widget">
+            <div class="section-title">
+                <h5>ورود به حساب</h5>
+            </div>
+
+            @if (ViewData["LoginAfterRegister"]?.ToString() == true.ToString())
+            {
+                @*<script>
+                    Swal.fire({
+                        icon: "success",
+                        title: "ثبت نام با موفقیت انجام شد",
+                        text: "برای دسترسی به حساب کاربری، ابتدا وارد شوید"
+                    });
+                </script>*@
+
+                <div class="alert alert-success info-box" id="infoBox">
+                   ثبت نام شما با موفقیت انجام شد
+                   <br/>
+                   برای دسترسی به حساب کاربری، ابتدا وارد شوید
+                </div>
+
+                <script>
+                    setTimeout(() => {
+                        $("#infoBox").hide();
+                    }, 5000);
+                </script>
+            }
+
+            <div asp-validation-summary="ModelOnly"></div>
+
+            <form asp-controller="Account" asp-action="Login" class="sign-form widget-form contact_form " method="post">
+
+                <div class="form-group">
+                    <input asp-for="Mobile" class="form-control" placeholder="شماره موبایل *">
+                    <span asp-validation-for="Mobile"></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for="Password" class="form-control" placeholder="کلمه عبور *">
+                    <span asp-validation-for="Password"></span>
+                </div>
+
+                <div class="sign-controls form-group">
+                    <div class="custom-control custom-checkbox">
+                        <input asp-for="RememberMe" class="custom-control-input" id="rememberMe">
+                        <label class="custom-control-label" for="rememberMe"> مرا به خاطر بسپار </label>
+                        <span asp-validation-for="RememberMe"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-custom">ورود</button>
+                </div>
+                <p class="form-group text-center">حساب کاربری ندارید؟ <a asp-controller="Account" asp-action="Register" class="btn-link">ثبت نام کنید</a> </p>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

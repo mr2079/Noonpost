@@ -1,0 +1,97 @@
+﻿@model CreateArticleViewModel
+
+<style>
+    .field-validation-error {
+        color: #F67280;
+        font-size: .8rem;
+        padding: 10px 20px 0 20px;
+    }
+
+    .validation-summary-errors {
+        color: #F67280;
+        font-size: .8rem;
+        margin-bottom: 20px;
+        padding: 0 20px;
+    }
+
+    .info-box {
+        font-size: .8rem;
+    }
+
+    .sign-lg {
+        width: 1000px !important;
+    }
+
+    .article-img-box {
+        width: 100%;
+        overflow: hidden;
+        border-radius: 20px;
+        margin-bottom: 1rem;
+    }
+
+        .article-img-box img {
+            width: 100%;
+            object-fit: cover;
+        }
+</style>
+
+<section class="section pt-55 mb-50">
+    <div class="container-fluid">
+        <div class="sign sign-lg widget">
+            <div class="section-title">
+                <h5>ایجاد مقاله</h5>
+            </div>
+
+            <div asp-validation-summary="ModelOnly"></div>
+
+            <form asp-controller="Article" asp-action="Create"
+                  class="sign-form widget-form contact_form " method="post" enctype="multipart/form-data">
+
+                <input type="hidden" asp-for=AuthorId value="@User.Identity.Name" />
+
+                <div class="form-group d-flex flex-column">
+                    <div class="article-img-box">
+                        <img id="selectedImg" />
+                    </div>
+                    <input asp-for=Image type="file" onchange="readURL(this)" />
+                    <span asp-validation-for=Image></span>
+                </div>
+
+                <div class="form-group">
+                    <input asp-for=Title class="form-control" placeholder="عنوان مقاله *" />
+                    <span asp-validation-for=Title></span>
+                </div>
+
+                <div class="form-group">
+                    <textarea asp-for=Text></textarea>
+                    <span asp-validation-for=Text></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="alert alert-info mb-2">برچسب ها را با یک خط فاصله از هم جدا کنید</div>
+                    <input asp-for=Tags class="form-control" placeholder="برچسب ها" />
+                    <span asp-validation-for=Tags></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn-custom">ایجاد</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ChangeImageScriptPartial");
+    }
+    <script src="~/assets/js/ckeditor.min.js"></script>
+    <script src="~/assets/js/translations/fa.min.js"></script>
+    <script>
+        ClassicEditor.create(document.querySelector("#Text"), {
+            language: 'fa'
+        });
+    </script>
+}
