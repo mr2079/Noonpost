@@ -52,7 +52,7 @@ public class AuthorController : Controller
                 .Count();
 
             ViewData["ArticlesCount"] = articlesCount;
-            ViewData["PageCount"] = articlesCount / take;
+            ViewData["PageCount"] = (articlesCount + take - 1) / take;
         }
 
         return View(author);

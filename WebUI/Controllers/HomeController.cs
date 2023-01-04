@@ -27,12 +27,12 @@ public class HomeController : Controller
 
         var articles = await _context.Articles
             .Include(a => a.User)
-            .OrderBy(a => a.CreateDate)
+            .OrderByDescending(a => a.CreateDate)
             .Skip(skip)
             .Take(take)
             .ToListAsync();
 
-        var pagesCount = (await _context.Articles.CountAsync()) / take;
+        var pagesCount = ((await _context.Articles.CountAsync()) + take - 1) / take;
 
         return View(Tuple.Create(slider, articles, pagesCount));
     }
@@ -55,7 +55,7 @@ public class HomeController : Controller
             .Take(take)
             .ToListAsync();
 
-        var pageCount = articles.Count / take;
+        var pageCount = (articles.Count + take - 1) / take;
 
         return View(Tuple.Create(articles, pageCount));
     }
