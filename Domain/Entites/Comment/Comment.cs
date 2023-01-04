@@ -8,7 +8,7 @@ public class Comment
     public Guid CommentId { get; set; }
     public Guid UserId { get; set; }
     public Guid ArticleId { get; set; }
-    //public Guid ParentId { get; set; } = Guid.Empty; 
+    public Guid? ParentId { get; set; } 
     [MaxLength(500)]
     public string Text { get; set; } = string.Empty;
     public DateTime CreateDate { get; set; } = DateTime.Now;

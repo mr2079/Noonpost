@@ -118,7 +118,7 @@ public class ArticleController : Controller
     public IActionResult Delete(Guid articleId, Guid authorId)
     {
         if (!ModelState.IsValid) return RedirectToAction("Index", "User",
-            new { userId= authorId, isArticleDeleteSucceeded = false.ToString() });
+            new { userId = authorId, isArticleDeleteSucceeded = false.ToString() });
 
         var article = _context.Articles.Find(articleId);
         if (article == null) return RedirectToAction("Index", "User",
@@ -138,7 +138,7 @@ public class ArticleController : Controller
         }
     }
 
-        [HttpPost]
+    [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult CreateComment(CreateCommentViewModel userComment)
     {
@@ -154,5 +154,23 @@ public class ArticleController : Controller
         _context.SaveChanges();
 
         return RedirectToAction("Show", "Article", new { articleId = userComment.ArticleId });
+    }
+
+    [HttpPost]
+    public IActionResult CreateCommentReply(Guid articleId, Guid parentId, string text)
+    {
+        var comment = new Comment()
+        {
+            UserId = Guid.Parse(User.Identity.Name),
+            ArticleId = articleId,
+            ParentId = parentId,
+            Text = text
+        };
+
+        _context.Comments.Add(comment);
+        _context.SaveChanges();
+
+        return RedirectToAction("Show", "Article",
+            new { articleId = articleId });
     }
 }

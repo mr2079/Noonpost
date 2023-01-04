@@ -1,5 +1,4 @@
 ﻿using Application.Context;
-using Domain.Entites.User;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

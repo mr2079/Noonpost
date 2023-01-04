@@ -74,9 +74,12 @@
                                asp-action="Edit"
                                asp-route-articleId="@article.ArticleId">ویرایش مقاله</a>
 
-                                        <a class="categorie mb-0 link-none" onclick="deleteArticle(this)">حذف مقاله
+                                        <a href="javascript:void(0)"
+                               class="categorie mb-0 link-none"
+                               onclick="deleteArticle(this)">
+                                            حذف مقاله
                                             <form asp-controller="Article"
-                                                asp-action="Delete">
+                                      asp-action="Delete">
                                                 <input type="hidden" name="articleId" value="@article.ArticleId">
                                                 <input type="hidden" name="authorId" value="@article.AuthorId">
                                             </form>
@@ -88,27 +91,30 @@
                     </div>
                 }
 
-                <!--pagination-->
-                <div class="col-lg-12">
-                    <div class="pagination mt--10">
-                        <ul class="list-inline">
-                            @for (int i = 1; i < pageCount + 1; i++)
-                            {
-                                <li class="active">
-                                    <a asp-controller="@controllerName"
+                @if (pageCount > 1)
+                {
+                    <!--pagination-->
+                    <div class="col-lg-12">
+                        <div class="pagination mt--10">
+                            <ul class="list-inline">
+                                @for (int i = 1; i < pageCount + 1; i++)
+                                {
+                                    <li class="active">
+                                        <a asp-controller="@controllerName"
                                asp-action="Index"
                                asp-route-page="@i">@i</a>
-                                </li>
-                            }
-                            @*<li>
+                                    </li>
+                                }
+                                @*<li>
                         <a href="#">
                         <i class="arrow_carrot-2left"></i>
                         </a>
                         </li>*@
-                        </ul>
+                            </ul>
+                        </div>
+                        <!--/-->
                     </div>
-                    <!--/-->
-                </div>
+                }
             </div>
         </div>
     </section>

@@ -57,21 +57,21 @@
                                 <div class="short-description ellipsis-2">@Html.Raw(article.Text.Substring(0, 120))</div>
                                 <div class="post-card-info">
                                     <ul class="list-inline">
-                                            <li>
-                                                <a asp-controller="Author"
+                                        <li>
+                                            <a asp-controller="Author"
                                        asp-action="Index"
                                        asp-route-authorId="@article.User.UserId">
-                                                    <img src="~/images/users/@article.User.ImageName"
+                                                <img src="~/images/users/@article.User.ImageName"
                                              alt="@(article.User.FirstName+" "+article.User.LastName)">
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a asp-controller="Author"
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-controller="Author"
                                        asp-action="Index"
                                        asp-route-authorId="@article.User.UserId">
-                                                    @(article.User.FirstName + " " + article.User.LastName)
-                                                </a>
-                                            </li>
+                                                @(article.User.FirstName + " " + article.User.LastName)
+                                            </a>
+                                        </li>
                                         <li class="dot"></li>
                                         <li>@article.CreateDate.ToShamsi()</li>
                                     </ul>
@@ -81,28 +81,32 @@
                     </div>
                 }
             </div>
-            <!--pagination-->
-            <div class="col-lg-12">
-                <div class="pagination mt--10">
-                    <ul class="list-inline">
-                        @for (int i = 1; i < Model.Item2 + 1; i++)
-                        {
-                            <li class="active">
-                                <a asp-controller="Home"
+
+            @if (Model.Item2 > 1)
+            {
+                <!--pagination-->
+                <div class="col-lg-12">
+                    <div class="pagination mt--10">
+                        <ul class="list-inline">
+                            @for (int i = 1; i < Model.Item2 + 1; i++)
+                            {
+                                <li class="active">
+                                    <a asp-controller="Home"
                            asp-action="Search"
                            asp-route-filter="@Context.Request.Query["filter"]"
                            asp-route-page="@i">@i</a>
-                            </li>
-                        }
-                        @*<li>
+                                </li>
+                            }
+                            @*<li>
                     <a href="#">
                     <i class="arrow_carrot-2left"></i>
                     </a>
                     </li>*@
-                    </ul>
+                        </ul>
+                    </div>
+                    <!--/-->
                 </div>
-                <!--/-->
-            </div>
+            }
         </div>
     </section>
 }
