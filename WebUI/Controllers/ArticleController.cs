@@ -115,6 +115,31 @@ public class ArticleController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
+    public IActionResult Delete(Guid articleId, Guid authorId)
+    {
+        if (!ModelState.IsValid) return RedirectToAction("Index", "User",
+            new { userId= authorId, isArticleDeleteSucceeded = false.ToString() });
+
+        var article = _context.Articles.Find(articleId);
+        if (article == null) return RedirectToAction("Index", "User",
+            new { userId = authorId, isArticleDeleteSucceeded = false.ToString() });
+
+        try
+        {
+            _context.Articles.Remove(article);
+            _context.SaveChanges();
+            return RedirectToAction("Index", "User",
+            new { userId = authorId, isArticleDeleteSucceeded = true.ToString() });
+        }
+        catch
+        {
+            return RedirectToAction("Index", "User",
+            new { userId = authorId, isArticleDeleteSucceeded = false.ToString() });
+        }
+    }
+
+        [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult CreateComment(CreateCommentViewModel userComment)
     {
         var comment = new Comment()

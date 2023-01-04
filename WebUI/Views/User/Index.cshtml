@@ -1,6 +1,7 @@
 ﻿@model UserPanelInfoViewModel
 @{
     ViewData["IsUserPanel"] = true.ToString();
+    var isDeleted = ViewData["IsDeleted"];
 }
 
 <style>
@@ -59,7 +60,7 @@
             max-width: 300px;
         }
 
-        .user-avatar {
+    .user-avatar {
         width: 100px;
         height: 100px;
         overflow: hidden;
@@ -67,10 +68,10 @@
         margin: 0 auto 20px auto;
     }
 
-    .user-avatar img {
-        width: 100%;
-        object-fit: cover;
-    }
+        .user-avatar img {
+            width: 100%;
+            object-fit: cover;
+        }
 </style>
 
 <section class="section author full-space mb-40 pt-55">
@@ -82,9 +83,9 @@
                     @if (Model.ImageName != null)
                     {
                         <div class="user-avatar">
-                        <a asp-controller="User" asp-action="Index" asp-route-userId="@Model.UserId" class="image">
-                            <img src="~/images/users/@Model.ImageName" alt="@(Model.FirstName+" "+Model.LastName)">
-                        </a>
+                            <a asp-controller="User" asp-action="Index" asp-route-userId="@Model.UserId" class="image">
+                                <img src="~/images/users/@Model.ImageName" alt="@(Model.FirstName+" "+Model.LastName)">
+                            </a>
                         </div>
                     }
                     <h6><span>@(Model.FirstName + " " + Model.LastName)</span></h6>
@@ -174,5 +175,25 @@ else
         ClassicEditor.create(document.querySelector("#Description"), {
             language: 'fa'
         });
+    </script>
+    <script>
+        const deleteArticle = (t) => {
+            var deleteForm = $(t).children("form");
+            console.log(deleteForm);
+            Swal.fire({
+                icon: 'warning',
+                title: 'هشدار',
+                text: 'آیا از حذف این مقاله مطمئن هستید؟',
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'تایید',
+                cancelButtonText: 'انصراف'
+            })
+                .then(res => {
+                    if (res.isConfirmed) {
+                        deleteForm.submit();
+                    }
+                });
+        }
     </script>
 }
