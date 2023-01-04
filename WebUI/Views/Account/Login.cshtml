@@ -31,17 +31,17 @@
             @if (ViewData["LoginAfterRegister"]?.ToString() == true.ToString())
             {
                 @*<script>
-                    Swal.fire({
-                        icon: "success",
-                        title: "ثبت نام با موفقیت انجام شد",
-                        text: "برای دسترسی به حساب کاربری، ابتدا وارد شوید"
-                    });
-                </script>*@
+            Swal.fire({
+            icon: "success",
+            title: "ثبت نام با موفقیت انجام شد",
+            text: "برای دسترسی به حساب کاربری، ابتدا وارد شوید"
+            });
+            </script>*@
 
                 <div class="alert alert-success info-box" id="infoBox">
-                   ثبت نام شما با موفقیت انجام شد
-                   <br/>
-                   برای دسترسی به حساب کاربری، ابتدا وارد شوید
+                    ثبت نام شما با موفقیت انجام شد
+                    <br />
+                    برای دسترسی به حساب کاربری، ابتدا وارد شوید
                 </div>
 
                 <script>
@@ -53,7 +53,10 @@
 
             <div asp-validation-summary="ModelOnly"></div>
 
-            <form asp-controller="Account" asp-action="Login" class="sign-form widget-form contact_form " method="post">
+            <form asp-controller="Account"
+                  asp-action="Login"
+                  asp-route-returnUrl="@ViewData["ReturnUrl"]"
+                  class="sign-form widget-form contact_form " method="post">
 
                 <div class="form-group">
                     <input asp-for="Mobile" class="form-control" placeholder="شماره موبایل *">
@@ -75,7 +78,11 @@
                 <div class="form-group">
                     <button type="submit" class="btn-custom">ورود</button>
                 </div>
-                <p class="form-group text-center">حساب کاربری ندارید؟ <a asp-controller="Account" asp-action="Register" class="btn-link">ثبت نام کنید</a> </p>
+                <p class="form-group text-center">
+                    حساب کاربری ندارید؟ <a asp-controller="Account"
+                                           asp-action="Register"
+                                           class="btn-link">ثبت نام کنید</a>
+                </p>
             </form>
         </div>
     </div>

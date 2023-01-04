@@ -19,12 +19,18 @@ public class AccountController : Controller
     }
 
     [HttpGet]
-    public IActionResult Register() => View();
+    public IActionResult Register(string returnUrl = "/")
+    {
+        ViewData["ReturnUrl"] = returnUrl;
+        return View();
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Register(RegisterViewModel model)
+    public IActionResult Register(RegisterViewModel model, string returnUrl = "/")
     {
+        ViewData["ReturnUrl"] = returnUrl;
+
         if (!ModelState.IsValid) return View();
         var isMobileExist = _context.Users.Any(u => u.Mobile == model.Mobile);
         if (isMobileExist)
@@ -43,22 +49,25 @@ public class AccountController : Controller
         _context.Users.Add(user);
         _context.SaveChanges();
 
-        return RedirectToAction(actionName: "Login", controllerName: "Account",
-            new { IsRegistered = true });
+        return RedirectToAction("Login", "Account",
+            new { isRegistered = true, returnUrl = returnUrl });
     }
 
     [HttpGet]
-    public IActionResult Login(bool IsRegistered = false)
+    public IActionResult Login(string returnUrl = "/", bool isRegistered = false)
     {
-        ViewData["LoginAfterRegister"] = IsRegistered;
+        ViewData["LoginAfterRegister"] = isRegistered;
+        ViewData["ReturnUrl"] = returnUrl;
 
         return View();
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Login(LoginViewModel model)
+    public IActionResult Login(LoginViewModel model, string returnUrl = "/")
     {
+        ViewData["ReturnUrl"] = returnUrl;
+
         if (!ModelState.IsValid) return View(model);
         var user = _context.Users.FirstOrDefault(u => u.Mobile == model.Mobile);
         if (user == null)
@@ -83,6 +92,9 @@ public class AccountController : Controller
             IsPersistent = model.RememberMe
         };
         HttpContext.SignInAsync(principal, properties);
+
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+            return Redirect(returnUrl);
 
         return RedirectToAction("Index", "Home");
     }
