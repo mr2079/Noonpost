@@ -148,6 +148,28 @@
                                             <li>@comment.CreateDate.ToShamsi()</li>
                                         </ul>
                                         <p>@Html.Raw(comment.Text)</p>
+                                        @if (User.Identity.Name != null)
+                                        {
+                                            if (comment.UserId == Guid.Parse(User.Identity.Name))
+                                            {
+                                                <div class="mb-1">
+                                                    <a href="javascript:void(0)"
+                                       onclick="editComment(this)"
+                                       class="link">
+                                                        <span class="d-none comment-id">@comment.CommentId</span>
+                                                        <span class="d-none text">@comment.Text</span>
+                                                        ویرایش
+                                                    </a>
+                                                    <a href="javascript:void(0)"
+                                       onclick="deleteComment(this)"
+                                       class="link">
+                                                        <span class="d-none comment-id">@comment.CommentId</span>
+                                                        حذف
+                                                    </a>
+                                                </div>
+                                            }
+
+                                        }
                                         <div>
                                             <a href="javascript:void(0)"
                                        onclick="sendReply(this)"
@@ -181,6 +203,28 @@
                                                     <li>@reply.CreateDate.ToShamsi()</li>
                                                 </ul>
                                                 <p>@Html.Raw(reply.Text)</p>
+                                                @if (User.Identity.Name != null)
+                                                {
+                                                    if (reply.UserId == Guid.Parse(User.Identity.Name))
+                                                    {
+                                                        <div class="mb-1">
+                                                            <a href="javascript:void(0)"
+                                       onclick="editComment(this)"
+                                       class="link">
+                                                                <span class="d-none comment-id">@reply.CommentId</span>
+                                                                <span class="d-none parent-id">@reply.ParentId</span>
+                                                                <span class="d-none text">@reply.Text</span>
+                                                                ویرایش
+                                                            </a>
+                                                            <a href="javascript:void(0)"
+                                       onclick="deleteComment(this)"
+                                       class="link">
+                                                                <span class="d-none comment-id">@reply.CommentId</span>
+                                                                حذف
+                                                            </a>
+                                                        </div>
+                                                    }
+                                                }
                                             </div>
                                         </li>
                                     }
@@ -285,17 +329,73 @@
                 html: `<form id="replyCommentForm" method="post" action="/Article/CreateCommentReply">` +
                     `<input type="hidden" name="articleId" value="${articleId}"/>` +
                     `<input type="hidden" name="parentId" value="${parentId}"/>` +
-                    `<textarea class="swal2-textarea" name="text"></textarea>` +
+                    `<textarea id="replyText" class="swal2-textarea" name="text"></textarea>` +
                     `</form>`,
                 showConfirmButton: true,
                 showCloseButton: true,
                 showCancelButton: true,
                 confirmButtonText: 'ارسال',
+                confirmButtonColor: 'green',
                 cancelButtonText: 'انصراف',
             })
                 .then(result => {
                     if (result.isConfirmed) {
                         $("#replyCommentForm").submit();
+                    }
+                });
+
+            ClassicEditor.create(document.querySelector("#replyText"), {
+                language: 'fa'
+            });
+        }
+
+        const editComment = (t) => {
+            var commentId = $(t).children('.comment-id').html();
+            var parentId = $(t).children('.parent-id').html();
+            var text = $(t).children('.text').html();
+            Swal.fire({
+                title: 'متن دیدگاه خود را ویرایش کنید',
+                html: `<form id="editCommentForm" method="post" action="/Article/EditComment">` +
+                    `<input type="hidden" name="commentId" value="${commentId}"/>` +
+                    `<input type="hidden" name="parentId" value="${parentId}"/>` +
+                    `<textarea id="editCommentText" class="swal2-textarea" name="text">${text}</textarea>` +
+                    `</form>`,
+                showConfirmButton: true,
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'ویرایش',
+                confirmButtonColor: 'gold',
+                cancelButtonText: 'انصراف',
+            })
+                .then(result => {
+                    if (result.isConfirmed) {
+                        $("#editCommentForm").submit();
+                    }
+                });
+
+            ClassicEditor.create(document.querySelector("#editCommentText"), {
+                language: 'fa'
+            });
+        }
+
+        const deleteComment = (t) => {
+            var commentId = $(t).children('.comment-id').html();
+            Swal.fire({
+                icon: 'warning',
+                title: 'آیا از  حذف این دیدگاه مطمئن هستید؟',
+                html: `<form id="deleteCommentForm" method="post" action="/Article/DeleteComment">` +
+                    `<input type="hidden" name="commentId" value="${commentId}"/>` +
+                    `</form>`,
+                showConfirmButton: true,
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'حذف',
+                confirmButtonColor: 'red',
+                cancelButtonText: 'انصراف',
+            })
+                .then(result => {
+                    if (result.isConfirmed) {
+                        $("#deleteCommentForm").submit();
                     }
                 });
         }

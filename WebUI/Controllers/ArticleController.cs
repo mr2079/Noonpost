@@ -173,4 +173,14 @@ public class ArticleController : Controller
         return RedirectToAction("Show", "Article",
             new { articleId = articleId });
     }
+
+    [HttpPost]
+    public void EditComment(Guid commentId, Guid? parentId, string text)
+    {
+    }
+
+    [HttpPost]
+    public void DeleteComment(Guid commentId)
+    {
+    }
 }
