@@ -147,8 +147,8 @@
                                             <li class="dot"></li>
                                             <li>@comment.CreateDate.ToShamsi()</li>
                                         </ul>
-                                        <p>@Html.Raw(comment.Text)</p>
-                                        @if (User.Identity.Name != null)
+                                        @Html.Raw(comment.Text)
+                                        @if (User.Identity.IsAuthenticated)
                                         {
                                             if (comment.UserId == Guid.Parse(User.Identity.Name))
                                             {
@@ -169,16 +169,17 @@
                                                 </div>
                                             }
 
-                                        }
-                                        <div>
-                                            <a href="javascript:void(0)"
+
+                                            <div>
+                                                <a href="javascript:void(0)"
                                        onclick="sendReply(this)"
                                        class="link">
-                                                <span class="d-none article-id">@Model.ArticleId</span>
-                                                <span class="d-none parent-id">@comment.CommentId</span>
-                                                <i class="arrow_back"></i> پاسخ
-                                            </a>
-                                        </div>
+                                                    <span class="d-none article-id">@Model.ArticleId</span>
+                                                    <span class="d-none parent-id">@comment.CommentId</span>
+                                                    <i class="arrow_back"></i> پاسخ
+                                                </a>
+                                            </div>
+                                        }
                                     </div>
                                 </li>
 
@@ -202,8 +203,8 @@
                                                     <li class="dot"></li>
                                                     <li>@reply.CreateDate.ToShamsi()</li>
                                                 </ul>
-                                                <p>@Html.Raw(reply.Text)</p>
-                                                @if (User.Identity.Name != null)
+                                                @Html.Raw(reply.Text)
+                                                @if (User.Identity.IsAuthenticated)
                                                 {
                                                     if (reply.UserId == Guid.Parse(User.Identity.Name))
                                                     {

@@ -5,6 +5,7 @@ using Infrastructure.Generator;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WebUI.Controllers;
 
@@ -175,12 +176,25 @@ public class ArticleController : Controller
     }
 
     [HttpPost]
-    public void EditComment(Guid commentId, Guid? parentId, string text)
+    public async Task<IActionResult> EditComment(Guid commentId, string text)
     {
+        var comment = await _context.Comments.FindAsync(commentId);
+        comment.Text = text;
+        _context.Comments.Update(comment);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Show", "Article",
+            new { articleId = comment.ArticleId });
     }
 
     [HttpPost]
-    public void DeleteComment(Guid commentId)
+    public async Task<IActionResult> DeleteComment(Guid commentId)
     {
+        var comment = await _context.Comments.FindAsync(commentId);
+        _context.Comments.Remove(comment);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("Show", "Article",
+            new { articleId = comment.ArticleId });
     }
 }
