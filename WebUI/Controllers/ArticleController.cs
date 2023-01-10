@@ -19,18 +19,30 @@ public class ArticleController : Controller
     }
 
     [HttpGet("/Article/{articleId}")]
-    public IActionResult Show(Guid articleId)
+    public async Task<IActionResult> Show(Guid articleId)
     {
         if (articleId == null || articleId == Guid.Empty) return NotFound();
-        var model = _context.Articles
+
+        var model = await _context.Articles
             .Include(a => a.User)
-            .Include(a => a.Comments)
-            .ThenInclude(c => c.User)
-            .FirstOrDefault(a => a.ArticleId == articleId);
+            .FirstOrDefaultAsync(a => a.ArticleId == articleId);
 
         model.View += 1;
         _context.Articles.Update(model);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
+
+        var comments = await _context.Comments
+            .AsNoTrackingWithIdentityResolution()
+            .Include(c => c.User)
+            .Include(c => c.Replies.OrderByDescending(r => r.CreateDate))
+            .ThenInclude(r => r.User)
+            .ToListAsync();
+
+        model.Comments = comments
+            .Where(c => c.ParentId == null)
+            .OrderByDescending(c => c.CreateDate)
+            .AsParallel()
+            .ToList();
 
         return View(model);
     }

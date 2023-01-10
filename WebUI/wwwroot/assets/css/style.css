@@ -1116,10 +1116,10 @@ input:checked + .slider {
         margin-bottom: 10px;
     }
 
-    .widget-latest-posts .image img {
-        width: 100%;
-        object-fit: cover;
-    }
+.widget-latest-posts .image img {
+    width: 100%;
+    object-fit: cover;
+}
 
 .widget-latest-posts .last-post {
     display: -webkit-box;
@@ -1278,14 +1278,20 @@ input:checked + .slider {
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
-        margin-bottom: 50px;
+        margin-bottom: 30px;
     }
 
-        .widget-comments .comment-item img {
-            width: 80px;
-            height: 80px;
+        .widget-comments .comment-item .user-avatar {
+            width: 70px;
+            height: 70px;
+            overflow: hidden;
             border-radius: 50%;
-            margin-right: 15px;
+            margin-left: 20px;
+        }
+        .widget-comments .comment-item .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .widget-comments .comment-item .content p {
@@ -1665,10 +1671,10 @@ input:checked + .slider {
     margin-top: 30px;
 }
 
-.post-single-body p {
-    line-height: 1.8rem;
-    text-align: justify;
-}
+    .post-single-body p {
+        line-height: 1.8rem;
+        text-align: justify;
+    }
 
     .post-single-body h5 {
         margin-top: 30px;
@@ -1680,22 +1686,22 @@ input:checked + .slider {
         margin-bottom: 15px;
     }
 
-        .post-single-body img {
-            border-radius: 5px !important;
-            width: 100% !important;
-        }
+    .post-single-body img {
+        border-radius: 5px !important;
+        width: 100% !important;
+    }
 
-        .post-single-body .image img {
-            border-radius: 5px;
-        }
+    .post-single-body .image img {
+        border-radius: 5px;
+    }
 
-        .post-single-body .image p {
-            color: #506172;
-            text-align: center;
-            font-size: 12px;
-            margin-top: 4px;
-            margin-bottom: 0px;
-        }
+    .post-single-body .image p {
+        color: #506172;
+        text-align: center;
+        font-size: 12px;
+        margin-top: 4px;
+        margin-bottom: 0px;
+    }
 
     .post-single-body .quote {
         background-color: #F9F9FF;

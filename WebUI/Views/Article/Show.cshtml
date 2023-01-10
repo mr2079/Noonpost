@@ -1,6 +1,7 @@
 ﻿@model Article
 @{
     var commentModel = new CreateCommentViewModel();
+    ViewData["ArticleId"] = Model.ArticleId;
 }
 
 <style>
@@ -18,26 +19,16 @@
         padding: 10px 20px 0 20px;
     }
 
-    .user-avatar {
-        width: 80px;
-        height: 80px;
-        overflow: hidden;
-        border-radius: 50%;
-        margin-left: 20px;
-    }
-
-        .user-avatar img {
-            width: 100%;
-            object-fit: cover;
-            margin: 0 !important;
-        }
-
     .reply-comment-item {
         padding-right: 80px;
     }
 
     .d-none {
         display: none !important;
+    }
+
+    .pr-40 {
+        padding-right: 40px !important;
     }
 </style>
 
@@ -106,7 +97,6 @@
 
                     @if (User.Identity.IsAuthenticated)
                     {
-                        ViewData["ArticleId"] = Model.ArticleId;
                         ViewData["UserId"] = User.Identity.Name;
                         <partial name="_CommentPartial" model=commentModel view-data="ViewData" />
                     }
@@ -128,109 +118,9 @@
                         <div class="title">
                             <h5>@Model.Comments.Where(c => c.ParentId == null).Count() دیدگاه</h5>
                         </div>
+
                         <ul class="widget-comments">
-                            @foreach (var comment in Model.Comments
-                           .Where(c => c.ParentId == null)
-                           .OrderByDescending(c => c.CreateDate))
-                            {
-                                <li class="comment-item">
-                                    @if (comment.User.ImageName != null)
-                                    {
-                                        <div class="user-avatar">
-                                            <img src="~/images/users/@comment.User.ImageName"
-                                     alt="@(comment.User.FirstName+" "+comment.User.LastName)">
-                                        </div>
-                                    }
-                                    <div class="content">
-                                        <ul class="info list-inline">
-                                            <li>@(comment.User.FirstName + " " + comment.User.LastName)</li>
-                                            <li class="dot"></li>
-                                            <li>@comment.CreateDate.ToShamsi()</li>
-                                        </ul>
-                                        @Html.Raw(comment.Text)
-                                        @if (User.Identity.IsAuthenticated)
-                                        {
-                                            if (comment.UserId == Guid.Parse(User.Identity.Name))
-                                            {
-                                                <div class="mb-1">
-                                                    <a href="javascript:void(0)"
-                                       onclick="editComment(this)"
-                                       class="link">
-                                                        <span class="d-none comment-id">@comment.CommentId</span>
-                                                        <span class="d-none text">@comment.Text</span>
-                                                        ویرایش
-                                                    </a>
-                                                    <a href="javascript:void(0)"
-                                       onclick="deleteComment(this)"
-                                       class="link">
-                                                        <span class="d-none comment-id">@comment.CommentId</span>
-                                                        حذف
-                                                    </a>
-                                                </div>
-                                            }
-
-
-                                            <div>
-                                                <a href="javascript:void(0)"
-                                       onclick="sendReply(this)"
-                                       class="link">
-                                                    <span class="d-none article-id">@Model.ArticleId</span>
-                                                    <span class="d-none parent-id">@comment.CommentId</span>
-                                                    <i class="arrow_back"></i> پاسخ
-                                                </a>
-                                            </div>
-                                        }
-                                    </div>
-                                </li>
-
-                                @if (Model.Comments.Any(c => c.ParentId != null && c.ParentId == comment.CommentId))
-                                {
-                                    @foreach (var reply in Model.Comments
-                                   .Where(c => c.ParentId != null && c.ParentId == comment.CommentId)
-                                   .OrderByDescending(c => c.CreateDate))
-                                    {
-                                        <li class="comment-item reply-comment-item">
-                                            @if (reply.User.ImageName != null)
-                                            {
-                                                <div class="user-avatar">
-                                                    <img src="~/images/users/@reply.User.ImageName"
-                                     alt="@(reply.User.FirstName+" "+reply.User.LastName)">
-                                                </div>
-                                            }
-                                            <div class="content">
-                                                <ul class="info list-inline">
-                                                    <li>@(reply.User.FirstName + " " + reply.User.LastName)</li>
-                                                    <li class="dot"></li>
-                                                    <li>@reply.CreateDate.ToShamsi()</li>
-                                                </ul>
-                                                @Html.Raw(reply.Text)
-                                                @if (User.Identity.IsAuthenticated)
-                                                {
-                                                    if (reply.UserId == Guid.Parse(User.Identity.Name))
-                                                    {
-                                                        <div class="mb-1">
-                                                            <a href="javascript:void(0)"
-                                       onclick="editComment(this)"
-                                       class="link">
-                                                                <span class="d-none comment-id">@reply.CommentId</span>
-                                                                <span class="d-none parent-id">@reply.ParentId</span>
-                                                                <span class="d-none text">@reply.Text</span>
-                                                                ویرایش
-                                                            </a>
-                                                            <a href="javascript:void(0)"
-                                       onclick="deleteComment(this)"
-                                       class="link">
-                                                                <span class="d-none comment-id">@reply.CommentId</span>
-                                                                حذف
-                                                            </a>
-                                                        </div>
-                                                    }
-                                                }
-                                            </div>
-                                        </li>
-                                    }
-                                }
-                            }
+                            <partial name="_ShowCommentsPartial" model="Model.Comments" view-data="ViewData"/>
                         </ul>
                     }
                     else

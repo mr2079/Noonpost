@@ -23,5 +23,5 @@ public class Article
     // Navigation properties
     [ForeignKey(nameof(AuthorId))]
     public User.User User { get; set; }
-    public ICollection<Comment.Comment>? Comments { get; set; }
+    public List<Comment.Comment>? Comments { get; set; }
 }

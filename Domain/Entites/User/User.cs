@@ -26,7 +26,7 @@ public class User
     public DateTime? UpdateDate { get; set; }
 
     // Navigation properties
-    public ICollection<Comment.Comment>? Comments { get; set; }
-    public ICollection<Article.Article>? Articles { get; set; }
+    public List<Comment.Comment>? Comments { get; set; }
+    public List<Article.Article>? Articles { get; set; }
 }
 
