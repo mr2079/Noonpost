@@ -4,7 +4,7 @@ namespace Infrastructure.Converter;
 
 public static class DateConverter
 {
-    public static string ToShamsi(this DateTime value)
+    public static string ToShamsi(this DateTime value, bool showTime = false)
     {
         PersianCalendar pc = new PersianCalendar();
         string monthName = string.Empty;
@@ -23,7 +23,14 @@ public static class DateConverter
             case 11: { monthName = "بهمن"; break; }
             case 12: { monthName = "اسفند"; break; }
         }
-        return pc.GetDayOfMonth(value).ToString("00") + " " + monthName + " " + pc.GetYear(value).ToString();
+
+        string year = pc.GetYear(value).ToString();
+        string dayOfMonth = pc.GetDayOfMonth(value).ToString("00");
+
+        if (showTime)
+            return $"{dayOfMonth} {monthName} {year} - {pc.GetHour(value)}:{pc.GetMinute(value)}";
+
+        return $"{dayOfMonth} {monthName} {year}";
     }
 }
 

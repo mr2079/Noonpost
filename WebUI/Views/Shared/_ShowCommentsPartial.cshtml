@@ -17,7 +17,7 @@
             <ul class="info list-inline">
                 <li>@(comment.User.FirstName + " " + comment.User.LastName)</li>
                 <li class="dot"></li>
-                <li>@comment.CreateDate.ToShamsi()</li>
+                <li>@comment.CreateDate.ToShamsi(true)</li>
             </ul>
             @Html.Raw(comment.Text)
             @if (User.Identity.IsAuthenticated)
