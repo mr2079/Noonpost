@@ -19,7 +19,7 @@ public class ArticleController : Controller
     }
 
     [HttpGet("/Article/{articleId}")]
-    public async Task<IActionResult> Show(Guid articleId)
+    public async Task<IActionResult> Show(Guid articleId, int commentPage = 1)
     {
         if (articleId == null || articleId == Guid.Empty) return NotFound();
 
@@ -30,6 +30,9 @@ public class ArticleController : Controller
         model.View += 1;
         _context.Articles.Update(model);
         await _context.SaveChangesAsync();
+
+        int takeComments = 5;
+        int skipComments = takeComments * (commentPage - 1);
 
         var comments = await _context.Comments
             .AsNoTrackingWithIdentityResolution()
@@ -42,7 +45,14 @@ public class ArticleController : Controller
             .Where(c => c.ParentId == null)
             .OrderByDescending(c => c.CreateDate)
             .AsParallel()
+            .Skip(skipComments)
+            .Take(takeComments)
             .ToList();
+
+        int commentsCount = comments.Where(c => c.ParentId == null).Count();
+
+        ViewData["CommentsCount"] = commentsCount;
+        ViewData["CommentsPageCount"] = (commentsCount + takeComments - 1) / takeComments;
 
         return View(model);
     }
