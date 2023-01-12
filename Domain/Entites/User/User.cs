@@ -2,10 +2,8 @@
 
 namespace Domain.Entites.User;
 
-public class User
+public class User : BaseEntity
 {
-    [Key]
-    public Guid UserId { get; set; }
     [MaxLength(255)]
     public string? ImageName { get; set; } = "Default.jpg";
     [MaxLength(255)]
@@ -22,8 +20,6 @@ public class User
     public string? Description { get; set; } = string.Empty;
     [MaxLength(255)]
     public string Role { get; set; } = "author";
-    public DateTime RegisterDate { get; set; } = DateTime.Now;
-    public DateTime? UpdateDate { get; set; }
 
     // Navigation properties
     public List<Comment.Comment>? Comments { get; set; }

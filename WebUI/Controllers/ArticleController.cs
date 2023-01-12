@@ -25,7 +25,7 @@ public class ArticleController : Controller
 
         var model = await _context.Articles
             .Include(a => a.User)
-            .FirstOrDefaultAsync(a => a.ArticleId == articleId);
+            .FirstOrDefaultAsync(a => a.Id == articleId);
 
         model.View += 1;
         _context.Articles.Update(model);
@@ -97,7 +97,7 @@ public class ArticleController : Controller
         var model = _context.Articles
             .Select(a => new EditArticleViewModel()
             {
-                ArticleId = a.ArticleId,
+                ArticleId = a.Id,
                 AuthorId = a.AuthorId,
                 ImageName = a.ImageName,
                 Title = a.Title,

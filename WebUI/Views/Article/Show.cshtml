@@ -1,7 +1,7 @@
 ﻿@model Article
 @{
     var commentModel = new CreateCommentViewModel();
-    ViewData["ArticleId"] = Model.ArticleId;
+    ViewData["ArticleId"] = Model.Id;
     int commentsPageCount = int.Parse(ViewData["CommentsPageCount"].ToString());
 }
 
@@ -55,7 +55,7 @@
                                     <li>
                                         <a asp-controller="Author"
                                        asp-action="Index"
-                                       asp-route-authorId="@Model.User.UserId">
+                                       asp-route-authorId="@Model.User.Id">
                                             <img src="~/images/users/@Model.User.ImageName"
                                              alt="@(Model.User.FirstName+" "+Model.User.LastName)">
                                         </a>
@@ -64,7 +64,7 @@
                                 <li>
                                     <a asp-controller="Author"
                                        asp-action="Index"
-                                       asp-route-authorId="@Model.User.UserId">@(Model.User.FirstName + " " + Model.User.LastName)</a>
+                                       asp-route-authorId="@Model.User.Id">@(Model.User.FirstName + " " + Model.User.LastName)</a>
                                 </li>
                                 <li class="dot"></li>
                                 <li>@Model.CreateDate.ToShamsi()</li>
@@ -139,7 +139,7 @@
                                             <li class="active">
                                                 <a asp-controller="Article"
                                        asp-action="Show"
-                                       asp-route-articleId="@Model.ArticleId"
+                                       asp-route-articleId="@Model.Id"
                                        asp-route-commentPage="@i">@i</a>
                                             </li>
                                         }
@@ -167,7 +167,7 @@
                         {
                             <a asp-controller="Author"
                            asp-action="Index"
-                           asp-route-authorId="@Model.User.UserId" class="image">
+                           asp-route-authorId="@Model.User.Id" class="image">
                                 <img src="~/images/users/@Model.User.ImageName"
                                  alt="@(Model.User.FirstName+" "+Model.User.LastName)">
                             </a>

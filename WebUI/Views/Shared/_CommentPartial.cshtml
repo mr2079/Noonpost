@@ -2,7 +2,6 @@
 @{
     var articleId = ViewData["ArticleId"];
     var userId = ViewData["UserId"];
-    //var parentId = ViewData["ParentId"];
 }
 
 
@@ -15,7 +14,6 @@
       class="widget-form mb-5" method="post">
         <input type="hidden" asp-for="ArticleId" value="@articleId" />
         <input type="hidden" asp-for="UserId" value="@userId" />
-        @*<input type="hidden" asp-for="ParentId" value="@parentId" />*@
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">

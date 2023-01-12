@@ -28,7 +28,7 @@ public class UserController : Controller
             .Include(u => u.Articles)
             .Select(u => new UserPanelInfoViewModel()
             {
-                UserId = u.UserId,
+                UserId = u.Id,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Mobile = u.Mobile,
@@ -89,6 +89,6 @@ public class UserController : Controller
         _context.Users.Update(user);
         _context.SaveChanges();
 
-        return RedirectToAction("Index", "User", new { userId = user.UserId });
+        return RedirectToAction("Index", "User", new { userId = user.Id });
     }
 }

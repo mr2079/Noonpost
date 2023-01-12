@@ -25,10 +25,10 @@ public class AuthorController : Controller
         var author = await _context.Users
             .Include(u => u.Articles)
             .ThenInclude(a => a.User)
-            .Where(u => u.Role == "author" && u.UserId == authorId)
+            .Where(u => u.Role == "author" && u.Id == authorId)
             .Select(u => new AuthorInfoViewModel()
             {
-                AuthorId = u.UserId,
+                AuthorId = u.Id,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 ImageName = u.ImageName,

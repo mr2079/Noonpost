@@ -3,17 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entites.Comment;
 
-public class Comment
+public class Comment : BaseEntity
 {
-    [Key]
-    public Guid CommentId { get; set; }
     public Guid UserId { get; set; }
     public Guid ArticleId { get; set; }
     public Guid? ParentId { get; set; }
     [MaxLength(500)]
     public string Text { get; set; } = string.Empty;
-    public DateTime CreateDate { get; set; } = DateTime.Now;
-    public DateTime? UpdateDate { get; set; }
     public bool IsAccepted { get; set; } = false;
 
     // Navigation properties

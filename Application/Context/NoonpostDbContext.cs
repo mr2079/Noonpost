@@ -2,11 +2,6 @@
 using Domain.Entites.Comment;
 using Domain.Entites.User;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Context;
 
@@ -17,4 +12,24 @@ public class NoonpostDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Article> Articles { get; set; }
     public DbSet<Comment> Comments { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        // User
+        modelBuilder.Entity<User>()
+            .Property(u => u.Id).HasColumnName("UserId");
+        modelBuilder.Entity<User>()
+            .Property(u => u.CreateDate).HasColumnName("RegisterDate");
+
+        // Article
+        modelBuilder.Entity<Article>()
+            .Property(a => a.Id).HasColumnName("ArticleId");
+
+        // Comment
+        modelBuilder.Entity<Comment>()
+            .Property(c => c.Id).HasColumnName("CommentId");
+
+
+        base.OnModelCreating(modelBuilder);
+    }
 }

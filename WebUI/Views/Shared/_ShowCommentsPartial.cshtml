@@ -28,14 +28,14 @@
                         <a href="javascript:void(0)"
                onclick="editComment(this)"
                class="link">
-                            <span class="d-none comment-id">@comment.CommentId</span>
+                            <span class="d-none comment-id">@comment.Id</span>
                             <span class="d-none text">@comment.Text</span>
                             ویرایش
                         </a>
                         <a href="javascript:void(0)"
                onclick="deleteComment(this)"
                class="link">
-                            <span class="d-none comment-id">@comment.CommentId</span>
+                            <span class="d-none comment-id">@comment.Id</span>
                             حذف
                         </a>
                     </div>
@@ -47,7 +47,7 @@
                onclick="sendReply(this)"
                class="link">
                         <span class="d-none article-id">@articleId</span>
-                        <span class="d-none parent-id">@comment.CommentId</span>
+                        <span class="d-none parent-id">@comment.Id</span>
                         <i class="arrow_back"></i> پاسخ
                     </a>
                 </div>

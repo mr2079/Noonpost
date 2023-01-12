@@ -14,6 +14,9 @@ public class HomeController : Controller
         _context = context;
     }
 
+    [HttpGet("/404")]
+    public IActionResult NotFoundPage() => View();
+
     [HttpGet]
     public async Task<IActionResult> Index(int page = 1)
     {
@@ -36,9 +39,6 @@ public class HomeController : Controller
 
         return View(Tuple.Create(slider, articles, pagesCount));
     }
-
-    [HttpGet("/404")]
-    public IActionResult NotFoundPage() => View();
 
     [HttpGet("/Search")]
     public async Task<IActionResult> Search(string filter, int page = 1)

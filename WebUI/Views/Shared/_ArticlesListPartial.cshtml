@@ -33,14 +33,14 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="post-card">
                             <div class="post-card-image">
-                                <a asp-controller="Article" asp-action="Show" asp-route-articleId="@article.ArticleId">
+                                <a asp-controller="Article" asp-action="Show" asp-route-articleId="@article.Id">
                                     <img src="~/images/articles/@article.ImageName" alt="@article.Title">
                                 </a>
                             </div>
                             <div class="post-card-content">
                                 <h5>
                                     <a asp-controller="Article" asp-action="Show"
-                               asp-route-articleId="@article.ArticleId">@article.Title</a>
+                               asp-route-articleId="@article.Id">@article.Title</a>
                                 </h5>
                                 <div class="short-description ellipsis-2">@Html.Raw(article.Text.Substring(0, 120))</div>
                                 <div class="post-card-info">
@@ -50,7 +50,7 @@
                                             <li>
                                                 <a asp-controller="Author"
                                        asp-action="Index"
-                                       asp-route-authorId="@article.User.UserId">
+                                       asp-route-authorId="@article.User.Id">
                                                     <img src="~/images/users/@article.User.ImageName"
                                              alt="@(article.User.FirstName+" "+article.User.LastName)">
                                                 </a>
@@ -58,7 +58,7 @@
                                             <li>
                                                 <a asp-controller="Author"
                                        asp-action="Index"
-                                       asp-route-authorId="@article.User.UserId">
+                                       asp-route-authorId="@article.User.Id">
                                                     @(article.User.FirstName + " " + article.User.LastName)
                                                 </a>
                                             </li>
@@ -72,7 +72,7 @@
                                         <a class="categorie mb-0"
                                asp-controller="Article"
                                asp-action="Edit"
-                               asp-route-articleId="@article.ArticleId">ویرایش مقاله</a>
+                               asp-route-articleId="@article.Id">ویرایش مقاله</a>
 
                                         <a href="javascript:void(0)"
                                class="categorie mb-0 link-none"
@@ -80,7 +80,7 @@
                                             حذف مقاله
                                             <form asp-controller="Article"
                                       asp-action="Delete">
-                                                <input type="hidden" name="articleId" value="@article.ArticleId">
+                                                <input type="hidden" name="articleId" value="@article.Id">
                                                 <input type="hidden" name="authorId" value="@article.AuthorId">
                                             </form>
                                         </a>
