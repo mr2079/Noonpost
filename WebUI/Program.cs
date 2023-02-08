@@ -1,4 +1,6 @@
 using Application.Context;
+using Infrastructure.Services;
+using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +27,10 @@ var defaultConnectionString = builder.Configuration.GetConnectionString("Default
 
 builder.Services.AddDbContext<NoonpostDbContext>(options =>
     options.UseSqlServer(defaultConnectionString));
+#endregion
+
+#region Dependency Injection
+builder.Services.AddScoped<IArticleService, ArticleService>();
 #endregion
 
 var app = builder.Build();
