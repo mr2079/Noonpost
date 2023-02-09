@@ -19,7 +19,7 @@ public class User : BaseEntity
     [MaxLength(600)]
     public string? Description { get; set; } = string.Empty;
     [MaxLength(255)]
-    public string Role { get; set; } = "author";
+    public string Role { get; set; } = "Author";
 
     // Navigation properties
     public List<Comment.Comment>? Comments { get; set; }

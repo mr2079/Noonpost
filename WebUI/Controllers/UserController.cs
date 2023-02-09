@@ -1,10 +1,6 @@
-﻿using Application.Context;
-using Infrastructure.Generator;
-using Infrastructure.Security;
-using Infrastructure.Services.Interfaces;
+﻿using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebUI.Controllers;
 

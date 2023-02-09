@@ -18,6 +18,9 @@ public class HomeController : Controller
     [HttpGet("/404")]
     public IActionResult NotFoundPage() => View();
 
+    [HttpGet("/401")]
+    public IActionResult UnauthorizedPage() => View();
+
     [HttpGet]
     public async Task<IActionResult> Index(int page = 1)
     {

@@ -15,6 +15,7 @@ builder.Services.AddAuthentication(options => {
     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 }).AddCookie(options => {
+    options.AccessDeniedPath = "/401";
     options.LoginPath = "/Account/Login";
     options.LogoutPath = "/Account/Logout";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(43200);
@@ -29,11 +30,12 @@ builder.Services.AddDbContext<NoonpostDbContext>(options =>
     options.UseSqlServer(defaultConnectionString));
 #endregion
 
-#region Dependency Injection
+#region IoC
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
 #endregion
 
 var app = builder.Build();
@@ -44,7 +46,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 
-app.UseStatusCodePagesWithRedirects("/404");
+app.UseStatusCodePagesWithRedirects("/{0}");
 
 app.UseStaticFiles();
 

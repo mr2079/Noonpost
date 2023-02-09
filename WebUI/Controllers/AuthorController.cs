@@ -1,6 +1,7 @@
 ﻿using Application.Context;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

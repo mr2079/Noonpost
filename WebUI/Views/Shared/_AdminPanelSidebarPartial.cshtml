@@ -1,0 +1,33 @@
+﻿@inject IAdminService _adminService
+@{
+    var adminInfo = await _adminService.GetAdminInfoForPanel(Guid.Parse(User.Identity.Name));
+}
+
+<!--widget-author-->
+<div class="widget">
+    <div class="widget-author">
+        <a asp-controller="User" asp-action="Index" asp-route-userId="@User.Identity.Name" class="image">
+            <img src="~/images/users/@adminInfo.ImageName" alt="@adminInfo.FullName">
+        </a>
+        <h6>
+            <span>@adminInfo.FullName</span>
+        </h6>
+    </div>
+</div>
+<!--/-->
+
+<!--widget-categories-->
+<div class="widget">
+    <div class="section-title">
+        <h5>تنظیمات</h5>
+    </div>
+    <ul class="widget-categories">
+        <li>
+            <a asp-controller="Admin" asp-action="ManageUsers" class="categorie w-100">لیست کاربران</a>
+        </li>
+        <li>
+            <a asp-controller="Admin" asp-action="ManageArticles" class="categorie w-100">لیست مقالات</a>
+        </li>
+    </ul>
+</div>
+<!--/-->

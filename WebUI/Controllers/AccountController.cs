@@ -20,6 +20,8 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult Register(string returnUrl = "/")
     {
+        if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
+
         ViewData["ReturnUrl"] = returnUrl;
         return View();
     }
@@ -46,9 +48,10 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult Login(string returnUrl = "/", bool isRegistered = false)
     {
+        if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Home");
+
         ViewData["LoginAfterRegister"] = isRegistered;
         ViewData["ReturnUrl"] = returnUrl;
-
         return View();
     }
 
@@ -73,7 +76,8 @@ public class AccountController : Controller
 
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, user.Id.ToString())
+            new Claim(ClaimTypes.Name, user.Id.ToString()),
+            new Claim(ClaimTypes.Role, user.Role)
         };
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var principal = new ClaimsPrincipal(identity);

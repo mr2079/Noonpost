@@ -1,0 +1,61 @@
+﻿<!Doctype html>
+<html lang="fa">
+
+<head>
+    <title>پنل مدیریت</title>
+    <!-- Meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- favicon -->
+    <link rel="icon" sizes="16x16" href="~/assets/img/favicon.png">
+    <!-- Title -->
+    <!-- CSS Plugins -->
+    <link rel="stylesheet" href="~/assets/css/all.css">
+    <link rel="stylesheet" href="~/assets/css/elegant-font-icons.css">
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/css/owl.carousel.css">
+    <link rel="stylesheet" href="~/assets/css/sweetalert2.min.css" />
+    <!-- main style -->
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/custom.css">
+</head>
+
+<body class="rtl">
+
+    <!-- Navigation-->
+    <partial name="_NavigationBarPartial" />
+    <!--/-->
+
+    <section class="section pt-55">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 max-width">
+                    <partial name="_AdminPanelSidebarPartial" />
+                </div>
+                <div class="col-lg-9 mb-20">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--Search-form-->
+    <partial name="_SearchFormPartial" />
+    <!--/-->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    @*<script src="~/assets/js/jquery-3.5.0.min.js"></script>*@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/js/popper.min.js"></script>
+    <script src="~/assets/js/bootstrap.min.js"></script>
+    <!-- JS Plugins  -->
+    @*<script src="~/assets/js/ajax-contact.js"></script>*@
+    <script src="~/assets/js/owl.carousel.min.js"></script>
+    <script src="~/assets/js/switch.js"></script>
+    <script src="~/assets/js/sweetalert2.min.js"></script>
+    <!-- JS main  -->
+    <script src="~/assets/js/main.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

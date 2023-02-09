@@ -60,8 +60,7 @@ public class ArticleService : IArticleService
             Text = articleInfo.Text,
             Tags = articleInfo.Tags,
             CreateDate = DateTime.Now,
-            ImageName = NameGenerator.Generate() + Path.GetExtension(image.FileName),
-            IsAccepted = true
+            ImageName = NameGenerator.Generate() + Path.GetExtension(image.FileName)
         };
 
         try

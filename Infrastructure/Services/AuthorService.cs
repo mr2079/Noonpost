@@ -21,7 +21,7 @@ public class AuthorService : IAuthorService
         => await _context.Users
             .Include(u => u.Articles)
             .ThenInclude(a => a.User)
-            .Where(u => u.Role == "author" && u.Id == authorId)
+            .Where(u => u.Id == authorId)
             .Select(u => new AuthorInfoViewModel()
             {
                 AuthorId = u.Id,
