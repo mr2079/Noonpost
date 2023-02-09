@@ -1,6 +1,5 @@
-﻿using Application.Context;
-using Domain.Entites.User;
-using Infrastructure.Security;
+﻿using Infrastructure.Security;
+using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -11,11 +10,11 @@ namespace WebUI.Controllers;
 
 public class AccountController : Controller
 {
-    private readonly NoonpostDbContext _context;
+    private readonly IUserService _userService;
 
-    public AccountController(NoonpostDbContext context)
+    public AccountController(IUserService userService)
     {
-        _context = context;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -27,27 +26,18 @@ public class AccountController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Register(RegisterViewModel model, string returnUrl = "/")
+    public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = "/")
     {
         ViewData["ReturnUrl"] = returnUrl;
 
         if (!ModelState.IsValid) return View();
-        var isMobileExist = _context.Users.Any(u => u.Mobile == model.Mobile);
-        if (isMobileExist)
+        if (await _userService.IsMobileExists(model.Mobile))
         {
             ModelState.AddModelError(string.Empty, "شماره موبایل وارد شده قبلا استفاده شده است");
             return View();
         }
 
-        var user = new User()
-        {
-            FirstName = model.FirstName,
-            LastName = model.LastName,
-            Mobile = model.Mobile,
-            Password = PasswordEncoder.EncodePasswordMd5(model.Password),
-        };
-        _context.Users.Add(user);
-        _context.SaveChanges();
+        await _userService.AddUser(model);
 
         return RedirectToAction("Login", "Account",
             new { isRegistered = true, returnUrl = returnUrl });
@@ -64,12 +54,12 @@ public class AccountController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Login(LoginViewModel model, string returnUrl = "/")
+    public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = "/")
     {
         ViewData["ReturnUrl"] = returnUrl;
 
         if (!ModelState.IsValid) return View(model);
-        var user = _context.Users.FirstOrDefault(u => u.Mobile == model.Mobile);
+        var user = await _userService.GetUserByMobile(model.Mobile);
         if (user == null)
         {
             ModelState.AddModelError(string.Empty, "حساب کاربری با شماره موبایل وارد شده، وجود ندارد");
@@ -91,7 +81,7 @@ public class AccountController : Controller
         {
             IsPersistent = model.RememberMe
         };
-        HttpContext.SignInAsync(principal, properties);
+        await HttpContext.SignInAsync(principal, properties);
 
         if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             return Redirect(returnUrl);

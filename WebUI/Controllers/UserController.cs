@@ -1,6 +1,7 @@
 ﻿using Application.Context;
 using Infrastructure.Generator;
 using Infrastructure.Security;
+using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +10,14 @@ namespace WebUI.Controllers;
 
 public class UserController : Controller
 {
-    private readonly NoonpostDbContext _context;
+    private readonly IAuthorService _authorService;
+    private readonly IUserService _userService; 
 
-    public UserController(NoonpostDbContext context)
+    public UserController(IAuthorService authorService,
+        IUserService userService)
     {
-        _context = context;
+        _authorService = authorService;
+        _userService = userService;
     }
 
     [HttpGet("/User/{userId}")]
@@ -24,33 +28,13 @@ public class UserController : Controller
         int take = 6;
         int skip = take * (page - 1);
 
-        var model = await _context.Users
-            .Include(u => u.Articles)
-            .Select(u => new UserPanelInfoViewModel()
-            {
-                UserId = u.Id,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
-                Mobile = u.Mobile,
-                Email = u.Email,
-                ImageName = u.ImageName,
-                Description = u.Description,
-                Articles = u.Articles
-                .OrderByDescending(a => a.CreateDate)
-                .Skip(skip)
-                .Take(take)
-                .ToList()
-            })
-            .FirstOrDefaultAsync(u => u.UserId == Guid.Parse(userId));
+        var model = await _userService.GetUserPanelInfo(Guid.Parse(userId), take, skip);
 
         if (model == null) return NotFound();
 
         if (model.Articles.Count() > 0)
         {
-            var articlesCount = _context.Articles
-                .Where(a => a.AuthorId == Guid.Parse(userId))
-                .Count();
-
+            var articlesCount = await _authorService.AuthorArticlesCount(Guid.Parse(userId));
             ViewData["ArticlesCount"] = articlesCount;
             ViewData["PageCount"] = (articlesCount + take - 1) / take;
         }
@@ -60,35 +44,11 @@ public class UserController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult UpdateUserInfo(UserPanelInfoViewModel info)
+    public async Task<IActionResult> UpdateUserInfo(UserPanelInfoViewModel info)
     {
         if (!ModelState.IsValid) return View(info);
-        var user = _context.Users.Find(info.UserId);
-        user.FirstName = info.FirstName;
-        user.LastName = info.LastName;
-        user.Mobile = info.Mobile;
-        user.Email = info.Email;
-        user.Description = info.Description;
-        user.UpdateDate = DateTime.Now;
-        if (info.Password != null)
-        {
-            user.Password = PasswordEncoder.EncodePasswordMd5(info.Password);
-        }
-        if (info.Image != null)
-        {
-            if (user.ImageName != "Default.jpg")
-            {
-                var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\users", user.ImageName);
-                if (System.IO.File.Exists(oldImagePath)) System.IO.File.Delete(oldImagePath);
-            }
+        await _userService.UpdateUser(info);
 
-            user.ImageName = NameGenerator.Generate() + Path.GetExtension(info.Image.FileName);
-            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\users", user.ImageName);
-            using (var fs = new FileStream(imagePath, FileMode.Create)) info.Image.CopyTo(fs);
-        }
-        _context.Users.Update(user);
-        _context.SaveChanges();
-
-        return RedirectToAction("Index", "User", new { userId = user.Id });
+        return RedirectToAction("Index", "User", new { userId = info.UserId });
     }
 }

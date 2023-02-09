@@ -8,15 +8,12 @@ namespace WebUI.Controllers;
 
 public class ArticleController : Controller
 {
-    private readonly NoonpostDbContext _context;
     private readonly IArticleService _articleService;
     private readonly ICommentService _commentService;
 
-    public ArticleController(NoonpostDbContext context,
-        IArticleService articleService,
+    public ArticleController(IArticleService articleService,
         ICommentService commentService)
     {
-        _context = context;
         _articleService = articleService;
         _commentService = commentService;
     }

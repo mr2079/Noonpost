@@ -139,5 +139,30 @@ public class ArticleService : IArticleService
             return false;
         }
     }
+
+    public async Task<int> ArticlesCountAsync()
+        => await _context.Articles.CountAsync();
+
+    public async Task<List<Article>> GetArticlesForSlider()
+        => await _context.Articles
+            .OrderByDescending(a => a.View)
+            .Take(5)
+            .ToListAsync();
+
+    public async Task<List<Article>> GetArticlesForIndex(int take, int skip)
+        => await _context.Articles
+            .Include(a => a.User)
+            .OrderByDescending(a => a.CreateDate)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
+
+    public async Task<List<Article>> GetArticlesByFilter(string filter, int take, int skip)
+        => await _context.Articles
+            .Include(a => a.User)
+            .Where(a => a.Title.Contains(filter) || a.Tags.Contains(filter))
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
 }
 

@@ -32,6 +32,8 @@ builder.Services.AddDbContext<NoonpostDbContext>(options =>
 #region Dependency Injection
 builder.Services.AddScoped<IArticleService, ArticleService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthorService, AuthorService>();
 #endregion
 
 var app = builder.Build();

@@ -6,6 +6,11 @@ namespace Infrastructure.Services.Interfaces;
 
 public interface IArticleService
 {
+    Task<int> ArticlesCountAsync();
+    Task<List<Article>> GetArticlesForSlider();
+    Task<List<Article>> GetArticlesForIndex(int take, int skip);
+    Task<List<Article>> GetArticlesByFilter(string filter, int take, int skip);
+
     Task<bool> IsExistsArticle(Guid articleId);
     Task<Article> GetArticleByIdAsync(Guid articleId);
     Task<Article> GetArticleForShowAsync(Guid articleId, int take, int skip);

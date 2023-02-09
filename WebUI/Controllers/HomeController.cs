@@ -1,4 +1,5 @@
 ﻿using Application.Context;
+using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -7,11 +8,11 @@ namespace WebUI.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly NoonpostDbContext _context;
+    private readonly IArticleService _articleService;
 
-    public HomeController(NoonpostDbContext context)
+    public HomeController(IArticleService articleService)
     {
-        _context = context;
+        _articleService = articleService;
     }
 
     [HttpGet("/404")]
@@ -20,22 +21,14 @@ public class HomeController : Controller
     [HttpGet]
     public async Task<IActionResult> Index(int page = 1)
     {
-        var slider = await _context.Articles
-            .OrderByDescending(a => a.View)
-            .Take(5)
-            .ToListAsync();
+        var slider = await _articleService.GetArticlesForSlider();
 
         var take = 6;
         var skip = take * (page - 1);
 
-        var articles = await _context.Articles
-            .Include(a => a.User)
-            .OrderByDescending(a => a.CreateDate)
-            .Skip(skip)
-            .Take(take)
-            .ToListAsync();
+        var articles = await _articleService.GetArticlesForIndex(take, skip);
 
-        var pagesCount = ((await _context.Articles.CountAsync()) + take - 1) / take;
+        var pagesCount = ((await _articleService.ArticlesCountAsync()) + take - 1) / take;
 
         return View(Tuple.Create(slider, articles, pagesCount));
     }
@@ -47,13 +40,8 @@ public class HomeController : Controller
 
         int take = 6;
         int skip = take * (page - 1);
-        
-        var articles = await _context.Articles
-            .Include(a => a.User)
-            .Where(a => a.Title.Contains(filter) || a.Tags.Contains(filter))
-            .Skip(skip)
-            .Take(take)
-            .ToListAsync();
+
+        var articles = await _articleService.GetArticlesByFilter(filter, take, skip);
 
         var pageCount = (articles.Count + take - 1) / take;
 
