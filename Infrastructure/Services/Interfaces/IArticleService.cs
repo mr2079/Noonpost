@@ -18,4 +18,5 @@ public interface IArticleService
     Task<EditArticleViewModel> EditArticleAsync(Guid articleId);
     Task<bool> UpdateArticleAsync(EditArticleViewModel edit, IFormFile? newArticleImg);
     Task<bool> DeleteArticleAsync(Article article);
+    Task<int> ArticleCommentsCount(Guid articleId);
 }

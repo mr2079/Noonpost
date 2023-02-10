@@ -1,0 +1,112 @@
+﻿<script src="~/assets/js/ckeditor.min.js"></script>
+<script src="~/assets/js/translations/fa.min.js"></script>
+<script>
+    ClassicEditor.create(document.querySelector("#CommentText"), {
+        language: 'fa'
+    });
+
+
+    const sendReply = (t) => {
+        var articleId = $(t).children('.article-id').html();
+        var parentId = $(t).children('.parent-id').html();
+        Swal.fire({
+            title: 'متن پاسخ را وارد کنید',
+            html: `<form id="replyCommentForm" method="post" action="/Article/CreateCommentReply">` +
+                `<input type="hidden" name="articleId" value="${articleId}"/>` +
+                `<input type="hidden" name="parentId" value="${parentId}"/>` +
+                `<textarea id="replyText" class="swal2-textarea" name="text"></textarea>` +
+                `</form>`,
+            showConfirmButton: true,
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'ارسال',
+            confirmButtonColor: 'green',
+            cancelButtonText: 'انصراف',
+        })
+            .then(result => {
+                if (result.isConfirmed) {
+                    $("#replyCommentForm").submit();
+                }
+            });
+
+        ClassicEditor.create(document.querySelector("#replyText"), {
+            language: 'fa'
+        });
+    }
+
+
+    const editComment = (t) => {
+        var commentId = $(t).children('.comment-id').html();
+        var parentId = $(t).children('.parent-id').html();
+        var text = $(t).children('.text').html();
+        Swal.fire({
+            title: 'متن دیدگاه خود را ویرایش کنید',
+            html: `<form id="editCommentForm" method="post" action="/Article/EditComment">` +
+                `<input type="hidden" name="commentId" value="${commentId}"/>` +
+                `<input type="hidden" name="parentId" value="${parentId}"/>` +
+                `<textarea id="editCommentText" class="swal2-textarea" name="text">${text}</textarea>` +
+                `</form>`,
+            showConfirmButton: true,
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'ویرایش',
+            confirmButtonColor: 'gold',
+            cancelButtonText: 'انصراف',
+        })
+            .then(result => {
+                if (result.isConfirmed) {
+                    $("#editCommentForm").submit();
+                }
+            });
+
+        ClassicEditor.create(document.querySelector("#editCommentText"), {
+            language: 'fa'
+        });
+    }
+
+
+    const deleteComment = (t) => {
+        var commentId = $(t).children('.comment-id').html();
+        Swal.fire({
+            icon: 'warning',
+            title: 'آیا از  حذف این دیدگاه مطمئن هستید؟',
+            html: `<form id="deleteCommentForm" method="post" action="/Article/DeleteComment">` +
+                `<input type="hidden" name="commentId" value="${commentId}"/>` +
+                `</form>`,
+            showConfirmButton: true,
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'حذف',
+            confirmButtonColor: 'red',
+            cancelButtonText: 'انصراف',
+        })
+            .then(result => {
+                if (result.isConfirmed) {
+                    $("#deleteCommentForm").submit();
+                }
+            });
+    }
+
+
+    const deleteArticle = (t) => {
+        var articleId = $(t).children('.article-id').html();
+        Swal.fire({
+            icon: 'warning',
+            title: 'آیا از  حذف این مقاله مطمئن هستید؟',
+            html: `<form id="deleteArticleForm" method="post" action="/Admin/DeleteArticle">` +
+                `<input type="hidden" name="userId" value="${articleId}"/>` +
+                `</form>`,
+            showConfirmButton: true,
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'حذف',
+            confirmButtonColor: 'red',
+            cancelButtonText: 'انصراف',
+        })
+            .then(result => {
+                if (result.isConfirmed) {
+                    $("#deleteArticleForm").submit();
+                }
+            });
+    }
+</script>

@@ -3,6 +3,7 @@
     var commentModel = new CreateCommentViewModel();
     ViewData["ArticleId"] = Model.Id;
     int commentsPageCount = int.Parse(ViewData["CommentsPageCount"].ToString());
+    int articleComments = int.Parse(ViewData["CommentsCount"].ToString());
 }
 
 <style>
@@ -28,8 +29,12 @@
         display: none !important;
     }
 
-    .pr-40 {
-        padding-right: 40px !important;
+    .pr-50 {
+        padding-right: 50px !important;
+    }
+
+    .pb-50 {
+        padding-bottom: 50px !important;
     }
 
     .pagination {
@@ -64,15 +69,45 @@
                                 <li>
                                     <a asp-controller="Author"
                                        asp-action="Index"
-                                       asp-route-authorId="@Model.User.Id">@(Model.User.FirstName + " " + Model.User.LastName)</a>
+                                       asp-route-authorId="@Model.User.Id">
+                                       @(Model.User.FirstName + " " + Model.User.LastName)
+                                   </a>
                                 </li>
                                 <li class="dot"></li>
                                 <li>@Model.CreateDate.ToShamsi()</li>
-                                <li class="dot"></li>
-                                <li>3 دیدگاه</li>
+                                @if (articleComments > 0)
+                                {
+                                    <li class="dot"></li>
+                                    <li>@articleComments دیدگاه</li>
+                                }
                             </ul>
                         </div>
                     </div>
+
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                    {
+                        <div class="mt-4">
+                            @if(!Model.IsAccepted)
+                            {
+                                <a asp-controller="Admin"
+                                asp-action="AcceptArticle"
+                                asp-route-articleId="@Model.Id"
+                                    class="btn btn-success">تایید مقاله</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Admin"
+                           asp-action="DeclineArticle"
+                           asp-route-articleId="@Model.Id"
+                           class="btn btn-warning">عدم تایید مقاله</a>
+                            }
+                            <a href="javascript:void(0)"
+                            onclick="deleteArticle(this)"
+                            class="btn btn-danger">حذف مقاله
+                            <span class="d-none article-id">@Model.Id</span>
+                        </a>
+                        </div>
+                    }
 
                     <div class="post-single-body">
                         @Html.Raw(Model.Text)
@@ -118,10 +153,10 @@
                         </div>
                     }
 
-                    @if (Model.Comments.Count > 0)
+                    @if (articleComments > 0)
                     {
                         <div class="title">
-                            <h5>@ViewData["CommentsCount"].ToString() دیدگاه</h5>
+                            <h5>@articleComments دیدگاه</h5>
                         </div>
 
                         <ul class="widget-comments">
@@ -179,41 +214,6 @@
                         {
                             <p>@Model.User.Email</p>
                         }
-                        @*@if (Model.User.Description != null)
-                        {
-                        <div class="user-description">
-                        @Html.Raw(Model.User.Description)
-                        </div>
-                        }*@
-                        @*<div class="social-media">
-                        <ul class="list-inline">
-                        <li>
-                        <a href="#" class="color-facebook">
-                        <i class="fab fa-facebook"></i>
-                        </a>
-                        </li>
-                        <li>
-                        <a href="#" class="color-instagram">
-                        <i class="fab fa-instagram"></i>
-                        </a>
-                        </li>
-                        <li>
-                        <a href="#" class="color-twitter">
-                        <i class="fab fa-twitter"></i>
-                        </a>
-                        </li>
-                        <li>
-                        <a href="#" class="color-youtube">
-                        <i class="fab fa-youtube"></i>
-                        </a>
-                        </li>
-                        <li>
-                        <a href="#" class="color-pinterest">
-                        <i class="fab fa-pinterest"></i>
-                        </a>
-                        </li>
-                        </ul>
-                        </div>*@
                     </div>
                 </div>
                 @await Component.InvokeAsync("LatestArticlesComponent")
@@ -229,92 +229,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_ChangeImageScriptPartial");
+        await Html.RenderPartialAsync("_ShowArticlePageScriptsPartial");
     }
-    <script src="~/assets/js/ckeditor.min.js"></script>
-    <script src="~/assets/js/translations/fa.min.js"></script>
-    <script>
-        ClassicEditor.create(document.querySelector("#CommentText"), {
-            language: 'fa'
-        });
-    </script>
-    <script>
-        const sendReply = (t) => {
-            var articleId = $(t).children('.article-id').html();
-            var parentId = $(t).children('.parent-id').html();
-            Swal.fire({
-                title: 'متن پاسخ را وارد کنید',
-                html: `<form id="replyCommentForm" method="post" action="/Article/CreateCommentReply">` +
-                    `<input type="hidden" name="articleId" value="${articleId}"/>` +
-                    `<input type="hidden" name="parentId" value="${parentId}"/>` +
-                    `<textarea id="replyText" class="swal2-textarea" name="text"></textarea>` +
-                    `</form>`,
-                showConfirmButton: true,
-                showCloseButton: true,
-                showCancelButton: true,
-                confirmButtonText: 'ارسال',
-                confirmButtonColor: 'green',
-                cancelButtonText: 'انصراف',
-            })
-                .then(result => {
-                    if (result.isConfirmed) {
-                        $("#replyCommentForm").submit();
-                    }
-                });
-
-            ClassicEditor.create(document.querySelector("#replyText"), {
-                language: 'fa'
-            });
-        }
-
-        const editComment = (t) => {
-            var commentId = $(t).children('.comment-id').html();
-            var parentId = $(t).children('.parent-id').html();
-            var text = $(t).children('.text').html();
-            Swal.fire({
-                title: 'متن دیدگاه خود را ویرایش کنید',
-                html: `<form id="editCommentForm" method="post" action="/Article/EditComment">` +
-                    `<input type="hidden" name="commentId" value="${commentId}"/>` +
-                    `<input type="hidden" name="parentId" value="${parentId}"/>` +
-                    `<textarea id="editCommentText" class="swal2-textarea" name="text">${text}</textarea>` +
-                    `</form>`,
-                showConfirmButton: true,
-                showCloseButton: true,
-                showCancelButton: true,
-                confirmButtonText: 'ویرایش',
-                confirmButtonColor: 'gold',
-                cancelButtonText: 'انصراف',
-            })
-                .then(result => {
-                    if (result.isConfirmed) {
-                        $("#editCommentForm").submit();
-                    }
-                });
-
-            ClassicEditor.create(document.querySelector("#editCommentText"), {
-                language: 'fa'
-            });
-        }
-
-        const deleteComment = (t) => {
-            var commentId = $(t).children('.comment-id').html();
-            Swal.fire({
-                icon: 'warning',
-                title: 'آیا از  حذف این دیدگاه مطمئن هستید؟',
-                html: `<form id="deleteCommentForm" method="post" action="/Article/DeleteComment">` +
-                    `<input type="hidden" name="commentId" value="${commentId}"/>` +
-                    `</form>`,
-                showConfirmButton: true,
-                showCloseButton: true,
-                showCancelButton: true,
-                confirmButtonText: 'حذف',
-                confirmButtonColor: 'red',
-                cancelButtonText: 'انصراف',
-            })
-                .then(result => {
-                    if (result.isConfirmed) {
-                        $("#deleteCommentForm").submit();
-                    }
-                });
-        }
-    </script>
 }

@@ -54,7 +54,7 @@
                                     <a asp-controller="Article" asp-action="Show"
                                asp-route-articleId="@article.Id">@article.Title</a>
                                 </h5>
-                                <div class="short-description ellipsis-2">@Html.Raw(article.Text.Substring(0, 120))</div>
+                                <div class="short-description ellipsis-2">@Html.Raw(article.Text.Substring(0, 200))</div>
                                 <div class="post-card-info">
                                     <ul class="list-inline">
                                         <li>

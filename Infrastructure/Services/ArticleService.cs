@@ -18,6 +18,10 @@ public class ArticleService : IArticleService
         _context = context;
     }
 
+    public async Task<int> ArticleCommentsCount(Guid articleId)
+        => await _context.Comments
+        .CountAsync(c => Equals(c.ArticleId, articleId) && Equals(c.ParentId, null));
+
     public async Task<bool> IsExistsArticle(Guid articleId) => await _context.Articles.AnyAsync(a => Guid.Equals(a.Id, articleId));
 
     public async Task<Article> GetArticleByIdAsync(Guid articleId) => await _context.Articles.FindAsync(articleId);
@@ -144,6 +148,7 @@ public class ArticleService : IArticleService
 
     public async Task<List<Article>> GetArticlesForSlider()
         => await _context.Articles
+            .Where(a => a.IsAccepted)
             .OrderByDescending(a => a.View)
             .Take(5)
             .ToListAsync();
@@ -151,6 +156,7 @@ public class ArticleService : IArticleService
     public async Task<List<Article>> GetArticlesForIndex(int take, int skip)
         => await _context.Articles
             .Include(a => a.User)
+            .Where(a => a.IsAccepted)
             .OrderByDescending(a => a.CreateDate)
             .Skip(skip)
             .Take(take)
@@ -159,7 +165,7 @@ public class ArticleService : IArticleService
     public async Task<List<Article>> GetArticlesByFilter(string filter, int take, int skip)
         => await _context.Articles
             .Include(a => a.User)
-            .Where(a => a.Title.Contains(filter) || a.Tags.Contains(filter))
+            .Where(a => (a.Title.Contains(filter) || a.Tags.Contains(filter)) && a.IsAccepted)
             .Skip(skip)
             .Take(take)
             .ToListAsync();

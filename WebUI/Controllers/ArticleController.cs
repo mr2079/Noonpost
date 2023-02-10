@@ -25,7 +25,7 @@ public class ArticleController : Controller
         int takeComments = 5;
         int skipComments = takeComments * (commentPage - 1);
         var model = await _articleService.GetArticleForShowAsync(articleId, takeComments, skipComments);
-        int commentsCount = model.Comments.Where(c => c.ParentId == null).Count();
+        int commentsCount = await _articleService.ArticleCommentsCount(articleId);
         ViewData["CommentsCount"] = commentsCount;
         ViewData["CommentsPageCount"] = (commentsCount + takeComments - 1) / takeComments;
 
@@ -117,7 +117,7 @@ public class ArticleController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteComment(Guid commentId)
     {
-       Guid articleId = await _commentService.DeleteComment(commentId);
+        Guid articleId = await _commentService.DeleteComment(commentId);
 
         return RedirectToAction("Show", "Article",
             new { articleId = articleId });

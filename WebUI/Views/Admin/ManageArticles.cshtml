@@ -1,9 +1,7 @@
-﻿@model Tuple<List<Article>,int>
+﻿@model Tuple<List<Article>,int,int,int>
 @{
     Layout = "_AdminLayout";
-    //int page = int.Parse(Context.Request.Query["page"].ToString() ?? "1");
-    //int i = page + ((page - 1) * 20);
-    int j = 1;
+    int j = ((Model.Item3 - 1) * Model.Item4) + 1;
 }
 
 <style>
@@ -11,12 +9,14 @@
         max-width: 150px;
         border-radius: 10px;
     }
+
     .author-img {
         width: 50px;
         height: 50px;
         border-radius: 50%;
         margin: 5px;
     }
+
     .author-name {
         font-size: 12px;
     }
@@ -30,6 +30,7 @@
                 <th scope="col">تصویر</th>
                 <th scope="col">عنوان</th>
                 <th scope="col">نویسنده</th>
+                <th scope="col">وضعیت</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -47,14 +48,28 @@
                     <td>
                         <div class="d-flex flex-column">
                             <a asp-controller="Author" asp-action="Index"
-                            asp-route-authorId="@article.AuthorId">
+                           asp-route-authorId="@article.AuthorId">
                                 <img class="author-img" src="~/images/users/@article.User.ImageName" />
                             </a>
                             <span class="author-name">@(article.User.FirstName + " " + article.User.LastName)</span>
                         </div>
                     </td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-danger">حذف</a>
+                        @if (article.IsAccepted)
+                        {
+                            <span class="text-success">تایید شده</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">تایید نشده</span>
+                        }
+                    </td>
+                    <td>
+                        <a href="javascript:void(0)"
+                       onclick="deleteArticle(this)"
+                       class="btn btn-danger">
+                            حذف مقاله
+                            <span class="d-none article-id">@article.Id</span>
                     </td>
                 </tr>
 
@@ -82,4 +97,30 @@
         </div>
         <!--/-->
     </div>
+}
+
+@section Scripts {
+    <script>
+        const deleteArticle = (t) => {
+            var articleId = $(t).children('.article-id').html();
+            Swal.fire({
+                icon: 'warning',
+                title: 'آیا از  حذف این مقاله مطمئن هستید؟',
+                html: `<form id="deleteArticleForm" method="post" action="/Admin/DeleteArticle">` +
+                    `<input type="hidden" name="userId" value="${articleId}"/>` +
+                    `</form>`,
+                showConfirmButton: true,
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'حذف',
+                confirmButtonColor: 'red',
+                cancelButtonText: 'انصراف',
+            })
+                .then(result => {
+                    if (result.isConfirmed) {
+                        $("#deleteArticleForm").submit();
+                    }
+                });
+        }
+    </script>
 }

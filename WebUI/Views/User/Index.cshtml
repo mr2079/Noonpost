@@ -109,6 +109,10 @@
                     {
                         <div class="link">هیچ مقاله&zwnj;ای وجود ندارد</div>
                     }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-controller="Admin" asp-action="Index" class="categorie">پنل مدیریت</a>
+                    }
                     <a asp-controller="Article" asp-action="Create" class="categorie">ایجاد مقاله</a>
                     <div class="link">
                         <!-- Button trigger modal -->
@@ -116,35 +120,6 @@
                             ویرایش اطلاعات
                         </button>
                     </div>
-                    @*<div class="social-media">
-                    <ul class="list-inline">
-                    <li>
-                    <a href="#" class="color-facebook">
-                    <i class="fab fa-facebook"></i>
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" class="color-instagram">
-                    <i class="fab fa-instagram"></i>
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" class="color-twitter">
-                    <i class="fab fa-twitter"></i>
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" class="color-youtube">
-                    <i class="fab fa-youtube"></i>
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" class="color-pinterest">
-                    <i class="fab fa-pinterest"></i>
-                    </a>
-                    </li>
-                    </ul>
-                    </div>*@
                 </div>
             </div>
         </div>
@@ -179,7 +154,6 @@ else
     <script>
         const deleteArticle = (t) => {
             var deleteForm = $(t).children("form");
-
             Swal.fire({
                 icon: 'warning',
                 title: 'هشدار',

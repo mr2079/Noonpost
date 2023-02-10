@@ -1,9 +1,7 @@
-﻿@model Tuple<List<User>,int>
+﻿@model Tuple<List<User>,int,int,int>
 @{
     Layout = "_AdminLayout";
-    //int page = int.Parse(Context.Request.Query["page"].ToString() ?? "1");
-    //int i = page + ((page - 1) * 20);
-    int j = 1;
+    int j = ((Model.Item3 - 1) * Model.Item4) + 1;
 }
 
 <style>
@@ -43,8 +41,18 @@
                     <td>@user.Mobile</td>
                     <td>@user.Email</td>
                     <td>
-                        <a href="#" class="btn btn-sm btn-warning">نقش</a>
-                        <a href="#" class="btn btn-sm btn-danger">حذف</a>
+                        <a href="javascript:void(0)"
+                       onclick="editUserRole(this)"
+                       class="btn btn-sm btn-info">
+                            نقش
+                            <span class="d-none user-id">@user.Id</span>
+                        </a>
+                        <a href="javascript:void(0)"
+                       onclick="deleteUser(this)"
+                       class="btn btn-sm btn-danger">
+                            حذف
+                            <span class="d-none user-id">@user.Id</span>
+                        </a>
                     </td>
                 </tr>
 
@@ -72,4 +80,59 @@
         </div>
         <!--/-->
     </div>
+}
+
+@section Scripts {
+    <script>
+        const editUserRole = (t) => {
+            var userId = $(t).children('.user-id').html();
+            Swal.fire({
+                title: 'نقش موردنظر را انتخاب کنید',
+                html: `<form id="editUserRoleForm" method="post" action="/Admin/EditUserRole">` +
+                    `<input type="hidden" name="userId" value="${userId}"/>` +
+                        `<div class="form-check">` +
+                        `<input type="radio" name="role" value="Admin" />` +
+                        `<label class="form-check-label mx-2">مدیر</label>` +
+                        `</div>` +
+                    `<div class="form-check">` +
+                    `<input type="radio" name="role" value="Author" />` +
+                    `<label class="form-check-label mx-2">نویسنده</label>` +
+                    `</div>` +
+                        `</form>`,
+                showConfirmButton: true,
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'تایید',
+                confirmButtonColor: 'green',
+                cancelButtonText: 'انصراف',
+            })
+                .then(result => {
+                    if (result.isConfirmed) {
+                        $("#editUserRoleForm").submit();
+                    }
+                });
+        }
+
+        const deleteUser = (t) => {
+            var userId = $(t).children('.user-id').html();
+            Swal.fire({
+                icon: 'warning',
+                title: 'آیا از  حذف این کاربر مطمئن هستید؟',
+                html: `<form id="deleteUserForm" method="post" action="/Admin/DeleteUser">` +
+                    `<input type="hidden" name="userId" value="${userId}"/>` +
+                    `</form>`,
+                showConfirmButton: true,
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'حذف',
+                confirmButtonColor: 'red',
+                cancelButtonText: 'انصراف',
+            })
+                .then(result => {
+                    if (result.isConfirmed) {
+                        $("#deleteUserForm").submit();
+                    }
+                });
+        }
+    </script>
 }
