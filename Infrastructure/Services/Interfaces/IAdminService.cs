@@ -17,4 +17,6 @@ public interface IAdminService
     Task<bool> DeleteArticle(Guid articleId);
     Task<bool> DeclineArticle(Guid articleId);
     Task<bool> AcceptArticle(Guid articleId);
+    Task<bool> AcceptComment(Guid commentId);
+    Task<bool> DeleteComment(Guid commentId);
 }

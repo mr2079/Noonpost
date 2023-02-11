@@ -5,65 +5,93 @@
 
 @foreach (var comment in Model)
 {
-    <li class="comment-item @((!comment.IsAccepted) ? "unaccepted-comment" : "")">
-        @if (!comment.IsAccepted)
-        {
-            <span class="unaccepted-comment-message"> تایید نشده </span>
-        }
-        @if (comment.User.ImageName != null)
-        {
-            <div class="user-avatar">
-                <img src="~/images/users/@comment.User.ImageName"
-             alt="@(comment.User.FirstName+" "+comment.User.LastName)">
-            </div>
-        }
-        <div class="content">
-            <ul class="info list-inline">
-                <li>@(comment.User.FirstName + " " + comment.User.LastName)</li>
-                <li class="dot"></li>
-                <li>@comment.CreateDate.ToShamsi(true)</li>
-            </ul>
-            @Html.Raw(comment.Text)
-            @if (User.Identity.IsAuthenticated)
+    if (comment.IsAccepted ||
+        User.IsInRole("Admin") ||
+        Equals(Guid.Parse(User.Identity.Name ?? Guid.Empty.ToString()), comment.UserId)) 
+    {
+
+        <li class="comment-item @((!comment.IsAccepted) ? "unaccepted-comment" : "")">
+            @if (!comment.IsAccepted)
             {
-                if (Equals(comment.UserId, Guid.Parse(User.Identity.Name)))
-                {
-                    <div class="mb-1">
-                        <a href="javascript:void(0)"
-               onclick="editComment(this)"
-               class="link">
-                            <span class="d-none comment-id">@comment.Id</span>
-                            <span class="d-none text">@comment.Text</span>
-                            ویرایش
-                        </a>
-                        <a href="javascript:void(0)"
-               onclick="deleteComment(this)"
-               class="link">
-                            <span class="d-none comment-id">@comment.Id</span>
-                            <span class="d-none article-id">@comment.ArticleId</span>
-                            حذف
-                        </a>
-                    </div>
-                }
-
-
-                <div>
-                    <a href="javascript:void(0)"
-               onclick="sendReply(this)"
-               class="link">
-                        <span class="d-none article-id">@articleId</span>
-                        <span class="d-none parent-id">@comment.Id</span>
-                        <i class="arrow_back"></i> پاسخ
-                    </a>
+                <span class="unaccepted-comment-message"> تایید نشده </span>
+            }
+            @if (comment.User.ImageName != null)
+            {
+                <div class="user-avatar">
+                    <img src="~/images/users/@comment.User.ImageName"
+             alt="@(comment.User.FirstName+" "+comment.User.LastName)">
                 </div>
             }
-        </div>
-    </li>
+            <div class="content">
+                <ul class="info list-inline">
+                    <li>@(
+                        comment.User.FirstName + " " + comment.User.LastName
+                        )</li>
+                    <li class="dot"></li>
+                    <li>@comment.CreateDate.ToShamsi(true)</li>
+                </ul>
+                @Html.Raw(comment.Text)
+                @if (User.Identity.IsAuthenticated)
+                {
+                    if (Equals(comment.UserId, Guid.Parse(User.Identity.Name)))
+                    {
+                        <div class="mb-1">
+                            <a href="javascript:void(0)"
+               onclick="editComment(this)"
+               class="link">
+                                <span class="d-none comment-id">@comment.Id</span>
+                                <span class="d-none text">@comment.Text</span>
+                                ویرایش
+                            </a>
+                            <a href="javascript:void(0)"
+               onclick="deleteComment(this)"
+               class="link">
+                                <span class="d-none comment-id">@comment.Id</span>
+                                <span class="d-none article-id">@comment.ArticleId</span>
+                                حذف
+                            </a>
+                        </div>
+                    }
 
-    @if (comment.Replies.Count > 0)
-    {
-        <ul class="widget-comments pr-50 pb-50">
-            <partial name="_ShowCommentsPartial" model="comment.Replies" view-data="ViewData" />
-        </ul>
+                    @if (!comment.IsAccepted && User.IsInRole("Admin"))
+                    {
+                        <div>
+                            <a href="javascript:void(0)"
+               onclick="acceptCommentByAdmin(this)"
+               class="link">
+                                <span class="d-none comment-id">@comment.Id</span>
+                                تایید دیدگاه
+                            </a>
+                            <a href="javascript:void(0)"
+               onclick="deleteCommentByAdmin(this)"
+               class="link">
+                                <span class="d-none comment-id">@comment.Id</span>
+                                حذف دیدگاه
+                            </a>
+                        </div>
+                    }
+                    else if (!Equals(Guid.Parse(User.Identity.Name), comment.UserId))
+                    {
+                        <div>
+                            <a href="javascript:void(0)"
+               onclick="sendReply(this)"
+               class="link">
+                                <span class="d-none article-id">@articleId</span>
+                                <span class="d-none parent-id">@comment.Id</span>
+                                <i class="arrow_back"></i> پاسخ
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+        </li>
+
+        @if (comment.Replies.Count > 0)
+        {
+            <ul class="widget-comments pr-50 pb-50">
+                <partial name="_ShowCommentsPartial" model="comment.Replies" view-data="ViewData" />
+            </ul>
+        }
+
     }
 }

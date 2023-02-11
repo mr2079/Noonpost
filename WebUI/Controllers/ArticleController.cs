@@ -27,6 +27,7 @@ public class ArticleController : Controller
         var model = await _articleService.GetArticleForShowAsync(articleId, takeComments, skipComments);
         int commentsCount = await _articleService.ArticleCommentsCount(articleId);
         ViewData["CommentsCount"] = commentsCount;
+        ViewData["AcceptedCommentsCount"] = await _articleService.ArticleAcceptedCommentsCount(articleId);
         ViewData["CommentsPageCount"] = (commentsCount + takeComments - 1) / takeComments;
 
         return View(model);

@@ -4,6 +4,7 @@
     ViewData["ArticleId"] = Model.Id;
     int commentsPageCount = int.Parse(ViewData["CommentsPageCount"].ToString());
     int articleComments = int.Parse(ViewData["CommentsCount"].ToString());
+    int acceptedComments = int.Parse(ViewData["AcceptedCommentsCount"].ToString());
 }
 
 <style>
@@ -95,10 +96,10 @@
                                 </li>
                                 <li class="dot"></li>
                                 <li>@Model.CreateDate.ToShamsi()</li>
-                                @if (articleComments > 0)
+                                @if (acceptedComments > 0)
                                 {
                                     <li class="dot"></li>
-                                    <li>@articleComments دیدگاه</li>
+                                    <li>@acceptedComments دیدگاه</li>
                                 }
                             </ul>
                         </div>
@@ -173,10 +174,10 @@
                         </div>
                     }
 
-                    @if (articleComments > 0 || User.IsInRole("Admin"))
+                    @if (articleComments > 0)
                     {
                         <div class="title">
-                            <h5>@articleComments دیدگاه</h5>
+                            <h5>@acceptedComments دیدگاه</h5>
                         </div>
 
                         <ul class="widget-comments">

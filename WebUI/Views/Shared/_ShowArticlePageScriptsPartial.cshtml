@@ -111,4 +111,66 @@
                 }
             });
     }
+
+    const acceptCommentByAdmin = (t) => {
+        var commentId = $(t).children('.comment-id').html();
+        Swal.fire({
+            icon: 'warning',
+            title: 'آیا از تایید این دیدگاه مطمئن هستید؟',
+            showConfirmButton: true,
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'تایید',
+            confirmButtonColor: 'green',
+            cancelButtonText: 'انصراف',
+        })
+            .then(result => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: "POST",
+                        url: "/Admin/AcceptComment",
+                        data: {
+                            commentId
+                        }
+                    }).done(response => {
+                        if (response) {
+                            $(t).hide();
+                        }
+                    });
+                }
+            });
+    }
+
+    const deleteCommentByAdmin = (t) => {
+        var commentId = $(t).children('.comment-id').html();
+        Swal.fire({
+            icon: 'warning',
+            title: 'آیا از تایید این دیدگاه مطمئن هستید؟',
+            html: `<form id="deleteCommentForm" method="post" action="/Admin/DeleteComment">` +
+                `<input type="hidden" name="commentId" value="${commentId}"/>` +
+                `</form>`,
+            showConfirmButton: true,
+            showCloseButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'حذف',
+            confirmButtonColor: 'red',
+            cancelButtonText: 'انصراف',
+        })
+            .then(result => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        method: "POST",
+                        url: "/Admin/DeleteComment",
+                        data: {
+                            commentId
+                        }
+                    }).done(response => {
+                        if (response) {
+                            var optionDiv = $(t).parent()[0];
+                            $(optionDiv).hide();
+                        }
+                    });
+                }
+            });
+    }
 </script>

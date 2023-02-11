@@ -75,4 +75,22 @@ public class AdminController : Controller
         await _adminService.DeleteArticle(articleId);
         return RedirectToAction("ManageArticles", "Admin");
     }
+
+    [HttpPost]
+    public async Task<JsonResult> AcceptComment(Guid commentId)
+    {
+        if (await _adminService.AcceptComment(commentId))
+            return new JsonResult(true);
+
+        return new JsonResult(false);
+    }
+
+    [HttpPost]
+    public async Task<JsonResult> DeleteComment(Guid commentId)
+    {
+        if (await _adminService.DeleteComment(commentId))
+            return new JsonResult(true);
+
+        return new JsonResult(false);
+    }
 }

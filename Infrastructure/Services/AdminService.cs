@@ -117,4 +117,31 @@ public class AdminService : IAdminService
         }
         catch { return false; }
     }
+
+    public async Task<bool> AcceptComment(Guid commentId)
+    {
+        try
+        {
+            var comment = await _context.Comments.FindAsync(commentId);
+            if (comment == null) return false;
+            comment.IsAccepted = true;
+            _context.Comments.Update(comment);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch { return false; }
+    }
+
+    public async Task<bool> DeleteComment(Guid commentId)
+    {
+        try
+        {
+            var comment = await _context.Comments.FindAsync(commentId);
+            if (comment == null) return false;
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch { return false; }
+    }
 }

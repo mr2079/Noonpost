@@ -19,6 +19,10 @@ public class ArticleService : IArticleService
 
     public async Task<int> ArticleCommentsCount(Guid articleId)
         => await _context.Comments
+        .CountAsync(c => Equals(c.ArticleId, articleId) && Equals(c.ParentId, null));
+
+    public async Task<int> ArticleAcceptedCommentsCount(Guid articleId)
+        => await _context.Comments
         .CountAsync(c => Equals(c.ArticleId, articleId) && Equals(c.ParentId, null) && c.IsAccepted);
 
     public async Task<bool> IsExistsArticle(Guid articleId) => await _context.Articles.AnyAsync(a => Guid.Equals(a.Id, articleId));
