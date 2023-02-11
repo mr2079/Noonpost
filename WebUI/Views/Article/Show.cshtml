@@ -40,6 +40,26 @@
     .pagination {
         padding: 50px 0 0 0 !important;
     }
+
+    .unaccepted-comment {
+        border: 3px solid pink;
+        border-radius: 20px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .unaccepted-comment-message {
+        font-size: 12px;
+        font-weight: 800;
+        background-color: pink;
+        text-align: center;
+        width: 150px;
+        position: absolute;
+        top: 22px;
+        left: -46px;
+        transform: rotate(-45deg);
+    }
 </style>
 
 <section class="section pt-55 ">
@@ -153,7 +173,7 @@
                         </div>
                     }
 
-                    @if (articleComments > 0)
+                    @if (articleComments > 0 || User.IsInRole("Admin"))
                     {
                         <div class="title">
                             <h5>@articleComments دیدگاه</h5>

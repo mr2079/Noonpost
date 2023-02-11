@@ -67,11 +67,13 @@
 
     const deleteComment = (t) => {
         var commentId = $(t).children('.comment-id').html();
+        var articleId = $(t).children('.article-id').html();
         Swal.fire({
             icon: 'warning',
             title: 'آیا از  حذف این دیدگاه مطمئن هستید؟',
             html: `<form id="deleteCommentForm" method="post" action="/Article/DeleteComment">` +
                 `<input type="hidden" name="commentId" value="${commentId}"/>` +
+                `<input type="hidden" name="articleId" value="${articleId}"/>` +
                 `</form>`,
             showConfirmButton: true,
             showCloseButton: true,

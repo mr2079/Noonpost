@@ -5,7 +5,6 @@ using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Infrastructure.Services;
 
@@ -20,7 +19,7 @@ public class ArticleService : IArticleService
 
     public async Task<int> ArticleCommentsCount(Guid articleId)
         => await _context.Comments
-        .CountAsync(c => Equals(c.ArticleId, articleId) && Equals(c.ParentId, null));
+        .CountAsync(c => Equals(c.ArticleId, articleId) && Equals(c.ParentId, null) && c.IsAccepted);
 
     public async Task<bool> IsExistsArticle(Guid articleId) => await _context.Articles.AnyAsync(a => Guid.Equals(a.Id, articleId));
 
@@ -41,7 +40,7 @@ public class ArticleService : IArticleService
             .Include(c => c.User)
             .Include(c => c.Replies.OrderByDescending(r => r.CreateDate))
             .ThenInclude(r => r.User)
-            .Where(c => c.ArticleId == articleId)
+            .Where(c => Equals(c.ArticleId, articleId))
             .ToListAsync();
 
         model.Comments = comments

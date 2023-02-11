@@ -21,7 +21,7 @@ public class AuthorService : IAuthorService
         => await _context.Users
             .Include(u => u.Articles)
             .ThenInclude(a => a.User)
-            .Where(u => u.Id == authorId)
+            .Where(u => Equals(u.Id, authorId))
             .Select(u => new AuthorInfoViewModel()
             {
                 AuthorId = u.Id,
@@ -31,6 +31,7 @@ public class AuthorService : IAuthorService
                 Email = u.Email,
                 Description = u.Description,
                 Articles = u.Articles
+                    .Where(a => a.IsAccepted)
                     .OrderByDescending(a => a.CreateDate)
                     .Skip(skip)
                     .Take(take)

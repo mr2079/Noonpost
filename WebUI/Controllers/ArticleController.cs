@@ -115,9 +115,9 @@ public class ArticleController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeleteComment(Guid commentId)
+    public async Task<IActionResult> DeleteComment(Guid commentId, Guid articleId)
     {
-        Guid articleId = await _commentService.DeleteComment(commentId);
+        await _commentService.DeleteComment(commentId);
 
         return RedirectToAction("Show", "Article",
             new { articleId = articleId });

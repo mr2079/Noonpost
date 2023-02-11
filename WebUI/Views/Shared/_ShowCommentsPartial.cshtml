@@ -5,7 +5,11 @@
 
 @foreach (var comment in Model)
 {
-    <li class="comment-item">
+    <li class="comment-item @((!comment.IsAccepted) ? "unaccepted-comment" : "")">
+        @if (!comment.IsAccepted)
+        {
+            <span class="unaccepted-comment-message"> تایید نشده </span>
+        }
         @if (comment.User.ImageName != null)
         {
             <div class="user-avatar">
@@ -22,7 +26,7 @@
             @Html.Raw(comment.Text)
             @if (User.Identity.IsAuthenticated)
             {
-                if (comment.UserId == Guid.Parse(User.Identity.Name))
+                if (Equals(comment.UserId, Guid.Parse(User.Identity.Name)))
                 {
                     <div class="mb-1">
                         <a href="javascript:void(0)"
@@ -36,6 +40,7 @@
                onclick="deleteComment(this)"
                class="link">
                             <span class="d-none comment-id">@comment.Id</span>
+                            <span class="d-none article-id">@comment.ArticleId</span>
                             حذف
                         </a>
                     </div>

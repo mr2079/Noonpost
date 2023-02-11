@@ -3,6 +3,7 @@ using Domain.Entites.Comment;
 using Domain.Entites.User;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Infrastructure.Services;
@@ -23,7 +24,6 @@ public class CommentService : ICommentService
             ArticleId = userComment.ArticleId,
             UserId = userComment.UserId,
             Text = userComment.CommentText,
-            IsAccepted = true,
             CreateDate = DateTime.Now,
         };
 
@@ -66,13 +66,16 @@ public class CommentService : ICommentService
         return comment.ArticleId;
     }
 
-    public async Task<Guid> DeleteComment(Guid commentId)
+    public async Task DeleteComment(Guid commentId)
     {
-        var comment = await _context.Comments.FindAsync(commentId);
-        if (comment == null) return Guid.Empty;
-        _context.Comments.Remove(comment);
+        var comments = await _context.Comments
+            .Include(c => c.Replies).ToListAsync();
+        var flatten = Flatten(comments.Where(c => Equals(c.Id, commentId)));
+        _context.Comments.RemoveRange(flatten);
         await _context.SaveChangesAsync();
-
-        return comment.ArticleId;
+        await Task.CompletedTask;
     }
+
+    private IEnumerable<Comment> Flatten(IEnumerable<Comment> comments)
+        => comments.SelectMany(c => Flatten(c.Replies)).Concat(comments);
 }

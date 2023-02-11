@@ -21,6 +21,13 @@
     .link-none {
         cursor: pointer;
     }
+
+    .unaccepted-article {
+        padding: 10px 20px;
+        margin-top: 10px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
 </style>
 
 @if (Model.Count > 0)
@@ -84,6 +91,12 @@
                                                 <input type="hidden" name="authorId" value="@article.AuthorId">
                                             </form>
                                         </a>
+                                        @if (!article.IsAccepted)
+                                        {
+                                            <div class="alert-danger unaccepted-article">
+                                                وضعیت: تایید نشده
+                                            </div>
+                                        }
                                     }
                                 </div>
                             </div>
