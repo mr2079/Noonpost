@@ -36,6 +36,7 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+builder.Services.AddTransient<IBaseService, BaseService>();
 #endregion
 
 var app = builder.Build();

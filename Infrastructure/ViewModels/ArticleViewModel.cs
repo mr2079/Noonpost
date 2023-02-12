@@ -6,6 +6,7 @@ namespace Infrastructure.ViewModels;
 public class CreateArticleViewModel
 {
     public Guid AuthorId { get; set; }
+    public Guid? ArticleImageGuid { get; set; }
 
     [Display(Name = "عنوان مقاله")]
     [Required(ErrorMessage = "فیلد {0} الزامی می باشد")]

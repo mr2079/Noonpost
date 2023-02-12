@@ -6,6 +6,7 @@ namespace Domain.Entites.Article;
 public class Article : BaseEntity
 {
     public Guid AuthorId { get; set; }
+    public Guid? ImagesGuid { get; set; }
     [MaxLength(255)]
     public string ImageName { get; set; } = string.Empty;
     [MaxLength(255)]

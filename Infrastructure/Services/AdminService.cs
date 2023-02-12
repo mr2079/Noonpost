@@ -10,10 +10,12 @@ namespace Infrastructure.Services;
 public class AdminService : IAdminService
 {
     private readonly NoonpostDbContext _context;
+    private readonly IBaseService _baseService;
 
-    public AdminService(NoonpostDbContext context)
+    public AdminService(NoonpostDbContext context, IBaseService baseService)
     {
         _context = context;
+        _baseService = baseService;
     }
 
     public async Task<int> AllUsersCount()
@@ -83,6 +85,18 @@ public class AdminService : IAdminService
         {
             var article = await _context.Articles.FindAsync(articleId);
             if (article == null) return false;
+            await _baseService.DeleteArticleImageFile(article.ImageName);
+            if (article.ImagesGuid != null)
+            {
+                var articleImages = await _context.ArticleImages
+                    .Where(ai => Equals(ai.ArticleImageGuid, article.ImagesGuid))
+                    .ToListAsync();
+
+                foreach (var image in articleImages)
+                {
+                    await _baseService.DeleteArticleImageFile(image.ImageName);
+                }    
+            }
             _context.Articles.Remove(article);
             await _context.SaveChangesAsync();
             return true;

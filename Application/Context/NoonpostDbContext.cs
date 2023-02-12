@@ -11,6 +11,7 @@ public class NoonpostDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Article> Articles { get; set; }
+    public DbSet<ArticleImage> ArticleImages { get; set; }
     public DbSet<Comment> Comments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -24,6 +25,10 @@ public class NoonpostDbContext : DbContext
         // Article
         modelBuilder.Entity<Article>()
             .Property(a => a.Id).HasColumnName("ArticleId");
+
+        // Article Image
+        modelBuilder.Entity<ArticleImage>()
+            .Property(a => a.Id).HasColumnName("ArticleImageId");
 
         // Comment
         modelBuilder.Entity<Comment>()

@@ -3,6 +3,7 @@ using Domain.Entites.Comment;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 
 namespace WebUI.Controllers;
 
@@ -34,7 +35,11 @@ public class ArticleController : Controller
     }
 
     [HttpGet("/Article/Create")]
-    public IActionResult Create() => View();
+    public IActionResult Create()
+    {
+        var model = new CreateArticleViewModel { ArticleImageGuid = Guid.NewGuid() };
+        return View(model);
+    }
 
     [HttpPost]
     public async Task<IActionResult> Create(CreateArticleViewModel articleInfo, IFormFile Image)
@@ -64,7 +69,7 @@ public class ArticleController : Controller
     public async Task<IActionResult> Edit(EditArticleViewModel edit, IFormFile? newArticleImg)
     {
         if (!ModelState.IsValid) return View(edit);
-        if (await _articleService.IsExistsArticle(edit.ArticleId)) return NotFound();
+        if (!await _articleService.IsExistsArticle(edit.ArticleId)) return NotFound();
         await _articleService.UpdateArticleAsync(edit, newArticleImg);
 
         return RedirectToAction("Index", "User", new { userId = edit.AuthorId });
@@ -122,5 +127,13 @@ public class ArticleController : Controller
 
         return RedirectToAction("Show", "Article",
             new { articleId = articleId });
+    }
+
+    public async Task<ActionResult> UploadArticleImage(IFormFile upload, Guid articleImageGuid)
+    {
+        var result = await _articleService.SaveUploadedArticleImage(upload);
+        await _articleService.AddArticleImage(articleImageGuid, result.Item1);
+
+        return Json(new { url = result.Item2 });
     }
 }

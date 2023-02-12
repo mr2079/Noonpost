@@ -94,7 +94,7 @@ public class UserService : IUserService
 
                 user.ImageName = NameGenerator.Generate() + Path.GetExtension(info.Image.FileName);
                 var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\users", user.ImageName);
-                using (var fs = new FileStream(imagePath, FileMode.Create)) info.Image.CopyTo(fs);
+                using (var fs = new FileStream(imagePath, FileMode.Create)) await info.Image.CopyToAsync(fs);
             }
             _context.Users.Update(user);
             await _context.SaveChangesAsync();

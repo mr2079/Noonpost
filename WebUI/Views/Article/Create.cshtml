@@ -48,6 +48,7 @@
                   class="sign-form widget-form contact_form " method="post" enctype="multipart/form-data">
 
                 <input type="hidden" asp-for=AuthorId value="@User.Identity.Name" />
+                <input type="hidden" asp-for=ArticleImageGuid />
 
                 <div class="form-group d-flex flex-column">
                     <div class="article-img-box">
@@ -86,12 +87,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
         await Html.RenderPartialAsync("_ChangeImageScriptPartial");
+        await Html.RenderPartialAsync("_CreateArticleCKEditorScriptsPartial");
     }
-    <script src="~/assets/js/ckeditor.min.js"></script>
-    <script src="~/assets/js/translations/fa.min.js"></script>
-    <script>
-        ClassicEditor.create(document.querySelector("#Text"), {
-            language: 'fa'
-        });
-    </script>
 }

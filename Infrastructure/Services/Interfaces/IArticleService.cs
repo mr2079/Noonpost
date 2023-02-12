@@ -20,4 +20,6 @@ public interface IArticleService
     Task<bool> DeleteArticleAsync(Article article);
     Task<int> ArticleCommentsCount(Guid articleId);
     Task<int> ArticleAcceptedCommentsCount(Guid articleId);
+    Task<Tuple<string, string>> SaveUploadedArticleImage(IFormFile image);
+    Task<bool> AddArticleImage(Guid articleImageGuid, string imageName);
 }
