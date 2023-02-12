@@ -10,6 +10,9 @@
         height: 50px;
         border-radius: 50%;
     }
+    .text-gold {
+        color: #ffb300;
+    }
 </style>
 
 <div class="table-responsive-md">
@@ -29,7 +32,13 @@
             @foreach (var user in Model.Item1)
             {
                 <tr>
-                    <th scope="row">@j</th>
+                    <th scope="row" class="d-flex flex-column justify-content-center align-items-center">@j
+                        @if (string.Equals(user.Role, "Admin"))
+                        {
+                            <br />
+                            <i class="fa fa-crown text-gold"></i>
+                        }
+                    </th>
                     <td>
                         <a asp-controller="Author" asp-action="Index"
                        asp-route-authorId="@user.Id">

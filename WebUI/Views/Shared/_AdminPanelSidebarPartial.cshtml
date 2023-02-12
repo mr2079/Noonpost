@@ -22,11 +22,17 @@
         <h5>تنظیمات</h5>
     </div>
     <ul class="widget-categories">
-        <li>
-            <a asp-controller="Admin" asp-action="ManageUsers" class="categorie w-100">لیست کاربران</a>
+        <li class="d-flex justify-content-between align-items-center">
+            <a asp-controller="Admin" asp-action="ManageUsers" class="categorie mr-0">لیست کاربران</a>
+            <i class="arrow_left"></i>
         </li>
-        <li>
-            <a asp-controller="Admin" asp-action="ManageArticles" class="categorie w-100">لیست مقالات</a>
+        <li class="d-flex justify-content-between align-items-center">
+            <a asp-controller="Admin" asp-action="ManageArticles" class="categorie mr-0">لیست مقالات</a>
+            <i class="arrow_left"></i>
+        </li>
+        <li class="d-flex justify-content-between align-items-center">
+            <a asp-controller="Admin" asp-action="ManageComments" class="categorie mr-0">دیدگاه&zwnj;های جدید</a>
+            <i class="arrow_left"></i>
         </li>
     </ul>
 </div>

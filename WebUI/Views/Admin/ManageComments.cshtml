@@ -1,0 +1,104 @@
+﻿@model Tuple<List<ArticlesWithNewCommentViewModel>,int,int,int>
+@{
+    Layout = "_AdminLayout";
+    int j = ((Model.Item3 - 1) * Model.Item4) + 1;
+}
+
+@if (Model.Item1.Count > 0)
+{
+    <style>
+        .article-img {
+            max-width: 150px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .article-title {
+            font-size: 12px;
+        }
+
+        .new-comment-count {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            border-radius: 50%;
+            color: white;
+            background-color: red;
+            display:block;
+        }
+    </style>
+
+    <div class="table-responsive-md">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">مقاله</th>
+                    <th scope="col">تعداد دیدگاه</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var article in Model.Item1)
+                {
+                    <tr>
+                        <th scope="row">@j</th>
+                        <td class="d-flex flex-column">
+                            <a asp-controller="Article" asp-action="Show" asp-route-articleId="@article.ArticleId">
+                                <img class="article-img" src="~/images/articles/@article.ArticleImageName" />
+                            </a>
+                            <span class="article-title">@article.ArticleTitle</span>
+                        </td>
+                        <td>
+                            <span class="new-comment-count">
+                                @article.NewCommentsCount
+                                +
+                            </span>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-info"
+                                href="/Article/@article.ArticleId#commentsList">دیدن دیدگاه&zwnj;ها</a>
+                        </td>
+                    </tr>
+
+                    j++;
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <style>
+        .no-content img {
+            max-width: 300px;
+            margin-bottom: 30px;
+        }
+    </style>
+
+    <div class="d-flex justify-content-center align-items-center flex-column no-content">
+        <img src="~/assets/img/no-content.gif" />
+        <h5>کامنت جدیدی وجود ندارد!</h5>
+    </div>
+}
+
+
+@if (Model.Item2 > 1)
+{
+    <!--pagination-->
+    <div class="col-lg-12">
+        <div class="pagination mt--10">
+            <ul class="list-inline">
+                @for (int i = 1; i < Model.Item2 + 1; i++)
+                {
+                    <li class="active">
+                        <a asp-controller="Admin"
+                   asp-action="ManageUsers"
+                   asp-route-page="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <!--/-->
+    </div>
+}

@@ -144,4 +144,28 @@ public class AdminService : IAdminService
         }
         catch { return false; }
     }
+
+    public async Task<Tuple<List<ArticlesWithNewCommentViewModel>, int>> GetArticlesWithNewComments()
+    {
+        var articles = await _context.Articles
+            .Where(a => a.IsAccepted)
+            .Include(a => a.Comments)
+            .Select(a => new ArticlesWithNewCommentViewModel()
+            {
+                ArticleId = a.Id,
+                ArticleTitle = a.Title,
+                ArticleImageName = a.ImageName,
+                NewCommentsCount = a.Comments.Count(c => !c.IsAccepted)
+            })
+            .ToListAsync();
+
+        foreach (var article in articles.ToList())
+        {
+            if (article.NewCommentsCount == 0) articles.Remove(article);
+        }
+
+        int articlesCount = articles.Count();
+
+        return Tuple.Create(articles, articlesCount);
+    }
 }

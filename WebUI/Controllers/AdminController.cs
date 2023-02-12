@@ -19,6 +19,7 @@ public class AdminController : Controller
         return View();
     }
 
+    [HttpGet("/Admin/Users")]
     public async Task<IActionResult> ManageUsers(int page = 1)
     {
         int take = 20;
@@ -44,6 +45,7 @@ public class AdminController : Controller
         await Task.CompletedTask;
     }
 
+    [HttpGet("/Admin/Articles")]
     public async Task<IActionResult> ManageArticles(int page = 1)
     {
         int take = 20;
@@ -92,5 +94,17 @@ public class AdminController : Controller
             return new JsonResult(true);
 
         return new JsonResult(false);
+    }
+
+    [HttpGet("/Admin/Comments")]
+    public async Task<IActionResult> ManageComments(int page = 1)
+    {
+        int take = 20;
+        int skip = take * (page - 1);
+        var result = await _adminService.GetArticlesWithNewComments();
+        var articlesCount = result.Item2;
+        var pagesCount = (articlesCount + take - 1) / take;
+
+        return View(Tuple.Create(result.Item1, pagesCount, page, take));
     }
 }
