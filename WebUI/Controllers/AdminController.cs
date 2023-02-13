@@ -14,6 +14,7 @@ public class AdminController : Controller
         _adminService = adminService;
     }
 
+    [HttpGet("/Admin/Dashboard")]
     public async Task<IActionResult> Index()
     {
         return View(await _adminService.GetAdminDashboardInfo());
