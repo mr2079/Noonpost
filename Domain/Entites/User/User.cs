@@ -5,7 +5,7 @@ namespace Domain.Entites.User;
 public class User : BaseEntity
 {
     [MaxLength(255)]
-    public string? ImageName { get; set; } = "Default.jpg";
+    public string ImageName { get; set; } = "Default.jpg";
     [MaxLength(255)]
     public string FirstName { get; set; } = string.Empty;
     [MaxLength(255)]

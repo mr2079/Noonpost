@@ -18,6 +18,18 @@ public class AdminService : IAdminService
         _baseService = baseService;
     }
 
+    public async Task<AdminDashboardViewModel> GetAdminDashboardInfo()
+    {
+        var dasboard = new AdminDashboardViewModel();
+        dasboard.AllArticlesCount = await _context.Articles.CountAsync();
+        dasboard.AllUsersCount= await _context.Users.CountAsync();
+        dasboard.AllAdminsCount= await _context.Users.CountAsync(u => string.Equals(u.Role, "Admin"));
+        dasboard.UnacceptedArticlesCount = await _context.Articles.CountAsync(a => !a.IsAccepted);
+        dasboard.NewCommentsCount = await _context.Comments.CountAsync(c => !c.IsAccepted);
+
+        return dasboard;
+    }
+
     public async Task<int> AllUsersCount()
         => await _context.Users.CountAsync();
 
@@ -85,7 +97,7 @@ public class AdminService : IAdminService
         {
             var article = await _context.Articles.FindAsync(articleId);
             if (article == null) return false;
-            await _baseService.DeleteArticleImageFile(article.ImageName);
+            await _baseService.DeleteImageFile(article.ImageName, "articles");
             if (article.ImagesGuid != null)
             {
                 var articleImages = await _context.ArticleImages
@@ -94,7 +106,7 @@ public class AdminService : IAdminService
 
                 foreach (var image in articleImages)
                 {
-                    await _baseService.DeleteArticleImageFile(image.ImageName);
+                    await _baseService.DeleteImageFile(image.ImageName, "articles");
                     _context.ArticleImages.Remove(image);
                 }    
             }

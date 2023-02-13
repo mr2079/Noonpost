@@ -1,5 +1,14 @@
 ﻿namespace Infrastructure.ViewModels;
 
+public class AdminDashboardViewModel
+{
+    public int AllArticlesCount { get; set; }
+    public int AllUsersCount { get; set; }
+    public int AllAdminsCount { get; set; }
+    public int NewCommentsCount { get; set; }
+    public int UnacceptedArticlesCount { get; set; }
+}
+
 public class AdminInfoViewModel
 {
     public string FullName { get; set; } = string.Empty;

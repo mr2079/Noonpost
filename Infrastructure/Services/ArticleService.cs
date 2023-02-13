@@ -69,15 +69,12 @@ public class ArticleService : IArticleService
             Title = articleInfo.Title,
             Text = articleInfo.Text,
             Tags = articleInfo.Tags,
-            CreateDate = DateTime.Now,
-            ImageName = NameGenerator.Generate() + Path.GetExtension(image.FileName)
+            CreateDate = DateTime.Now
         };
 
         try
         {
-            var imagePath = Path.Combine(Directory.GetCurrentDirectory() + "\\wwwroot\\images\\articles", article.ImageName);
-            using (var fs = new FileStream(imagePath, FileMode.Create)) await image.CopyToAsync(fs);
-
+            article.ImageName = await _baseService.SaveImageFile(image, "articles");
             await _context.Articles.AddAsync(article);
             await _context.SaveChangesAsync();
 
@@ -115,12 +112,8 @@ public class ArticleService : IArticleService
             article.UpdateDate = DateTime.Now;
             if (newArticleImg != null)
             {
-                await _baseService.DeleteArticleImageFile(article.ImageName);
-
-                article.ImageName = NameGenerator.Generate() + Path.GetExtension(newArticleImg.FileName);
-                var newImagePath = Path
-                    .Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\articles", article.ImageName);
-                using (var fs = new FileStream(newImagePath, FileMode.Create)) await newArticleImg.CopyToAsync(fs);
+                await _baseService.DeleteImageFile(article.ImageName, "articles");
+                article.ImageName = await _baseService.SaveImageFile(newArticleImg, "articles");
             }
             _context.Articles.Update(article);
             await _context.SaveChangesAsync();
@@ -137,7 +130,7 @@ public class ArticleService : IArticleService
     {
         try
         {
-            await _baseService.DeleteArticleImageFile(article.ImageName);
+            await _baseService.DeleteImageFile(article.ImageName, "articles");
             if (article.ImagesGuid != null)
             {
                 var articleImages = await _context.ArticleImages
@@ -146,7 +139,7 @@ public class ArticleService : IArticleService
 
                 foreach (var image in articleImages)
                 {
-                    await _baseService.DeleteArticleImageFile(image.ImageName);
+                    await _baseService.DeleteImageFile(image.ImageName, "articles");
                     _context.ArticleImages.Remove(image);
                 }
             }
@@ -191,11 +184,9 @@ public class ArticleService : IArticleService
     {
         try
         {
-            var imageName = NameGenerator.Generate() + Path.GetExtension(image.FileName);
-            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\articles", imageName);
-            using (var fs = new FileStream(imagePath, FileMode.Create)) await image.CopyToAsync(fs);
+            var imageName = await _baseService.SaveImageFile(image, "articles");
             string imgSrc = $"/images/articles/{imageName}";
-            return Tuple.Create(imgSrc, imagePath);
+            return Tuple.Create(imgSrc, imageName);
         }
         catch { return Tuple.Create("", ""); }
     }

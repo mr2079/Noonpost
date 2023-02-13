@@ -3,22 +3,19 @@ using Domain.Entites.User;
 using Infrastructure.Security;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
-using Microsoft.AspNetCore.Http.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Infrastructure.Generator;
 
 namespace Infrastructure.Services;
 
 public class UserService : IUserService
 {
     private readonly NoonpostDbContext _context;
+    private readonly IBaseService _baseService;
 
-    public UserService(NoonpostDbContext context)
+    public UserService(NoonpostDbContext context, IBaseService baseService)
     {
         _context = context;
+        _baseService = baseService;
     }
 
     public async Task<bool> AddUser(RegisterViewModel model)
@@ -88,18 +85,22 @@ public class UserService : IUserService
             {
                 if (user.ImageName != "Default.jpg")
                 {
-                    var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\users", user.ImageName);
-                    if (System.IO.File.Exists(oldImagePath)) System.IO.File.Delete(oldImagePath);
+                    await _baseService.DeleteImageFile(user.ImageName, "users");
                 }
 
-                user.ImageName = NameGenerator.Generate() + Path.GetExtension(info.Image.FileName);
-                var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images\\users", user.ImageName);
-                using (var fs = new FileStream(imagePath, FileMode.Create)) await info.Image.CopyToAsync(fs);
+                user.ImageName = await _baseService.SaveImageFile(info.Image, "users");
             }
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
             return true;
         }
         catch { return false; }
+    }
+
+    public async Task<Tuple<string,string>> GetUserInfoForNavigationBar(Guid userId)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return Tuple.Create(string.Empty, string.Empty);
+        return Tuple.Create($"{user.FirstName} {user.LastName}", user.ImageName);
     }
 }

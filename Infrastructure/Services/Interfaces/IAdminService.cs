@@ -20,4 +20,5 @@ public interface IAdminService
     Task<bool> AcceptComment(Guid commentId);
     Task<bool> DeleteComment(Guid commentId);
     Task<Tuple<List<ArticlesWithNewCommentViewModel>, int>> GetArticlesWithNewComments();
+    Task<AdminDashboardViewModel> GetAdminDashboardInfo();
 }

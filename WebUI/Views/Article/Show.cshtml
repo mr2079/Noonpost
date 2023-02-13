@@ -1,5 +1,6 @@
 ﻿@model Article
 @{
+    ViewData["Title"] = Model.Title;
     var commentModel = new CreateCommentViewModel();
     ViewData["ArticleId"] = Model.Id;
     int commentsPageCount = int.Parse(ViewData["CommentsPageCount"].ToString());
@@ -24,10 +25,6 @@
 
     .reply-comment-item {
         padding-right: 80px;
-    }
-
-    .d-none {
-        display: none !important;
     }
 
     .pr-50 {
@@ -61,6 +58,13 @@
         left: -46px;
         transform: rotate(-45deg);
     }
+
+    .no-content img {
+        max-width: 200px;
+        margin-bottom: 20px;
+    }
+
+    .text-decoration-underline { text-decoration: underline !important; }
 </style>
 
 <section class="section pt-55 ">
@@ -164,22 +168,33 @@
                     else
                     {
                         <div class="alert alert-info">
-                            برای نوشتن دیدگاه خود ابتدا <a asp-controller="Account"
+                            برای نوشتن دیدگاه خود ابتدا <a class="text-decoration-underline" asp-controller="Account"
                                                        asp-action="Login"
                                                        asp-route-returnUrl="@Context.Request.Path">وارد شوید</a>
                             <br />
-                            در صورتی که حساب کاربری ندارید ابتدا <a asp-controller="Account"
+                            در صورتی که حساب کاربری ندارید ابتدا <a class="text-decoration-underline" asp-controller="Account"
                                                                 asp-action="Register"
                                                                 asp-route-returnUrl="@Context.Request.Path">ثبت نام کنید</a>
                         </div>
                     }
 
+                    @if (articleComments > 0 && acceptedComments > 0)
+                        {
+                            <div class="title">
+                                <h5>@acceptedComments دیدگاه</h5>
+                            </div>
+                        }
+
+                    @if (acceptedComments == 0)
+                    {
+                        <div class="d-flex flex-column justify-content-center align-items-center mt-5 mb-4 no-content">
+                            <img src="~/assets/img/no-content.gif" />
+                            <h5>هیچ دیدگاهی وجود ندارد!</h5>
+                        </div>
+                    }
+
                     @if (articleComments > 0)
                     {
-                        <div class="title">
-                            <h5>@acceptedComments دیدگاه</h5>
-                        </div>
-
                         <ul id="commentsList" class="widget-comments">
                             <partial name="_ShowCommentsPartial" model="Model.Comments" view-data="ViewData"/>
                         </ul>
@@ -204,14 +219,6 @@
                                 <!--/-->
                             </div>
                         }
-                    }
-                    else
-                    {
-                        <div class="alert alert-info">
-                            هیچ دیدگاهی وجود ندارد
-                            <br />
-                            شما اولین نفر باشید
-                        </div>
                     }
                 </div>
             </div>

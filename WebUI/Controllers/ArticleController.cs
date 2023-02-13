@@ -108,7 +108,7 @@ public class ArticleController : Controller
         await _commentService.CreateComment(articleId, parentId, Guid.Parse(User.Identity.Name), text);
 
         return RedirectToAction("Show", "Article",
-            new { articleId = articleId });
+            new { articleId });
     }
 
     [HttpPost]
@@ -117,7 +117,7 @@ public class ArticleController : Controller
         Guid articleId = await _commentService.EditComment(commentId, text);
 
         return RedirectToAction("Show", "Article",
-            new { articleId = articleId });
+            new { articleId });
     }
 
     [HttpPost]
@@ -126,14 +126,14 @@ public class ArticleController : Controller
         await _commentService.DeleteComment(commentId);
 
         return RedirectToAction("Show", "Article",
-            new { articleId = articleId });
+            new { articleId });
     }
 
     public async Task<ActionResult> UploadArticleImage(IFormFile upload, Guid articleImageGuid)
     {
         var result = await _articleService.SaveUploadedArticleImage(upload);
-        await _articleService.AddArticleImage(articleImageGuid, result.Item1);
+        await _articleService.AddArticleImage(articleImageGuid, result.Item2);
 
-        return Json(new { url = result.Item2 });
+        return Json(new { url = result.Item1 });
     }
 }

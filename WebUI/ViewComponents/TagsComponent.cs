@@ -20,7 +20,7 @@ public class TagsComponent : ViewComponent
             .OrderByDescending(a => a.View)
             .Where(a => a.Tags != null)
             .Select(a => a.Tags)
-            .Take(5)
+            .Take(4)
             .ToListAsync();
 
         return await Task.FromResult((IViewComponentResult)View("Tags", tags));

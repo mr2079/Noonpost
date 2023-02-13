@@ -11,4 +11,5 @@ public interface IUserService
     Task<bool> AddUser(RegisterViewModel model);
     Task<bool> UpdateUser(UserPanelInfoViewModel info);
     Task<UserPanelInfoViewModel> GetUserPanelInfo(Guid userId, int take, int skip);
+    Task<Tuple<string, string>> GetUserInfoForNavigationBar(Guid userId);
 }

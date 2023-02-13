@@ -1,6 +1,9 @@
-﻿namespace Infrastructure.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace Infrastructure.Services.Interfaces;
 
 public interface IBaseService
 {
-    Task<bool> DeleteArticleImageFile(string fileName);
+    Task<string> SaveImageFile(IFormFile file, string directoryName);
+    Task<bool> DeleteImageFile(string fileName, string directoryName);
 }
