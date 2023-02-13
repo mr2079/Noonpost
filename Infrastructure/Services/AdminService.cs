@@ -95,6 +95,7 @@ public class AdminService : IAdminService
                 foreach (var image in articleImages)
                 {
                     await _baseService.DeleteArticleImageFile(image.ImageName);
+                    _context.ArticleImages.Remove(image);
                 }    
             }
             _context.Articles.Remove(article);
