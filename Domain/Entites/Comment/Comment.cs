@@ -13,8 +13,8 @@ public class Comment : BaseEntity
     public bool IsAccepted { get; set; } = false;
 
     // Navigation properties
-    public User.User User { get; set; }
-    public Article.Article Article { get; set; }
+    public User.User User { get; set; } = null!;
+    public Article.Article Article { get; set; } = null!;
     [ForeignKey(nameof(ParentId))]
     public Comment? Parent { get; set; }
     public List<Comment>? Replies { get; set; }

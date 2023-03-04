@@ -3,11 +3,20 @@
     var adminInfo = await _adminService.GetAdminInfoForPanel(Guid.Parse(User.Identity.Name));
 }
 
+<style>
+    .admin-img-box {
+        width: 100px;
+        height: 100px;
+    }
+</style>
+
 <!--widget-author-->
 <div class="widget">
     <div class="widget-author">
-        <a asp-controller="User" asp-action="Index" asp-route-userId="@User.Identity.Name" class="image">
-            <img src="~/images/users/@adminInfo.ImageName" alt="@adminInfo.FullName">
+        <a asp-controller="User" asp-action="Index" asp-route-userId="@User.Identity.Name" class="d-flex align-items-center justify-content-center mb-3">
+            <div class="img-box admin-image-box">
+                <img src="~/images/users/@adminInfo.ImageName" alt="@adminInfo.FullName">
+            </div>
         </a>
         <h6>
             <span>@adminInfo.FullName</span>
@@ -28,6 +37,10 @@
         </li>
         <li class="d-flex justify-content-between align-items-center">
             <a asp-controller="Admin" asp-action="ManageUsers" class="categorie mr-0">لیست کاربران</a>
+            <i class="arrow_left"></i>
+        </li>
+        <li class="d-flex justify-content-between align-items-center">
+            <a asp-controller="Admin" asp-action="ManageCategories" class="categorie mr-0">لیست دسته&zwnj;بندی&zwnj;ها</a>
             <i class="arrow_left"></i>
         </li>
         <li class="d-flex justify-content-between align-items-center">

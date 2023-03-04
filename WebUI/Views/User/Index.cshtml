@@ -37,16 +37,6 @@
         align-items: center;
     }
 
-    .user-img-box {
-        margin-bottom: 1rem;
-    }
-
-        .user-img-box img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-        }
-
     .no-content {
         display: flex;
         flex-direction: column;
@@ -60,18 +50,11 @@
             max-width: 300px;
         }
 
-    .user-avatar {
+    .user-img-box {
         width: 100px;
         height: 100px;
-        overflow: hidden;
-        border-radius: 50%;
-        margin: 0 auto 20px auto;
+        margin: 0 auto 1rem auto;
     }
-
-        .user-avatar img {
-            width: 100%;
-            object-fit: cover;
-        }
 </style>
 
 <section class="section author full-space mb-40 pt-55">
@@ -82,8 +65,8 @@
                 <div class="widget-author inner-width">
                     @if (Model.ImageName != null)
                     {
-                        <div class="user-avatar">
-                            <a asp-controller="User" asp-action="Index" asp-route-userId="@Model.UserId" class="image">
+                        <div class="img-box user-img-box">
+                            <a asp-controller="User" asp-action="Index" asp-route-userId="@Model.UserId">
                                 <img src="~/images/users/@Model.ImageName" alt="@(Model.FirstName+" "+Model.LastName)">
                             </a>
                         </div>

@@ -1,4 +1,5 @@
 ﻿using Domain.Entites.Article;
+using Domain.Entites.Category;
 using Domain.Entites.Comment;
 using Domain.Entites.User;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ public class NoonpostDbContext : DbContext
     public DbSet<Article> Articles { get; set; }
     public DbSet<ArticleImage> ArticleImages { get; set; }
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<Category> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,6 +35,10 @@ public class NoonpostDbContext : DbContext
         // Comment
         modelBuilder.Entity<Comment>()
             .Property(c => c.Id).HasColumnName("CommentId");
+
+        // Category
+        modelBuilder.Entity<Category>()
+            .Property(c => c.Id).HasColumnName("CategoryId");
 
 
         base.OnModelCreating(modelBuilder);

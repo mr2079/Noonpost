@@ -44,7 +44,15 @@ public class UserService : IUserService
         => await _context.Users.FirstOrDefaultAsync(u => string.Equals(u.Mobile, mobile));
 
     public async Task<UserPanelInfoViewModel> GetUserPanelInfo(Guid userId, int take, int skip)
-        => await _context.Users
+    {
+        var articles = await _context.Articles
+            .Include(a => a.Category)
+            .Where(a => a.AuthorId == userId)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
+
+        return await _context.Users
             .Include(u => u.Articles)
             .Select(u => new UserPanelInfoViewModel()
             {
@@ -55,13 +63,10 @@ public class UserService : IUserService
                 Email = u.Email,
                 ImageName = u.ImageName,
                 Description = u.Description,
-                Articles = u.Articles
-                    .OrderByDescending(a => a.CreateDate)
-                    .Skip(skip)
-                    .Take(take)
-                    .ToList()
+                Articles = articles
             })
             .FirstOrDefaultAsync(u => Equals(u.UserId, userId));
+    }
 
     public async Task<bool> IsMobileExists(string mobile)
         => await _context.Users.AnyAsync(u => string.Equals(u.Mobile, mobile));
@@ -97,7 +102,7 @@ public class UserService : IUserService
         catch { return false; }
     }
 
-    public async Task<Tuple<string,string>> GetUserInfoForNavigationBar(Guid userId)
+    public async Task<Tuple<string, string>> GetUserInfoForNavigationBar(Guid userId)
     {
         var user = await _context.Users.FindAsync(userId);
         if (user == null) return Tuple.Create(string.Empty, string.Empty);

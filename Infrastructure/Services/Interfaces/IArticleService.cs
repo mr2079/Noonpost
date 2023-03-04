@@ -1,4 +1,5 @@
 ﻿using Domain.Entites.Article;
+using Domain.Entites.Category;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Http;
 
@@ -9,7 +10,6 @@ public interface IArticleService
     Task<int> ArticlesCountAsync();
     Task<List<Article>> GetArticlesForSlider();
     Task<List<Article>> GetArticlesForIndex(int take, int skip);
-    Task<List<Article>> GetArticlesByFilter(string filter, int take, int skip);
 
     Task<bool> IsExistsArticle(Guid articleId);
     Task<Article> GetArticleByIdAsync(Guid articleId);
@@ -22,4 +22,8 @@ public interface IArticleService
     Task<int> ArticleAcceptedCommentsCount(Guid articleId);
     Task<Tuple<string, string>> SaveUploadedArticleImage(IFormFile image);
     Task<bool> AddArticleImage(Guid articleImageGuid, string imageName);
+    Task<List<Category>> GetAllCategoriesAsync();
+    Task<List<Category>> GetCategoriesForNavBarAsync();
+    Task<Tuple<List<Article>, int>> GetArticlesByFilter(string filter, int take, int skip);
+    Task<Tuple<List<Article>, int>> GetArticlesByCategoryIdAsync(Guid categoryId, int take, int skip);
 }

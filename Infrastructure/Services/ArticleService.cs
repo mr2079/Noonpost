@@ -1,5 +1,6 @@
 ﻿using Application.Context;
 using Domain.Entites.Article;
+using Domain.Entites.Category;
 using Infrastructure.Generator;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
@@ -31,10 +32,22 @@ public class ArticleService : IArticleService
 
     public async Task<Article> GetArticleByIdAsync(Guid articleId) => await _context.Articles.FindAsync(articleId);
 
+    public async Task<Tuple<List<Article>, int>> GetArticlesByCategoryIdAsync(Guid categoryId, int take, int skip)
+    {
+        var articles = _context.Articles
+            .Include(a => a.User)
+            .Include(a => a.Category)
+             .Where(a => a.CategoryId == categoryId)
+             .OrderByDescending(a => a.CreateDate);
+
+        return Tuple.Create(await articles.Skip(skip).Take(take).ToListAsync(), await articles.CountAsync());
+    }
+
     public async Task<Article> GetArticleForShowAsync(Guid articleId, int take, int skip)
     {
         var model = await _context.Articles
             .Include(a => a.User)
+            .Include(a => a.Category)
             .FirstOrDefaultAsync(a => a.Id == articleId);
 
         model.View += 1;
@@ -65,6 +78,7 @@ public class ArticleService : IArticleService
         var article = new Article()
         {
             AuthorId = articleInfo.AuthorId,
+            CategoryId = articleInfo.CategoryId,
             ImagesGuid = articleInfo.ArticleImageGuid,
             Title = articleInfo.Title,
             Text = articleInfo.Text,
@@ -92,11 +106,13 @@ public class ArticleService : IArticleService
             .Select(a => new EditArticleViewModel()
             {
                 ArticleId = a.Id,
+                CategoryId = a.CategoryId,
                 AuthorId = a.AuthorId,
                 ImageName = a.ImageName,
                 Title = a.Title,
                 Text = a.Text,
                 Tags = a.Tags,
+                Categories = GetAllCategoriesAsync().Result
             })
             .FirstOrDefaultAsync(a => a.ArticleId == articleId);
     }
@@ -106,8 +122,9 @@ public class ArticleService : IArticleService
         try
         {
             var article = await _context.Articles.FindAsync(edit.ArticleId);
+            article.CategoryId = edit.CategoryId;
             article.Title = edit.Title;
-            article.Text  = edit.Text;
+            article.Text = edit.Text;
             article.Tags = edit.Tags;
             article.UpdateDate = DateTime.Now;
             if (newArticleImg != null)
@@ -166,19 +183,22 @@ public class ArticleService : IArticleService
     public async Task<List<Article>> GetArticlesForIndex(int take, int skip)
         => await _context.Articles
             .Include(a => a.User)
+            .Include(a => a.Category)
             .Where(a => a.IsAccepted)
             .OrderByDescending(a => a.CreateDate)
             .Skip(skip)
             .Take(take)
             .ToListAsync();
 
-    public async Task<List<Article>> GetArticlesByFilter(string filter, int take, int skip)
-        => await _context.Articles
+    public async Task<Tuple<List<Article>, int>> GetArticlesByFilter(string filter, int take, int skip)
+    {
+        var articles = _context.Articles
             .Include(a => a.User)
-            .Where(a => (a.Title.Contains(filter) || a.Tags.Contains(filter)) && a.IsAccepted)
-            .Skip(skip)
-            .Take(take)
-            .ToListAsync();
+            .Include(a => a.Category)
+            .Where(a => (a.Title.Contains(filter) || a.Tags.Contains(filter)) && a.IsAccepted);
+
+        return Tuple.Create(await articles.Skip(skip).Take(take).ToListAsync(), await articles.CountAsync());
+    }
 
     public async Task<Tuple<string, string>> SaveUploadedArticleImage(IFormFile image)
     {
@@ -205,6 +225,20 @@ public class ArticleService : IArticleService
             return true;
         }
         catch { return false; }
+    }
+
+    public async Task<List<Category>> GetAllCategoriesAsync()
+    {
+        return await _context.Categories.ToListAsync();
+    }
+
+    public async Task<List<Category>> GetCategoriesForNavBarAsync()
+    {
+        return await _context.Categories
+            .Include(c => c.Articles)
+            .OrderByDescending(c => c.Articles.Count())
+            .Take(10)
+            .ToListAsync();
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using Domain.Entites.Article;
+using Domain.Entites.Category;
 using Domain.Entites.User;
 using Infrastructure.ViewModels;
 
@@ -21,4 +22,8 @@ public interface IAdminService
     Task<bool> DeleteComment(Guid commentId);
     Task<Tuple<List<ArticlesWithNewCommentViewModel>, int>> GetArticlesWithNewComments();
     Task<AdminDashboardViewModel> GetAdminDashboardInfo();
+    Task<List<CategoryViewModel>> GetAllCategoriesAsync();
+    Task<int> AllCategoriesCount();
+    Task<bool> CreateCategoryAsync(string title);
+    Task<bool> UpdateCategoryAsync(Guid Id, string title);
 }

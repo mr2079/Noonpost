@@ -44,10 +44,10 @@ public class HomeController : Controller
         int take = 6;
         int skip = take * (page - 1);
 
-        var articles = await _articleService.GetArticlesByFilter(filter, take, skip);
+        var result = await _articleService.GetArticlesByFilter(filter, take, skip);
 
-        var pageCount = (articles.Count + take - 1) / take;
+        var pageCount = (result.Item2 + take - 1) / take;
 
-        return View(Tuple.Create(articles, pageCount));
+        return View(Tuple.Create(result.Item1, pageCount));
     }
 }

@@ -19,26 +19,9 @@
     }
 
     .user-img-box {
-        margin-bottom: 1rem;
-    }
-
-        .user-img-box img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-        }
-
-    .user-avatar {
         width: 100px;
         height: 100px;
-        overflow: hidden;
-        border-radius: 50%;
-        margin: 0 auto 20px auto;
-    }
-
-    .user-avatar img {
-        width: 100%;
-        object-fit: cover;
+        margin: 0 auto 1rem auto;
     }
 </style>
 
@@ -50,11 +33,12 @@
                 <div class="widget-author inner-width">
                     @if (Model.ImageName != null)
                     {
-                        <div class="user-avatar">
-                            <a asp-controller="Author" asp-action="Index" asp-route-authorId="@Model.AuthorId" class="image">
+                        <div class="img-box user-img-box">
+                            <a asp-controller="Author" asp-action="Index" asp-route-authorId="@Model.AuthorId">
                                 <img src="~/images/users/@Model.ImageName" alt="@(Model.FirstName+" "+Model.LastName)">
                             </a>
-                        </div>
+                            </div>
+                        
                     }
                     <h6><span>سلام، من @(Model.FirstName + " " + Model.LastName) هستم!</span></h6>
                     @if (Model.Description != null)
@@ -68,37 +52,6 @@
                     {
                         <div class="link">@ViewData["ArticlesCount"] مقاله</div>
                     }
-
-
-                    @*<div class="social-media">
-                    <ul class="list-inline">
-                    <li>
-                    <a href="#" class="color-facebook">
-                    <i class="fab fa-facebook"></i>
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" class="color-instagram">
-                    <i class="fab fa-instagram"></i>
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" class="color-twitter">
-                    <i class="fab fa-twitter"></i>
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" class="color-youtube">
-                    <i class="fab fa-youtube"></i>
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" class="color-pinterest">
-                    <i class="fab fa-pinterest"></i>
-                    </a>
-                    </li>
-                    </ul>
-                    </div>*@
                 </div>
             </div>
         </div>

@@ -18,7 +18,17 @@ public class AuthorService : IAuthorService
         => await _context.Articles.CountAsync(a => Equals(a.AuthorId, authorId));
 
     public async Task<AuthorInfoViewModel> GetAuthorInfoAsync(Guid authorId, int take, int skip)
-        => await _context.Users
+    {
+        var articles = await _context.Articles
+            .Include(a => a.User)
+            .Include(a => a.Category)
+            .Where(a => a.AuthorId == authorId)
+            .OrderByDescending(a => a.CreateDate)
+            .Skip(skip)
+            .Take(take)
+            .ToListAsync();
+
+        return await _context.Users
             .Include(u => u.Articles)
             .ThenInclude(a => a.User)
             .Where(u => Equals(u.Id, authorId))
@@ -30,12 +40,8 @@ public class AuthorService : IAuthorService
                 ImageName = u.ImageName,
                 Email = u.Email,
                 Description = u.Description,
-                Articles = u.Articles
-                    .Where(a => a.IsAccepted)
-                    .OrderByDescending(a => a.CreateDate)
-                    .Skip(skip)
-                    .Take(take)
-                    .ToList()
+                Articles = articles
             })
             .FirstOrDefaultAsync();
+    }
 }

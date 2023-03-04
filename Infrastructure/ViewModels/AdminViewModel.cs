@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.ViewModels;
+﻿using Domain.Entites.Category;
+
+namespace Infrastructure.ViewModels;
 
 public class AdminDashboardViewModel
 {
@@ -21,4 +23,10 @@ public class ArticlesWithNewCommentViewModel
     public string ArticleTitle { get; set; } = string.Empty;
     public string ArticleImageName { get; set; } = string.Empty;
     public int NewCommentsCount { get; set; }
+}
+
+public class CategoryViewModel
+{
+    public Category Category { get; set; } = new();
+    public int CategoryArticlesCount { get; set; } = 0;
 }

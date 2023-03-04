@@ -1,4 +1,4 @@
-﻿@model Tuple<List<Article>, int>
+﻿@model Tuple<List<Article>, int, Guid, string>
 
 <style>
     .ellipsis-2 {
@@ -34,7 +34,13 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="categorie-title">
-                    <h3>جستجو : <span>@Context.Request.Query["filter"]</span></h3>
+                    <small>
+                        <a asp-controller="Home"
+                           asp-action="Index">صفحه نخست</a>
+                        <span class="arrow_carrot-left"></span>
+                        @Model.Item4
+                    </small>
+                    <h3>دسته&zwnj;بندی : <span>@Model.Item4</span> </h3>
                 </div>
             </div>
         </div>
@@ -43,7 +49,7 @@
 
 @if (Model.Item1.Count > 0)
 {
-    <section class="section pt-85 mt-0">
+    <section class="section">
         <div class="container-fluid">
             <div class="row">
                 @foreach (var article in Model.Item1)
@@ -56,12 +62,6 @@
                                 </a>
                             </div>
                             <div class="post-card-content">
-                                <a class="categorie"
-                           asp-controller="Article"
-                           asp-action="Category"
-                           asp-route-categoryId="@article.Category.Id"
-                           asp-route-categoryTitle="@article.Category.Title">@article.Category.Title</a>
-
                                 <h5>
                                     <a asp-controller="Article" asp-action="Show"
                                asp-route-articleId="@article.Id">@article.Title</a>
@@ -105,9 +105,10 @@
                             @for (int i = 1; i < Model.Item2 + 1; i++)
                             {
                                 <li class="active">
-                                    <a asp-controller="Home"
-                           asp-action="Search"
-                           asp-route-filter="@Context.Request.Query["filter"]"
+                                    <a asp-controller="Article"
+                           asp-action="Category"
+                           asp-route-categoryId="@Model.Item3"
+                           asp-route-categoryTitle="@Model.Item4"
                            asp-route-page="@i">@i</a>
                                 </li>
                             }

@@ -1074,7 +1074,7 @@ input:checked + .slider {
     text-align: center;
 }
 
-    .widget-author .image {
+    /*.widget-author .image {
         position: relative;
         width: 100px;
         height: 100px;
@@ -1085,7 +1085,7 @@ input:checked + .slider {
         height: 100px;
         border-radius: 50%;
         margin-bottom: 15px;
-    }
+    }*/
 
     .widget-author h6 {
         font-size: 20px;
@@ -1288,11 +1288,12 @@ input:checked + .slider {
             border-radius: 50%;
             margin-left: 20px;
         }
-        .widget-comments .comment-item .user-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+
+            .widget-comments .comment-item .user-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
 
         .widget-comments .comment-item .content p {
             margin-bottom: 15px;
@@ -1652,12 +1653,12 @@ input:checked + .slider {
     margin-bottom: 30px;
 }
 
-.post-single-info img {
+/*.post-single-info img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
     margin-right: 7px;
-}
+}*/
 
 .post-single-info li {
     margin-bottom: 0;
@@ -2490,6 +2491,10 @@ input:checked + .slider {
     }
 }
 
+.table table {
+    width: 100%;
+}
+
 /* ------------------------------
 		Dark Mode
 ------------------------------ */
@@ -2506,7 +2511,10 @@ input:checked + .slider {
     .dark .about-us .description .quote,
     .dark .loading,
     .dark .custom-control-label::before,
-    .dark .social-media a:hover {
+    .dark .social-media a:hover,
+    .dark table,
+    .dark .modal-content,
+    .dark .swal2-modal {
         background-color: #1d1d1d;
     }
 
@@ -2556,7 +2564,11 @@ input:checked + .slider {
         .dark .social-media a i:hover,
         .dark .post-single-footer .tags ul li a:hover,
         .dark .widget-tags ul li a:hover,
-        .dark .sign-form .sign-controls .btn-link {
+        .dark .sign-form .sign-controls .btn-link,
+        .dark table,
+        .dark .form-control,
+        .dark .close-modal,
+        .dark .swal2-modal {
             color: #d9d9d9;
         }
 
@@ -2805,3 +2817,14 @@ body.rtl {
     left: 30px;
     right: auto;
 }
+
+.img-box {
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+    .img-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }

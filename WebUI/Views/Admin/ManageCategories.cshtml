@@ -1,0 +1,133 @@
+﻿@model Tuple<List<CategoryViewModel>, int, int, int>
+@{
+    Layout = "_AdminLayout";
+    int j = ((Model.Item3 - 1) * Model.Item4) + 1;
+}
+
+<style>
+    .articles-count {
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        border-radius: 50%;
+        color: white;
+        background-color: red;
+        display: block;
+    }
+</style>
+
+<a onclick="addCategory()"
+   href="javascript:void(0)"
+   class="btn btn-success">افزودن دسته&zwnj;بندی</a>
+
+<div class="table-responsive-md mt-3">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">عنوان</th>
+                <th scope="col">تعداد مقاله</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model.Item1)
+            {
+                <tr>
+                    <th scope="row">@j</th>
+                    <td>
+                        @category.Category.Title
+                    </td>
+                    <td>
+                        <span class="articles-count">
+                            @category.CategoryArticlesCount
+                            +
+                        </span>
+                    </td>
+                    <td>
+                        <a onclick="editCategory(this)"
+                            class="btn btn-sm btn-warning"
+                           href="javascript:void(0)">ویرایش
+                            <span class="d-none category-id">@category.Category.Id</span>
+                            <span class="d-none category-title">@category.Category.Title</span>
+                        </a>
+
+                        <a class="btn btn-sm btn-danger"
+                           href="javascript:void(0)">حذف</a>
+                    </td>
+                </tr>
+
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@if (Model.Item2 > 1)
+{
+    <!--pagination-->
+    <div class="col-lg-12">
+        <div class="pagination mt--10">
+            <ul class="list-inline">
+                @for (int i = 1; i < Model.Item2 + 1; i++)
+                {
+                    <li class="active">
+                        <a asp-controller="Admin"
+                   asp-action="ManageUsers"
+                   asp-route-page="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <!--/-->
+    </div>
+}
+
+
+@section Scripts{
+    <script>
+        const addCategory = () => {
+            Swal.fire({
+                title: 'نام دسته بندی را وارد کنید',
+                html: `<form id="addCategoryForm" method="post" action="/Admin/CreateCategory">` +
+                    `<input class="form-control" name="categoryTitle" placeholder="نام دسته بندی" />` +
+                    `</form>`,
+                showConfirmButton: true,
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'ثبت',
+                confirmButtonColor: 'green',
+                cancelButtonText: 'انصراف',
+            })
+                .then(result => {
+                    if (result.isConfirmed) {
+                        $("#addCategoryForm").submit();
+                    }
+                });
+        }
+
+        const editCategory = (t) => {
+            var categoryId = $(t).children('.category-id').html();
+            var categoryTitle = $(t).children('.category-title').html();
+            Swal.fire({
+                title: 'نام دسته بندی را ویرایش کنید',
+                html: `<form id="editCategoryForm" method="post" action="/Admin/UpdateCategory">` +
+                    `<input type="hidden" name="categoryId" value="${categoryId}"/>` +
+                    `<input class="form-control" name="categoryTitle" value="${categoryTitle}"/>` +
+                    `</form>`,
+                showConfirmButton: true,
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'ویرایش',
+                confirmButtonColor: 'yellow',
+                cancelButtonText: 'انصراف',
+            })
+                .then(result => {
+                    if (result.isConfirmed) {
+                        $("#editCategoryForm").submit();
+                    }
+                });
+        }
+    </script>
+}

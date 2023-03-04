@@ -2,25 +2,29 @@
 using Domain.Entites.Comment;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 
 namespace WebUI.Controllers;
 
+[Authorize(Roles = "Admin,Author")]
 public class ArticleController : Controller
 {
     private readonly IArticleService _articleService;
     private readonly ICommentService _commentService;
 
     public ArticleController(IArticleService articleService,
-        ICommentService commentService)
+        ICommentService commentService,
+        IAdminService adminService)
     {
         _articleService = articleService;
         _commentService = commentService;
     }
 
+    [AllowAnonymous]
     [HttpGet("/Article/{articleId}")]
-    public async Task<IActionResult> Show(Guid articleId, int commentPage = 1)
+    public async Task<IActionResult> Show(Guid articleId, Guid? articleTitle, int commentPage = 1)
     {
         if (articleId == Guid.Empty) return NotFound();
         int takeComments = 5;
@@ -35,9 +39,14 @@ public class ArticleController : Controller
     }
 
     [HttpGet("/Article/Create")]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        var model = new CreateArticleViewModel { ArticleImageGuid = Guid.NewGuid() };
+        var model = new CreateArticleViewModel
+        {
+            ArticleImageGuid = Guid.NewGuid(),
+            Categories = await _articleService.GetAllCategoriesAsync(),
+        };
+
         return View(model);
     }
 
@@ -45,9 +54,12 @@ public class ArticleController : Controller
     public async Task<IActionResult> Create(CreateArticleViewModel articleInfo, IFormFile Image)
     {
         if (!ModelState.IsValid) return View(articleInfo);
-        if (articleInfo.Text == null)
+        if (articleInfo.Text == null || articleInfo.CategoryId == Guid.Empty)
         {
-            ModelState.AddModelError("Text", "فیلد متن مقاله الزامی می باشد");
+            if (articleInfo.CategoryId == Guid.Empty)
+                ModelState.AddModelError("CategoryId", "فیلد عنوان دسته بندی الزامی می باشد");
+            if (articleInfo.Text == null)
+                ModelState.AddModelError("Text", "فیلد متن مقاله الزامی می باشد");
             return View(articleInfo);
         }
         await _articleService.CreateArticleAsync(articleInfo, Image);
@@ -129,11 +141,25 @@ public class ArticleController : Controller
             new { articleId });
     }
 
+    [HttpPost]
     public async Task<ActionResult> UploadArticleImage(IFormFile upload, Guid articleImageGuid)
     {
         var result = await _articleService.SaveUploadedArticleImage(upload);
         await _articleService.AddArticleImage(articleImageGuid, result.Item2);
 
         return Json(new { url = result.Item1 });
+    }
+
+    [AllowAnonymous]
+    [HttpGet("/Category/{categoryTitle}/{categoryId}")]
+    public async Task<IActionResult> Category(Guid categoryId, string categoryTitle, int page = 1)
+    {
+        int take = 20;
+        int skip = take * (page - 1);
+
+        var result = await _articleService.GetArticlesByCategoryIdAsync(categoryId, take, skip);
+        var pagesCount = (result.Item2 + take - 1) / take;
+
+        return View(Tuple.Create(result.Item1, pagesCount, categoryId, categoryTitle));
     }
 }

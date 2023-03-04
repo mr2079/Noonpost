@@ -108,4 +108,32 @@ public class AdminController : Controller
 
         return View(Tuple.Create(result.Item1, pagesCount, page, take));
     }
+
+    [HttpGet("/Admin/Categories")]
+    public async Task<IActionResult> ManageCategories(int page = 1)
+    {
+        int take = 20;
+        int skip = take * (page - 1);
+        var model = await _adminService.GetAllCategoriesAsync();
+        int categoriesCount = await _adminService.AllCategoriesCount();
+        int pagesCount = (categoriesCount + take - 1) / take;
+
+        return View(Tuple.Create(model, pagesCount, page, take));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateCategory(string categoryTitle)
+    {
+        await _adminService.CreateCategoryAsync(categoryTitle);
+
+        return RedirectToAction("ManageCategories", "Admin");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> UpdateCategory(Guid categoryId, string categoryTitle)
+    {
+        await _adminService.UpdateCategoryAsync(categoryId, categoryTitle);
+
+        return RedirectToAction("ManageCategories", "Admin");
+    }
 }

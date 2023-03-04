@@ -1,5 +1,6 @@
 ﻿using Application.Context;
 using Domain.Entites.Article;
+using Domain.Entites.Category;
 using Domain.Entites.User;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
@@ -20,14 +21,14 @@ public class AdminService : IAdminService
 
     public async Task<AdminDashboardViewModel> GetAdminDashboardInfo()
     {
-        var dasboard = new AdminDashboardViewModel();
-        dasboard.AllArticlesCount = await _context.Articles.CountAsync();
-        dasboard.AllUsersCount= await _context.Users.CountAsync();
-        dasboard.AllAdminsCount= await _context.Users.CountAsync(u => string.Equals(u.Role, "Admin"));
-        dasboard.UnacceptedArticlesCount = await _context.Articles.CountAsync(a => !a.IsAccepted);
-        dasboard.NewCommentsCount = await _context.Comments.CountAsync(c => !c.IsAccepted);
+        var dashboard = new AdminDashboardViewModel();
+        dashboard.AllArticlesCount = await _context.Articles.CountAsync();
+        dashboard.AllUsersCount = await _context.Users.CountAsync();
+        dashboard.AllAdminsCount = await _context.Users.CountAsync(u => string.Equals(u.Role, "Admin"));
+        dashboard.UnacceptedArticlesCount = await _context.Articles.CountAsync(a => !a.IsAccepted);
+        dashboard.NewCommentsCount = await _context.Comments.CountAsync(c => !c.IsAccepted);
 
-        return dasboard;
+        return dashboard;
     }
 
     public async Task<int> AllUsersCount()
@@ -35,6 +36,9 @@ public class AdminService : IAdminService
 
     public async Task<int> AllArticlesCount()
         => await _context.Articles.CountAsync();
+
+    public async Task<int> AllCategoriesCount()
+        => await _context.Categories.CountAsync();
 
     public async Task<AdminInfoViewModel> GetAdminInfoForPanel(Guid adminId)
         => await _context.Users
@@ -108,7 +112,7 @@ public class AdminService : IAdminService
                 {
                     await _baseService.DeleteImageFile(image.ImageName, "articles");
                     _context.ArticleImages.Remove(image);
-                }    
+                }
             }
             _context.Articles.Remove(article);
             await _context.SaveChangesAsync();
@@ -195,4 +199,44 @@ public class AdminService : IAdminService
 
         return Tuple.Create(articles, articlesCount);
     }
+
+    public async Task<List<CategoryViewModel>> GetAllCategoriesAsync()
+    {
+        return await _context.Categories
+            .Include(c => c.Articles)
+            .Select(c => new CategoryViewModel()
+            {
+                Category = c,
+                CategoryArticlesCount = c.Articles.Count()
+            })
+            .ToListAsync();
+    }
+
+    public async Task<bool> CreateCategoryAsync(string title)
+    {
+        try
+        {
+            var category = new Category { Title = title };
+            await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch { return false; }
+    }
+
+    public async Task<bool> UpdateCategoryAsync(Guid Id, string title)
+    {
+        try
+        {
+            var category = await _context.Categories.FindAsync(Id);
+            if (category == null) return false;
+            category.Title = title;
+            category.UpdateDate = DateTime.Now;
+            _context.Categories.Update(category);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch { return false; }
+    }
+
 }

@@ -64,7 +64,21 @@
         margin-bottom: 20px;
     }
 
-    .text-decoration-underline { text-decoration: underline !important; }
+    .text-decoration-underline {
+        text-decoration: underline !important;
+    }
+
+    .author-img-box {
+        width: 100px;
+        height: 100px;
+        margin: 0 auto 1rem auto;
+    }
+
+    .author-img-box-sm {
+        width: 40px;
+        height: 40px;
+        margin-left: 8px;
+    }
 </style>
 
 <section class="section pt-55 ">
@@ -77,26 +91,33 @@
                         <img src="~/images/articles/@Model.ImageName" alt="@Model.Title">
                     </div>
                     <div class="post-single-content">
+                        <a class="categorie"
+                           asp-controller="Article"
+                           asp-action="Category"
+                           asp-route-categoryId="@Model.Category.Id"
+                           asp-route-categoryTitle="@Model.Category.Title">@Model.Category.Title</a>
                         <h4>@Model.Title</h4>
                         <div class="post-single-info">
-                            <ul class="list-inline">
+                            <ul class="list-inline d-flex align-items-center">
                                 @if (Model.User.ImageName != null)
                                 {
                                     <li>
-                                        <a asp-controller="Author"
-                                       asp-action="Index"
-                                       asp-route-authorId="@Model.User.Id">
-                                            <img src="~/images/users/@Model.User.ImageName"
-                                             alt="@(Model.User.FirstName+" "+Model.User.LastName)">
-                                        </a>
+                                        <div class="img-box author-img-box-sm">
+                                            <a asp-controller="Author"
+                                           asp-action="Index"
+                                           asp-route-authorId="@Model.User.Id">
+                                                <img src="~/images/users/@Model.User.ImageName"
+                                                     alt="@(Model.User.FirstName+" "+Model.User.LastName)">
+                                            </a>
+                                        </div>
                                     </li>
                                 }
                                 <li>
                                     <a asp-controller="Author"
                                        asp-action="Index"
                                        asp-route-authorId="@Model.User.Id">
-                                       @(Model.User.FirstName + " " + Model.User.LastName)
-                                   </a>
+                                        @(Model.User.FirstName + " " + Model.User.LastName)
+                                    </a>
                                 </li>
                                 <li class="dot"></li>
                                 <li>@Model.CreateDate.ToShamsi()</li>
@@ -112,25 +133,26 @@
                     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
                     {
                         <div class="mt-4">
-                            @if(!Model.IsAccepted)
+                            @if (!Model.IsAccepted)
                             {
                                 <a asp-controller="Admin"
-                                asp-action="AcceptArticle"
-                                asp-route-articleId="@Model.Id"
-                                    class="btn btn-success">تایید مقاله</a>
+                           asp-action="AcceptArticle"
+                           asp-route-articleId="@Model.Id"
+                                   class="btn btn-success">تایید مقاله</a>
                             }
                             else
                             {
                                 <a asp-controller="Admin"
                            asp-action="DeclineArticle"
                            asp-route-articleId="@Model.Id"
-                           class="btn btn-warning">عدم تایید مقاله</a>
+                                   class="btn btn-warning">عدم تایید مقاله</a>
                             }
                             <a href="javascript:void(0)"
-                            onclick="deleteArticle(this)"
-                            class="btn btn-danger">حذف مقاله
-                            <span class="d-none article-id">@Model.Id</span>
-                        </a>
+                               onclick="deleteArticle(this)"
+                               class="btn btn-danger">
+                                حذف مقاله
+                                <span class="d-none article-id">@Model.Id</span>
+                            </a>
                         </div>
                     }
 
@@ -179,11 +201,11 @@
                     }
 
                     @if (articleComments > 0 && acceptedComments > 0)
-                        {
-                            <div class="title">
-                                <h5>@acceptedComments دیدگاه</h5>
-                            </div>
-                        }
+                    {
+                        <div class="title">
+                            <h5>@acceptedComments دیدگاه</h5>
+                        </div>
+                    }
 
                     @if (acceptedComments == 0)
                     {
@@ -196,7 +218,7 @@
                     @if (articleComments > 0)
                     {
                         <ul id="commentsList" class="widget-comments">
-                            <partial name="_ShowCommentsPartial" model="Model.Comments" view-data="ViewData"/>
+                            <partial name="_ShowCommentsPartial" model="Model.Comments" view-data="ViewData" />
                         </ul>
 
                         @if (commentsPageCount > 1)
@@ -228,12 +250,14 @@
                     <div class="widget-author">
                         @if (Model.User.ImageName != null)
                         {
-                            <a asp-controller="Author"
-                           asp-action="Index"
-                           asp-route-authorId="@Model.User.Id" class="image">
-                                <img src="~/images/users/@Model.User.ImageName"
-                                 alt="@(Model.User.FirstName+" "+Model.User.LastName)">
-                            </a>
+                            <div class="img-box author-img-box">
+                                <a asp-controller="Author"
+                               asp-action="Index"
+                               asp-route-authorId="@Model.User.Id" class="image">
+                                    <img src="~/images/users/@Model.User.ImageName"
+                                         alt="@(Model.User.FirstName+" "+Model.User.LastName)">
+                                </a>
+                            </div>
                         }
                         <h6>
                             <span>@(Model.User.FirstName + " " + Model.User.LastName)</span>

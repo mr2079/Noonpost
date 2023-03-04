@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.Entites.Category;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace Infrastructure.ViewModels;
@@ -6,6 +7,7 @@ namespace Infrastructure.ViewModels;
 public class CreateArticleViewModel
 {
     public Guid AuthorId { get; set; }
+    public Guid CategoryId { get; set; }
     public Guid? ArticleImageGuid { get; set; }
 
     [Display(Name = "عنوان مقاله")]
@@ -22,11 +24,14 @@ public class CreateArticleViewModel
 
     [Display(Name = "برچسب ها")]
     public string? Tags { get; set; }
+
+    public List<Category> Categories { get; set; } = new();
 }
 
 public class EditArticleViewModel
 {
     public Guid ArticleId { get; set; }
+    public Guid CategoryId { get; set; }
     public Guid AuthorId { get; set; }
 
     [Display(Name = "عنوان مقاله")]
@@ -45,6 +50,8 @@ public class EditArticleViewModel
 
     [Display(Name = "برچسب ها")]
     public string? Tags { get; set; }
+
+    public List<Category> Categories { get; set; } = new();
 }
 
 public class LatestArticleViewModel
