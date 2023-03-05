@@ -52,7 +52,7 @@
                         <div class="post-card">
                             <div class="post-card-image">
                                 <a asp-controller="Article" asp-action="Show" asp-route-articleId="@article.Id">
-                                    <img src="~/images/articles/@article.ImageName" alt="@article.Title">
+                                    <img src="~/images/articles/thumb400/@article.ImageName" alt="@article.Title">
                                 </a>
                             </div>
                             <div class="post-card-content">
@@ -74,7 +74,7 @@
                                                 <a asp-controller="Author"
                                            asp-action="Index"
                                            asp-route-authorId="@article.User.Id">
-                                                    <img src="~/images/users/@article.User.ImageName"
+                                                    <img src="~/images/users/thumb60/@article.User.ImageName"
                                                          alt="@(article.User.FirstName+" "+article.User.LastName)">
                                                 </a>
                                             </div>

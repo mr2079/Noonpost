@@ -62,14 +62,14 @@ public class AdminController : Controller
     {
         await _adminService.AcceptArticle(articleId);
         return RedirectToAction("Show", "Article",
-            new { articleId = articleId });
+            new { articleId });
     }
 
     public async Task<IActionResult> DeclineArticle(Guid articleId)
     {
         await _adminService.DeclineArticle(articleId);
         return RedirectToAction("Show", "Article",
-            new { articleId = articleId });
+            new { articleId });
     }
 
     [HttpPost]

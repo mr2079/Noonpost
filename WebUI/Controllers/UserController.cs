@@ -1,9 +1,11 @@
 ﻿using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebUI.Controllers;
 
+[Authorize]
 public class UserController : Controller
 {
     private readonly IAuthorService _authorService;

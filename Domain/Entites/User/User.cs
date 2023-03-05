@@ -10,6 +10,13 @@ public class User : BaseEntity
     public string FirstName { get; set; } = string.Empty;
     [MaxLength(255)]
     public string LastName { get; set; } = string.Empty;
+    public string FullName
+    {
+        get
+        {
+            return $"{FirstName} {LastName}";
+        }
+    }
     [MaxLength(255)]
     public string Mobile { get; set; } = string.Empty;
     [MaxLength(255)]

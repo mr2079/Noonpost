@@ -53,6 +53,20 @@
     <script src="~/assets/js/sweetalert2.min.js"></script>
     <!-- JS main  -->
     <script src="~/assets/js/main.js"></script>
+    <script>
+        const newsLettreOnSubmit = (e) => {
+            e.preventDefault();
+            if (e.target[0].value) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'ایمیل شما با موفقیت ثبت شد',
+                    showConfirmButton: false,
+                    timer: 2000
+                })
+                e.target[0].value = "";
+            }
+        }
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 
