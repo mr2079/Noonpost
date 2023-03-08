@@ -46,7 +46,9 @@
                     <div class="col-lg-4 col-md-6">
                         <div class="post-card">
                             <div class="post-card-image">
-                                <a asp-controller="Article" asp-action="Show" asp-route-articleId="@article.Id">
+                                <a asp-controller="Article" asp-action="Show"
+                           asp-route-articleCId="@article.CId"
+                           asp-route-articleTitle="@article.Title">
                                     <img src="~/images/articles/thumb400/@article.ImageName" alt="@article.Title">
                                 </a>
                             </div>
@@ -54,12 +56,13 @@
                                 <a class="categorie"
                            asp-controller="Article"
                            asp-action="Category"
-                           asp-route-categoryId="@article.Category.Id"
+                           asp-route-categoryCId="@article.Category.CId"
                            asp-route-categoryTitle="@article.Category.Title">@article.Category.Title</a>
 
                                 <h5>
                                     <a asp-controller="Article" asp-action="Show"
-                               asp-route-articleId="@article.Id">@article.Title</a>
+                               asp-route-articleCId="@article.CId"
+                               asp-route-articleTitle="@article.Title">@article.Title</a>
                                 </h5>
                                 <div class="short-description ellipsis-2">@Html.Raw(article.Text.Substring(0, 200))</div>
                                 <div class="post-card-info">
@@ -70,17 +73,19 @@
                                                 <div class="img-box author-img-box">
                                                     <a asp-controller="Author"
                                            asp-action="Index"
-                                           asp-route-authorId="@article.User.Id">
+                                           asp-route-authorCId="@article.User.CId"
+                                           asp-route-authorName="@article.User.FullName">
                                                         <img src="~/images/users/thumb60/@article.User.ImageName"
-                                                             alt="@(article.User.FirstName+" "+article.User.LastName)">
+                                                             alt="@article.User.FullName">
                                                     </a>
                                                 </div>
                                             </li>
                                             <li>
                                                 <a asp-controller="Author"
                                        asp-action="Index"
-                                       asp-route-authorId="@article.User.Id">
-                                                    @(article.User.FirstName + " " + article.User.LastName)
+                                       asp-route-authorCId="@article.User.CId"
+                                       asp-route-authorName="@article.User.FullName">
+                                                    @article.User.FullName
                                                 </a>
                                             </li>
                                             <li class="dot"></li>

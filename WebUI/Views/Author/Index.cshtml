@@ -1,6 +1,7 @@
 ﻿@model AuthorInfoViewModel
 @{
     ViewData["IsUserPanel"] = false.ToString();
+    ViewData["Title"] = $"{Model.FullName} - نویسنده";
 }
 
 <style>
@@ -34,13 +35,15 @@
                     @if (Model.ImageName != null)
                     {
                         <div class="img-box user-img-box">
-                            <a asp-controller="Author" asp-action="Index" asp-route-authorId="@Model.AuthorId">
-                                <img src="~/images/users/thumb200/@Model.ImageName" alt="@(Model.FirstName+" "+Model.LastName)">
+                            <a asp-controller="Author" asp-action="Index" 
+                            asp-route-authorCId="@Model.CId"
+                            asp-route-authorName="@Model.FullName">
+                                <img src="~/images/users/thumb200/@Model.ImageName" alt="@Model.FullName">
                             </a>
                             </div>
                         
                     }
-                    <h6><span>سلام، من @(Model.FirstName + " " + Model.LastName) هستم!</span></h6>
+                    <h6><span>سلام، من @Model.FullName هستم!</span></h6>
                     @if (Model.Description != null)
                     {
                         <div class="user-description">

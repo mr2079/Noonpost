@@ -20,6 +20,7 @@ public class AdminInfoViewModel
 public class ArticlesWithNewCommentViewModel
 {
     public Guid ArticleId { get; set; }
+    public long ArticleCId { get; set; }
     public string ArticleTitle { get; set; } = string.Empty;
     public string ArticleImageName { get; set; } = string.Empty;
     public int NewCommentsCount { get; set; }

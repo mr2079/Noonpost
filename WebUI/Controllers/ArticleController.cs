@@ -1,10 +1,12 @@
 ﻿using Application.Context;
+using Domain.Entites.Article;
 using Domain.Entites.Comment;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
+using System.Security.Claims;
 
 namespace WebUI.Controllers;
 
@@ -15,24 +17,22 @@ public class ArticleController : Controller
     private readonly ICommentService _commentService;
 
     public ArticleController(IArticleService articleService,
-        ICommentService commentService,
-        IAdminService adminService)
+        ICommentService commentService)
     {
         _articleService = articleService;
         _commentService = commentService;
     }
 
     [AllowAnonymous]
-    [HttpGet("/Article/{articleId}")]
-    public async Task<IActionResult> Show(Guid articleId, Guid? articleTitle, int commentPage = 1)
+    [HttpGet("/Article/{articleCId}/{articleTitle}")]
+    public async Task<IActionResult> Show(long articleCId, Guid articleTitle, int commentPage = 1)
     {
-        if (articleId == Guid.Empty) return NotFound();
         int takeComments = 5;
         int skipComments = takeComments * (commentPage - 1);
-        var model = await _articleService.GetArticleForShowAsync(articleId, takeComments, skipComments);
-        int commentsCount = await _articleService.ArticleCommentsCount(articleId);
+        var model = await _articleService.GetArticleForShowAsync(articleCId, takeComments, skipComments);
+        int commentsCount = await _articleService.ArticleCommentsCount(articleCId);
         ViewData["CommentsCount"] = commentsCount;
-        ViewData["AcceptedCommentsCount"] = await _articleService.ArticleAcceptedCommentsCount(articleId);
+        ViewData["AcceptedCommentsCount"] = await _articleService.ArticleAcceptedCommentsCount(articleCId);
         ViewData["CommentsPageCount"] = (commentsCount + takeComments - 1) / takeComments;
 
         return View(model);
@@ -64,7 +64,8 @@ public class ArticleController : Controller
         }
         await _articleService.CreateArticleAsync(articleInfo, Image);
 
-        return RedirectToAction("Index", "User", new { userId = articleInfo.AuthorId });
+        return RedirectToAction("Index", "User", 
+            new { userCId = User.FindFirstValue("CId"), userName = User.FindFirstValue("UserName") });
     }
 
     [HttpGet("/Article/Edit/{articleId}")]
@@ -84,7 +85,8 @@ public class ArticleController : Controller
         if (!await _articleService.IsExistsArticle(edit.ArticleId)) return NotFound();
         await _articleService.UpdateArticleAsync(edit, newArticleImg);
 
-        return RedirectToAction("Index", "User", new { userId = edit.AuthorId });
+        return RedirectToAction("Index", "User",
+            new { userCId = User.FindFirstValue("CId"), userName = User.FindFirstValue("UserName") });
     }
 
     [HttpPost]
@@ -92,17 +94,13 @@ public class ArticleController : Controller
     public async Task<IActionResult> Delete(Guid articleId, Guid authorId)
     {
         if (!ModelState.IsValid) return RedirectToAction("Index", "User",
-            new { userId = authorId, isArticleDeleteSucceeded = false.ToString() });
+            new { userCId = User.FindFirstValue("CId"), userName = User.FindFirstValue("UserName") });
 
         var article = await _articleService.GetArticleByIdAsync(articleId);
-        if (article == null) return RedirectToAction("Index", "User",
-            new { userId = authorId, isArticleDeleteSucceeded = false.ToString() });
-
-        if (await _articleService.DeleteArticleAsync(article)) return RedirectToAction("Index", "User",
-            new { userId = authorId, isArticleDeleteSucceeded = true.ToString() });
+        await _articleService.DeleteArticleAsync(article);
 
         return RedirectToAction("Index", "User",
-            new { userId = authorId, isArticleDeleteSucceeded = false.ToString() });
+            new { userCId = User.FindFirstValue("CId"), userName = User.FindFirstValue("UserName") });
     }
 
     [HttpPost]
@@ -111,7 +109,10 @@ public class ArticleController : Controller
     {
         await _commentService.CreateComment(userComment);
 
-        return RedirectToAction("Show", "Article", new { articleId = userComment.ArticleId });
+        var result = await _articleService.GetArticleCIdByArticleId(userComment.ArticleId);
+
+        return RedirectToAction("Show", "Article",
+            new { articleCId = result.Item1, articleTitle = result.Item2 });
     }
 
     [HttpPost]
@@ -119,17 +120,21 @@ public class ArticleController : Controller
     {
         await _commentService.CreateComment(articleId, parentId, Guid.Parse(User.Identity.Name), text);
 
+        var result = await _articleService.GetArticleCIdByArticleId(articleId);
+
         return RedirectToAction("Show", "Article",
-            new { articleId });
+            new { articleCId = result.Item1, articleTitle = result.Item2 });
     }
 
     [HttpPost]
     public async Task<IActionResult> EditComment(Guid commentId, string text)
     {
-        Guid articleId = await _commentService.EditComment(commentId, text);
+        var articleId = await _commentService.EditComment(commentId, text);
+
+        var result = await _articleService.GetArticleCIdByArticleId(articleId);
 
         return RedirectToAction("Show", "Article",
-            new { articleId });
+            new { articleCId = result.Item1, articleTitle = result.Item2 });
     }
 
     [HttpPost]
@@ -137,8 +142,10 @@ public class ArticleController : Controller
     {
         await _commentService.DeleteComment(commentId);
 
+        var result = await _articleService.GetArticleCIdByArticleId(articleId);
+
         return RedirectToAction("Show", "Article",
-            new { articleId });
+            new { articleCId = result.Item1, articleTitle = result.Item2 });
     }
 
     [HttpPost]
@@ -151,15 +158,15 @@ public class ArticleController : Controller
     }
 
     [AllowAnonymous]
-    [HttpGet("/Category/{categoryTitle}/{categoryId}")]
-    public async Task<IActionResult> Category(Guid categoryId, string categoryTitle, int page = 1)
+    [HttpGet("/Category/{categoryCId}/{categoryTitle}")]
+    public async Task<IActionResult> Category(long categoryCId, string categoryTitle, int page = 1)
     {
         int take = 20;
         int skip = take * (page - 1);
 
-        var result = await _articleService.GetArticlesByCategoryIdAsync(categoryId, take, skip);
+        var result = await _articleService.GetArticlesByCategoryIdAsync(categoryCId, take, skip);
         var pagesCount = (result.Item2 + take - 1) / take;
 
-        return View(Tuple.Create(result.Item1, pagesCount, categoryId, categoryTitle));
+        return View(Tuple.Create(result.Item1, pagesCount, categoryCId, categoryTitle));
     }
 }

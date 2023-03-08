@@ -4,6 +4,6 @@ namespace Infrastructure.Services.Interfaces;
 
 public interface IAuthorService
 {
-    Task<AuthorInfoViewModel> GetAuthorInfoAsync(Guid authorId, int take, int skip);
-    Task<int> AuthorArticlesCount(Guid authorId);
+    Task<AuthorInfoViewModel> GetAuthorInfoAsync(long authorCId, int take, int skip);
+    Task<int> AuthorArticlesCount(long authorCId);
 }

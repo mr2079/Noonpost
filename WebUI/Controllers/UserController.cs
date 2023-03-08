@@ -18,21 +18,21 @@ public class UserController : Controller
         _userService = userService;
     }
 
-    [HttpGet("/User/{userId}")]
-    public async Task<IActionResult> Index(string userId, int page = 1)
+    [HttpGet("/User/{userCId}/{userName}")]
+    public async Task<IActionResult> Index(long userCId, string userName, int page = 1)
     {
-        if (userId == null || userId == string.Empty) return Redirect("/");
+        if (userCId == 0) return Redirect("/");
 
         int take = 6;
         int skip = take * (page - 1);
 
-        var model = await _userService.GetUserPanelInfo(Guid.Parse(userId), take, skip);
+        var model = await _userService.GetUserPanelInfo(userCId, take, skip);
 
         if (model == null) return NotFound();
 
         if (model.Articles.Count() > 0)
         {
-            var articlesCount = await _authorService.AuthorArticlesCount(Guid.Parse(userId));
+            var articlesCount = await _authorService.AuthorArticlesCount(userCId);
             ViewData["ArticlesCount"] = articlesCount;
             ViewData["PageCount"] = (articlesCount + take - 1) / take;
         }
@@ -45,8 +45,9 @@ public class UserController : Controller
     public async Task<IActionResult> UpdateUserInfo(UserPanelInfoViewModel info)
     {
         if (!ModelState.IsValid) return View(info);
+
         await _userService.UpdateUser(info);
 
-        return RedirectToAction("Index", "User", new { userId = info.UserId });
+        return RedirectToAction("Index", "User", new { userCId = info.CId, userName = info.FullName });
     }
 }

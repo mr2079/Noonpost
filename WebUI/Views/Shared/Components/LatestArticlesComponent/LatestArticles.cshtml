@@ -14,7 +14,8 @@
                 <div class="image">
                     <a asp-controller="Article"
                             asp-action="Show"
-                            asp-route-articleId ="@article.ArticleId">
+                            asp-route-articleCId="@article.CId"
+                            asp-route-articleTitle="@article.Title">
                         <img src="~/images/articles/@article.ImageName" 
                         alt="@article.Title">
                     </a>
@@ -24,7 +25,8 @@
                     <p>
                         <a asp-controller="Article"
                             asp-action="Show"
-                            asp-route-articleId ="@article.ArticleId">
+                            asp-route-articleCId ="@article.CId"
+                            asp-route-articleTitle="@article.Title">
                             @article.Title
                         </a>
                     </p>

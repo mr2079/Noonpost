@@ -32,5 +32,8 @@ public static class DateConverter
 
         return $"{dayOfMonth} {monthName} {year}";
     }
+
+    public static long ToTimeStamp(this DateTime value)
+        => long.Parse(value.ToString("yyyyMMddHHmmssffff"));
 }
 

@@ -10,6 +10,6 @@ public interface IUserService
     Task<bool> IsMobileExists(string mobile);
     Task<bool> AddUser(RegisterViewModel model);
     Task<bool> UpdateUser(UserPanelInfoViewModel info);
-    Task<UserPanelInfoViewModel> GetUserPanelInfo(Guid userId, int take, int skip);
-    Task<Tuple<string, string>> GetUserInfoForNavigationBar(Guid userId);
+    Task<UserPanelInfoViewModel> GetUserPanelInfo(long userCId, int take, int skip);
+    Task<UserNavBarInfoViewModel> GetUserInfoForNavigationBar(Guid userId);
 }

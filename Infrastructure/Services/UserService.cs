@@ -1,5 +1,6 @@
 ﻿using Application.Context;
 using Domain.Entites.User;
+using Infrastructure.Converter;
 using Infrastructure.Security;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
@@ -22,6 +23,7 @@ public class UserService : IUserService
     {
         var user = new User()
         {
+            CId = DateTime.Now.ToTimeStamp(),
             FirstName = model.FirstName,
             LastName = model.LastName,
             Mobile = model.Mobile,
@@ -43,20 +45,24 @@ public class UserService : IUserService
     public async Task<User> GetUserByMobile(string mobile)
         => await _context.Users.FirstOrDefaultAsync(u => string.Equals(u.Mobile, mobile));
 
-    public async Task<UserPanelInfoViewModel> GetUserPanelInfo(Guid userId, int take, int skip)
+    public async Task<UserPanelInfoViewModel> GetUserPanelInfo(long userCId, int take, int skip)
     {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.CId == userCId);
+
         var articles = await _context.Articles
             .Include(a => a.Category)
-            .Where(a => a.AuthorId == userId)
+            .Where(a => a.AuthorId == user.Id)
             .Skip(skip)
             .Take(take)
             .ToListAsync();
 
         return await _context.Users
             .Include(u => u.Articles)
+            .Where(u => u.Id == user.Id)
             .Select(u => new UserPanelInfoViewModel()
             {
                 UserId = u.Id,
+                CId = u.CId,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Mobile = u.Mobile,
@@ -65,7 +71,7 @@ public class UserService : IUserService
                 Description = u.Description,
                 Articles = articles
             })
-            .FirstOrDefaultAsync(u => Equals(u.UserId, userId));
+            .FirstOrDefaultAsync();
     }
 
     public async Task<bool> IsMobileExists(string mobile)
@@ -102,10 +108,16 @@ public class UserService : IUserService
         catch { return false; }
     }
 
-    public async Task<Tuple<string, string>> GetUserInfoForNavigationBar(Guid userId)
+    public async Task<UserNavBarInfoViewModel> GetUserInfoForNavigationBar(Guid userId)
     {
-        var user = await _context.Users.FindAsync(userId);
-        if (user == null) return Tuple.Create(string.Empty, string.Empty);
-        return Tuple.Create($"{user.FirstName} {user.LastName}", user.ImageName);
+        return await _context.Users
+            .Where(u => u.Id == userId)
+            .Select(u => new UserNavBarInfoViewModel
+            {
+                CId = u.CId,
+                FullName = u.FullName,
+                ImageName = u.ImageName
+            })
+            .FirstOrDefaultAsync();
     }
 }

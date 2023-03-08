@@ -1,7 +1,7 @@
 ﻿@inject IUserService _userService;
 @inject IArticleService _articleService;
 @{
-    var currentUser = Tuple.Create(string.Empty, string.Empty) ;
+    UserNavBarInfoViewModel currentUser = new() ;
     if (User.Identity.IsAuthenticated)
     {
         currentUser = await _userService.GetUserInfoForNavigationBar(Guid.Parse(User.Identity.Name));
@@ -58,7 +58,7 @@
                                 <a class="dropdown-item" 
                                 asp-controller="Article"
                                 asp-action="Category"
-                                asp-route-categoryId="@category.Id"
+                                asp-route-categoryCId="@category.CId"
                                 asp-route-categoryTitle="@category.Title"> @category.Title </a>
                             </li>
                         }
@@ -68,12 +68,15 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item">
-                        <a class="nav-link user-panel d-flex align-items-center" asp-controller="User" asp-action="Index"
-                       asp-route-userId="@User.Identity.Name">
+                        <a class="nav-link user-panel d-flex align-items-center"
+                            asp-controller="User" 
+                            asp-action="Index"
+                            asp-route-userCId="@currentUser.CId"
+                            asp-route-userName="@currentUser.FullName">
                             <div>
-                                <img src="~/images/users/thumb60/@currentUser.Item2" alt="@currentUser.Item1" />
+                                <img src="~/images/users/thumb60/@currentUser.ImageName" alt="@currentUser.FullName" />
                             </div>
-                            <span>@currentUser.Item1</span>
+                            <span>@currentUser.FullName</span>
                         </a>
                     </li>
                     <li class="nav-item">

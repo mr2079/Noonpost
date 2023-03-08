@@ -2,6 +2,7 @@
 using Domain.Entites.Article;
 using Domain.Entites.Category;
 using Domain.Entites.User;
+using Infrastructure.Converter;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -184,6 +185,7 @@ public class AdminService : IAdminService
             .Select(a => new ArticlesWithNewCommentViewModel()
             {
                 ArticleId = a.Id,
+                ArticleCId = a.CId,
                 ArticleTitle = a.Title,
                 ArticleImageName = a.ImageName,
                 NewCommentsCount = a.Comments.Count(c => !c.IsAccepted)
@@ -216,7 +218,7 @@ public class AdminService : IAdminService
     {
         try
         {
-            var category = new Category { Title = title };
+            var category = new Category { CId = DateTime.Now.ToTimeStamp(), Title = title };
             await _context.Categories.AddAsync(category);
             await _context.SaveChangesAsync();
             return true;
@@ -239,4 +241,16 @@ public class AdminService : IAdminService
         catch { return false; }
     }
 
+    public async Task<bool> DeleteCategoryAsync(Guid Id)
+    {
+        try
+        {
+            var category = await _context.Categories.FindAsync(Id);
+            if (category == null) return false;
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch { return false; }
+    }
 }

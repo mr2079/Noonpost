@@ -17,6 +17,7 @@
                     <form asp-controller="User" asp-action="UpdateUserInfo"
                           class="sign-form widget-form contact_form " method="post" enctype="multipart/form-data">
                         <input asp-for=UserId type="hidden">
+                        <input asp-for=CId type="hidden" value="@User.FindFirst("CId").Value">
 
                         <div class="form-group select-user-img">
                             <div class="img-box user-img-box">

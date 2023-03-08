@@ -26,4 +26,5 @@ public interface IAdminService
     Task<int> AllCategoriesCount();
     Task<bool> CreateCategoryAsync(string title);
     Task<bool> UpdateCategoryAsync(Guid Id, string title);
+    Task<bool> DeleteCategoryAsync(Guid Id);
 }

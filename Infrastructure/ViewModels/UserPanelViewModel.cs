@@ -7,6 +7,7 @@ namespace Infrastructure.ViewModels;
 public class UserPanelInfoViewModel
 {
     public Guid UserId { get; set; }
+    public long CId { get; set; }
 
     [Display(Name = "نام")]
     [Required(ErrorMessage = "فیلد {0} الزامی می باشد")]
@@ -18,13 +19,21 @@ public class UserPanelInfoViewModel
     [MinLength(2, ErrorMessage = "{0} نمی تواند کمتر از {1} کاراکتر باشد")]
     public string LastName { get; set; } = string.Empty;
 
+    public string FullName
+    {
+        get
+        {
+            return $"{FirstName} {LastName}";
+        }
+    }
+
     [Display(Name = "شماره موبایل")]
     [Required(ErrorMessage = "فیلد {0} الزامی می باشد")]
     public string Mobile { get; set; } = string.Empty;
 
     [Display(Name = "آدرس ایمیل")]
     [EmailAddress(ErrorMessage = "{0} وارد شده، معتبر نیست")]
-    public string? Email { get; set; } 
+    public string? Email { get; set; }
 
     [Display(Name = "کلمه عبور جدید")]
     [DataType(DataType.Password)]
@@ -46,4 +55,11 @@ public class UserPanelInfoViewModel
     public string? Description { get; set; }
 
     public ICollection<Article>? Articles { get; set; }
+}
+
+public class UserNavBarInfoViewModel
+{
+    public long CId { get; set; }
+    public string FullName { get; set; } = string.Empty;
+    public string ImageName { get; set; } = string.Empty;
 }

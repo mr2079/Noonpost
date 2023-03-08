@@ -21,7 +21,7 @@ public class LatestArticlesComponent : ViewComponent
             .Take(4)
             .Select(a => new LatestArticleViewModel() 
             {
-                ArticleId = a.Id,
+                CId = a.CId,
                 Title= a.Title,
                 ImageName = a.ImageName,
                 CreateDate = a.CreateDate

@@ -56,7 +56,7 @@ public class EditArticleViewModel
 
 public class LatestArticleViewModel
 {
-    public Guid ArticleId { get; set; }
+    public long CId { get; set; }
     public string Title { get; set; } = string.Empty;
     public string ImageName { get; set; } = string.Empty;
     public DateTime CreateDate { get; set; }

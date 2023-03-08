@@ -30,21 +30,17 @@
                                 <h2>
                                     <a asp-controller="Article"
                                    asp-action="Show"
-                                   asp-route-articleId="@slider.Id">@slider.Title</a>
+                                   asp-route-articleCId="@slider.CId"
+                                   asp-route-articleTitle="@slider.Title">@slider.Title</a>
                                 </h2>
 
                                 <div class="post-card-info">
                                     <ul class="list-inline">
-                                        @*<li>
-                                    <a href="author.html">
-                                    <img src="~/images/users/@slider.User.ImageName"
-                                    alt="@(slider.User.FirstName + " " + slider.User.LastName)">
-                                    </a>
-                                    </li>*@
                                         <li>
                                             <a asp-controller="Author"
                                            asp-action="Index"
-                                           asp-route-authorId="@slider.User.Id">@(slider.User.FirstName + " " + slider.User.LastName)</a>
+                                           asp-route-authorCId="@slider.User.CId"
+                                           asp-route-authorName="@slider.User.FullName">@slider.User.FullName</a>
                                         </li>
                                         <li class="dot"></li>
                                         <li>@slider.CreateDate.ToShamsi()</li>
@@ -70,7 +66,8 @@
                         <div class="post-card-image">
                             <a asp-controller="Article"
                            asp-action="Show"
-                           asp-route-articleId="@article.Id">
+                           asp-route-articleCId="@article.CId"
+                            asp-route-articleTitle="@article.Title">
                                 <img src="~/images/articles/thumb600/@article.ImageName" alt="@article.Title">
                             </a>
                         </div>
@@ -78,12 +75,13 @@
                             <a class="categorie"
                                 asp-controller="Article"
                                 asp-action="Category"
-                                asp-route-categoryId="@article.Category.Id"
+                                asp-route-categoryCId="@article.Category.CId"
                                 asp-route-categoryTitle="@article.Category.Title">@article.Category.Title</a>
                             <h5>
                                 <a asp-controller="Article"
                                asp-action="Show"
-                               asp-route-articleId="@article.Id">@article.Title</a>
+                               asp-route-articleCId="@article.CId"
+                               asp-route-articleTitle="@article.Title">@article.Title</a>
                             </h5>
                             <div class="short-description ellipsis-2">@Html.Raw(article.Text.Substring(0, 200))</div>
                             <div class="post-card-info">
@@ -92,16 +90,18 @@
                                         <div class="img-box author-img-box">
                                             <a asp-controller="Author"
                                            asp-action="Index"
-                                           asp-route-authorId="@article.User.Id">
+                                           asp-route-authorCId="@article.User.CId"
+                                           asp-route-authorName="@article.User.FullName">
                                                 <img src="~/images/users/thumb60/@article.User.ImageName"
-                                                     alt="@(article.User.FirstName + " " + article.User.LastName)">
+                                                     alt="@article.User.FullName">
                                             </a>
                                         </div>
                                     </li>
                                     <li>
                                         <a asp-controller="Author"
                                        asp-action="Index"
-                                       asp-route-authorId="@article.User.Id">@(article.User.FirstName + " " + article.User.LastName)</a>
+                                       asp-route-authorCId="@article.User.CId"
+                                       asp-route-authorName="@article.User.FullName">@article.User.FullName</a>
                                     </li>
                                     <li class="dot"></li>
                                     <li>@article.CreateDate.ToShamsi()</li>
@@ -126,11 +126,6 @@
                                asp-route-page="@i">@i</a>
                                 </li>
                             }
-                            @*<li>
-                        <a href="#">
-                        <i class="arrow_carrot-2left"></i>
-                        </a>
-                        </li>*@
                         </ul>
                     </div>
                     <!--/-->

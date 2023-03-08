@@ -1,9 +1,10 @@
 ﻿using Application.Context;
 using Domain.Entites.Article;
 using Domain.Entites.Category;
-using Infrastructure.Generator;
+using Infrastructure.Converter;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
+using MessagePack.Formatters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,35 +21,45 @@ public class ArticleService : IArticleService
         _baseService = baseService;
     }
 
-    public async Task<int> ArticleCommentsCount(Guid articleId)
-        => await _context.Comments
-        .CountAsync(c => Equals(c.ArticleId, articleId) && Equals(c.ParentId, null));
+    public async Task<int> ArticleCommentsCount(long articleCId)
+    {
+        var article = await _context.Articles.FirstOrDefaultAsync(a => a.CId == articleCId);
 
-    public async Task<int> ArticleAcceptedCommentsCount(Guid articleId)
-        => await _context.Comments
-        .CountAsync(c => Equals(c.ArticleId, articleId) && Equals(c.ParentId, null) && c.IsAccepted);
+        return await _context.Comments
+        .CountAsync(c => Equals(c.ArticleId, article.Id) && Equals(c.ParentId, null));
+    }
+
+    public async Task<int> ArticleAcceptedCommentsCount(long articleCId)
+    {
+        var article = await _context.Articles.FirstOrDefaultAsync(a => a.CId == articleCId);
+
+        return await _context.Comments.CountAsync(c => Equals(c.ArticleId, article.Id) &&
+            Equals(c.ParentId, null) && c.IsAccepted);
+    }
 
     public async Task<bool> IsExistsArticle(Guid articleId) => await _context.Articles.AnyAsync(a => Equals(a.Id, articleId));
 
     public async Task<Article> GetArticleByIdAsync(Guid articleId) => await _context.Articles.FindAsync(articleId);
 
-    public async Task<Tuple<List<Article>, int>> GetArticlesByCategoryIdAsync(Guid categoryId, int take, int skip)
+    public async Task<Tuple<List<Article>, int>> GetArticlesByCategoryIdAsync(long categoryCId, int take, int skip)
     {
+        var cat = await _context.Categories.FirstOrDefaultAsync(a => a.CId == categoryCId);
+
         var articles = _context.Articles
             .Include(a => a.User)
             .Include(a => a.Category)
-             .Where(a => a.CategoryId == categoryId)
-             .OrderByDescending(a => a.CreateDate);
+            .Where(a => a.CategoryId == cat.Id)
+            .OrderByDescending(a => a.CreateDate);
 
         return Tuple.Create(await articles.Skip(skip).Take(take).ToListAsync(), await articles.CountAsync());
     }
 
-    public async Task<Article> GetArticleForShowAsync(Guid articleId, int take, int skip)
+    public async Task<Article> GetArticleForShowAsync(long articleCId, int take, int skip)
     {
         var model = await _context.Articles
             .Include(a => a.User)
             .Include(a => a.Category)
-            .FirstOrDefaultAsync(a => a.Id == articleId);
+            .FirstOrDefaultAsync(a => a.CId == articleCId);
 
         model.View += 1;
         _context.Articles.Update(model);
@@ -59,7 +70,7 @@ public class ArticleService : IArticleService
             .Include(c => c.User)
             .Include(c => c.Replies.OrderByDescending(r => r.CreateDate))
             .ThenInclude(r => r.User)
-            .Where(c => Equals(c.ArticleId, articleId))
+            .Where(c => Equals(c.ArticleId, model.Id))
             .ToListAsync();
 
         model.Comments = comments
@@ -77,6 +88,7 @@ public class ArticleService : IArticleService
     {
         var article = new Article()
         {
+            CId = DateTime.Now.ToTimeStamp(),
             AuthorId = articleInfo.AuthorId,
             CategoryId = articleInfo.CategoryId,
             ImagesGuid = articleInfo.ArticleImageGuid,
@@ -239,6 +251,12 @@ public class ArticleService : IArticleService
             .OrderByDescending(c => c.Articles.Count())
             .Take(10)
             .ToListAsync();
+    }
+
+    public async Task<Tuple<long, string>> GetArticleCIdByArticleId(Guid articleId)
+    {
+        var article = await _context.Articles.FindAsync(articleId);
+        return Tuple.Create(article.CId, article.Title);
     }
 }
 

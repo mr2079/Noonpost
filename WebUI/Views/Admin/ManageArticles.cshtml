@@ -40,18 +40,22 @@
                 <tr>
                     <th scope="row">@j</th>
                     <td>
-                        <a asp-controller="Article" asp-action="Show" asp-route-articleId="@article.Id">
-                            <img class="article-img" src="~/images/articles/@article.ImageName" />
+                        <a asp-controller="Article"
+                        asp-action="Show"
+                        asp-route-articleCId="@article.CId"
+                        asp-route-articleTitle="@article.Title">
+                            <img class="article-img" src="~/images/articles/thumb400/@article.ImageName" />
                         </a>
                     </td>
                     <td>@article.Title</td>
                     <td>
                         <div class="d-flex flex-column">
                             <a asp-controller="Author" asp-action="Index"
-                           asp-route-authorId="@article.AuthorId">
-                                <img class="author-img" src="~/images/users/@article.User.ImageName" />
+                           asp-route-authorCId="@article.User.CId"
+                            asp-route-authorName="@article.User.FullName">
+                                <img class="author-img" src="~/images/users/thumb60/@article.User.ImageName" />
                             </a>
-                            <span class="author-name">@(article.User.FirstName + " " + article.User.LastName)</span>
+                            <span class="author-name">@article.User.FullName</span>
                         </div>
                     </td>
                     <td>

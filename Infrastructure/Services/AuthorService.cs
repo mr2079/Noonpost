@@ -14,11 +14,22 @@ public class AuthorService : IAuthorService
         _context = context;
     }
 
-    public async Task<int> AuthorArticlesCount(Guid authorId)
-        => await _context.Articles.CountAsync(a => Equals(a.AuthorId, authorId));
-
-    public async Task<AuthorInfoViewModel> GetAuthorInfoAsync(Guid authorId, int take, int skip)
+    private async Task<Guid> GetAuthorIdByCId(long cId)
     {
+        var author = await _context.Users.FirstOrDefaultAsync(u => u.CId == cId);
+        return author.Id;
+    }
+
+    public async Task<int> AuthorArticlesCount(long authorCId)
+    {
+        var authorId = await GetAuthorIdByCId(authorCId);
+        return await _context.Articles.CountAsync(a => Equals(a.AuthorId, authorId));
+    }
+
+    public async Task<AuthorInfoViewModel> GetAuthorInfoAsync(long authorCId, int take, int skip)
+    {
+        Guid authorId = await GetAuthorIdByCId(authorCId);
+
         var articles = await _context.Articles
             .Include(a => a.User)
             .Include(a => a.Category)
@@ -30,13 +41,11 @@ public class AuthorService : IAuthorService
 
         return await _context.Users
             .Include(u => u.Articles)
-            .ThenInclude(a => a.User)
             .Where(u => Equals(u.Id, authorId))
             .Select(u => new AuthorInfoViewModel()
             {
-                AuthorId = u.Id,
-                FirstName = u.FirstName,
-                LastName = u.LastName,
+                CId = u.CId,
+                FullName = u.FullName,
                 ImageName = u.ImageName,
                 Email = u.Email,
                 Description = u.Description,

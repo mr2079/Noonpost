@@ -1017,6 +1017,12 @@ input:checked + .slider {
     .navbar .dropdown-menu.fade-up {
         top: 180%;
     }
+
+    .sticky-side-bar {
+        position: sticky;
+        top: 6rem;
+        margin-bottom: 3rem;
+    }
 }
 
 /* ------------------------------

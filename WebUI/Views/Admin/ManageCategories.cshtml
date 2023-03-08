@@ -1,4 +1,4 @@
-﻿@model Tuple<List<CategoryViewModel>, int, int, int>
+﻿@model Tuple<List<Infrastructure.ViewModels.CategoryViewModel>, int, int, int>
 @{
     Layout = "_AdminLayout";
     int j = ((Model.Item3 - 1) * Model.Item4) + 1;
@@ -46,14 +46,22 @@
                     </td>
                     <td>
                         <a onclick="editCategory(this)"
-                            class="btn btn-sm btn-warning"
-                           href="javascript:void(0)">ویرایش
+                           class="btn btn-sm btn-warning"
+                           href="javascript:void(0)">
+                            ویرایش
                             <span class="d-none category-id">@category.Category.Id</span>
                             <span class="d-none category-title">@category.Category.Title</span>
                         </a>
 
-                        <a class="btn btn-sm btn-danger"
-                           href="javascript:void(0)">حذف</a>
+                        @if (category.CategoryArticlesCount == 0)
+                        {
+                            <a class="btn btn-sm btn-danger"
+                               href="javascript:void(0)"
+                               onclick="deleteCategory(this)">
+                                حذف
+                                <span class="d-none category-id">@category.Category.Id</span>
+                            </a>
+                        }
                     </td>
                 </tr>
 
@@ -74,8 +82,8 @@
                 {
                     <li class="active">
                         <a asp-controller="Admin"
-                   asp-action="ManageUsers"
-                   asp-route-page="@i">@i</a>
+                           asp-action="ManageUsers"
+                           asp-route-page="@i">@i</a>
                     </li>
                 }
             </ul>
@@ -126,6 +134,28 @@
                 .then(result => {
                     if (result.isConfirmed) {
                         $("#editCategoryForm").submit();
+                    }
+                });
+        }
+
+        const deleteCategory = (t) => {
+            var categoryId = $(t).children('.category-id').html();
+            Swal.fire({
+                icon: "warning",
+                title: 'آیا از حذف این دسته بندی مطمئن هستید؟',
+                html: `<form id="deleteCategoryForm" method="post" action="/Admin/DeleteCategory">` +
+                    `<input type="hidden" name="categoryId" value="${categoryId}"/>` +
+                    `</form>`,
+                showConfirmButton: true,
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonText: 'حذف',
+                confirmButtonColor: 'red',
+                cancelButtonText: 'انصراف',
+            })
+                .then(result => {
+                    if (result.isConfirmed) {
+                        $("#deleteCategoryForm").submit();
                     }
                 });
         }

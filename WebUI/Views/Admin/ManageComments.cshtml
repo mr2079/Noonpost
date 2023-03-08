@@ -44,8 +44,11 @@
                     <tr>
                         <th scope="row">@j</th>
                         <td class="d-flex flex-column">
-                            <a asp-controller="Article" asp-action="Show" asp-route-articleId="@article.ArticleId">
-                                <img class="article-img" src="~/images/articles/@article.ArticleImageName" />
+                            <a asp-controller="Article"
+                            asp-action="Show"
+                            asp-route-articleCId="@article.ArticleCId"
+                            asp-route-articleTitle="@article.ArticleTitle">
+                                <img class="article-img" src="~/images/articles/thumb400/@article.ArticleImageName" />
                             </a>
                             <span class="article-title">@article.ArticleTitle</span>
                         </td>

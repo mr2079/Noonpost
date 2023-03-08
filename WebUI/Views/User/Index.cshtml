@@ -2,6 +2,7 @@
 @{
     ViewData["IsUserPanel"] = true.ToString();
     var isDeleted = ViewData["IsDeleted"];
+    ViewData["Title"] = $"{Model.FullName} - حساب کاربری";
 }
 
 <style>
@@ -66,12 +67,15 @@
                     @if (Model.ImageName != null)
                     {
                         <div class="img-box user-img-box">
-                            <a asp-controller="User" asp-action="Index" asp-route-userId="@Model.UserId">
-                                <img src="~/images/users/thumb200/@Model.ImageName" alt="@(Model.FirstName+" "+Model.LastName)">
+                            <a asp-controller="User" asp-action="Index" 
+                            asp-route-userCId="@Model.CId"
+                            asp-route-userName="@Model.FullName">
+                                <img src="~/images/users/thumb200/@Model.ImageName"
+                                    alt="@Model.FullName">
                             </a>
                         </div>
                     }
-                    <h6><span>@(Model.FirstName + " " + Model.LastName)</span></h6>
+                    <h6><span>@Model.FullName</span></h6>
                     <p>@Model.Mobile</p>
                     @if (Model.Email != null)
                     {

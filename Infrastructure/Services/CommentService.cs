@@ -1,6 +1,7 @@
 ﻿using Application.Context;
 using Domain.Entites.Comment;
 using Domain.Entites.User;
+using Infrastructure.Converter;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ public class CommentService : ICommentService
     {
         var comment = new Comment()
         {
+            CId = DateTime.Now.ToTimeStamp(),
             ArticleId = userComment.ArticleId,
             UserId = userComment.UserId,
             Text = userComment.CommentText,
@@ -40,6 +42,7 @@ public class CommentService : ICommentService
     {
         var comment = new Comment()
         {
+            CId = DateTime.Now.ToTimeStamp(),
             UserId = userId,
             ArticleId = articleId,
             ParentId = parentId,

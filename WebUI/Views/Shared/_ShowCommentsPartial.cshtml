@@ -3,6 +3,7 @@
     var articleId = ViewData["ArticleId"];
 }
 
+
 @foreach (var comment in Model)
 {
     if (comment.IsAccepted ||
@@ -17,16 +18,14 @@
             }
             @if (comment.User.ImageName != null)
             {
-                <div class="user-avatar">
+                <div class="img-box user-avatar-comment">
                     <img src="~/images/users/thumb200/@comment.User.ImageName"
-             alt="@(comment.User.FirstName+" "+comment.User.LastName)">
+                        alt="@comment.User.FullName">
                 </div>
             }
             <div class="content">
                 <ul class="info list-inline">
-                    <li>@(
-                        comment.User.FirstName + " " + comment.User.LastName
-                        )</li>
+                    <li>@comment.User.FullName</li>
                     <li class="dot"></li>
                     <li>@comment.CreateDate.ToShamsi(true)</li>
                 </ul>

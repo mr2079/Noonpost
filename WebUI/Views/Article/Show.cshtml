@@ -79,6 +79,12 @@
         height: 40px;
         margin-left: 8px;
     }
+
+    .user-avatar-comment {
+        width: 70px;
+        height: 70px;
+        margin-left: 20px;
+    }
 </style>
 
 <section class="section pt-55 ">
@@ -94,7 +100,7 @@
                         <a class="categorie"
                            asp-controller="Article"
                            asp-action="Category"
-                           asp-route-categoryId="@Model.Category.Id"
+                           asp-route-categoryCId="@Model.Category.CId"
                            asp-route-categoryTitle="@Model.Category.Title">@Model.Category.Title</a>
                         <h4>@Model.Title</h4>
                         <div class="post-single-info">
@@ -104,8 +110,9 @@
                                     <li>
                                         <div class="img-box author-img-box-sm">
                                             <a asp-controller="Author"
-                                           asp-action="Index"
-                                           asp-route-authorId="@Model.User.Id">
+                                                asp-action="Index"
+                                                asp-route-authorCId="@Model.User.CId"
+                                                asp-route-authorName="@Model.User.FullName">
                                                 <img src="~/images/users/thumb60/@Model.User.ImageName"
                                                      alt="@(Model.User.FirstName+" "+Model.User.LastName)">
                                             </a>
@@ -253,7 +260,8 @@
                             <div class="img-box author-img-box">
                                 <a asp-controller="Author"
                                asp-action="Index"
-                               asp-route-authorId="@Model.User.Id" class="image">
+                               asp-route-authorCId="@Model.User.CId"
+                               asp-route-authorName="@Model.User.FullName" class="image">
                                     <img src="~/images/users/thumb200/@Model.User.ImageName"
                                          alt="@(Model.User.FirstName+" "+Model.User.LastName)">
                                 </a>
@@ -268,8 +276,10 @@
                         }
                     </div>
                 </div>
-                @await Component.InvokeAsync("LatestArticlesComponent")
-                @await Component.InvokeAsync("TagsComponent")
+                <div class="sticky-side-bar">
+                    @await Component.InvokeAsync("LatestArticlesComponent")
+                    @await Component.InvokeAsync("TagsComponent")
+                </div>
                 <!--/-->
             </div>
         </div>

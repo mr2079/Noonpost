@@ -8,10 +8,13 @@ namespace WebUI.Controllers;
 public class AdminController : Controller
 {
     private readonly IAdminService _adminService;
+    private readonly IArticleService _articleService;
 
-    public AdminController(IAdminService adminService)
+    public AdminController(IAdminService adminService,
+        IArticleService articleService)
     {
         _adminService = adminService;
+        _articleService = articleService;
     }
 
     [HttpGet("/Admin/Dashboard")]
@@ -61,15 +64,21 @@ public class AdminController : Controller
     public async Task<IActionResult> AcceptArticle(Guid articleId)
     {
         await _adminService.AcceptArticle(articleId);
+
+        var result = await _articleService.GetArticleCIdByArticleId(articleId);
+
         return RedirectToAction("Show", "Article",
-            new { articleId });
+            new { articleCId = result.Item1, articleTitle = result.Item2 });
     }
 
     public async Task<IActionResult> DeclineArticle(Guid articleId)
     {
         await _adminService.DeclineArticle(articleId);
+
+        var result = await _articleService.GetArticleCIdByArticleId(articleId);
+
         return RedirectToAction("Show", "Article",
-            new { articleId });
+            new { articleCId = result.Item1, articleTitle = result.Item2 });
     }
 
     [HttpPost]
@@ -133,6 +142,14 @@ public class AdminController : Controller
     public async Task<IActionResult> UpdateCategory(Guid categoryId, string categoryTitle)
     {
         await _adminService.UpdateCategoryAsync(categoryId, categoryTitle);
+
+        return RedirectToAction("ManageCategories", "Admin");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteCategory(Guid categoryId)
+    {
+        await _adminService.DeleteCategoryAsync(categoryId);
 
         return RedirectToAction("ManageCategories", "Admin");
     }

@@ -6,6 +6,7 @@ public abstract class BaseEntity
 {
     [Key]
     public Guid Id { get; set; }
+    public long CId { get; set; }
     public DateTime CreateDate { get; set; } = DateTime.Now;
     public DateTime? UpdateDate { get; set; }
 }
