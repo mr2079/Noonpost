@@ -10,11 +10,11 @@ public class NoonpostDbContext : DbContext
 {
     public NoonpostDbContext(DbContextOptions<NoonpostDbContext> options) : base(options) { }
 
-    public DbSet<User> Users { get; set; }
-    public DbSet<Article> Articles { get; set; }
-    public DbSet<ArticleImage> ArticleImages { get; set; }
-    public DbSet<Comment> Comments { get; set; }
-    public DbSet<Category> Categories { get; set; }
+    public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Article> Articles { get; set; } = null!;
+    public DbSet<ArticleImage> ArticleImages { get; set; } = null!;
+    public DbSet<Comment> Comments { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -39,6 +39,22 @@ public class NoonpostDbContext : DbContext
         // Category
         modelBuilder.Entity<Category>()
             .Property(c => c.Id).HasColumnName("CategoryId");
+
+        // Add Admin to User Entity in Initial Migration
+        modelBuilder.Entity<User>()
+            .HasData(
+                new User()
+                {
+                    Id = Guid.NewGuid(),
+                    CreateDate = DateTime.Now,
+                    CId = long.Parse(DateTime.Now.ToString("yyyyMMddHHmmssffff")),
+                    FirstName = "محمدعلی",
+                    LastName = "خوشدونی",
+                    Mobile = "09198585873",
+                    Role = "Admin",
+                    Password = "B3-E6-3E-3A-88-45-B1-E3-66-8C-9A-F7-56-BF-F6-9F",
+                }
+            );
 
 
         base.OnModelCreating(modelBuilder);

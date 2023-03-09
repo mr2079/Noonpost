@@ -114,7 +114,7 @@
                                                 asp-route-authorCId="@Model.User.CId"
                                                 asp-route-authorName="@Model.User.FullName">
                                                 <img src="~/images/users/thumb60/@Model.User.ImageName"
-                                                     alt="@(Model.User.FirstName+" "+Model.User.LastName)">
+                                                     alt="@Model.User.FullName">
                                             </a>
                                         </div>
                                     </li>
@@ -122,8 +122,9 @@
                                 <li>
                                     <a asp-controller="Author"
                                        asp-action="Index"
-                                       asp-route-authorId="@Model.User.Id">
-                                        @(Model.User.FirstName + " " + Model.User.LastName)
+                                       asp-route-authorCId="@Model.User.CId"
+                                       asp-route-authorName="@Model.User.FullName">
+                                        @Model.User.FullName
                                     </a>
                                 </li>
                                 <li class="dot"></li>

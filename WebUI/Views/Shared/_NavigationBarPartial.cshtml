@@ -40,8 +40,8 @@
         <!--logo-->
         <div class="logo">
             <a asp-controller="Home" asp-action="Index">
-                <img src="~/assets/img/logo-dark.png" alt="" class="logo-dark">
-                <img src="~/assets/img/logo-white.png" alt="" class="logo-white">
+                <img src="~/assets/img/logo-dark.png" alt="نانپوست" class="logo-dark">
+                <img src="~/assets/img/logo-white.png" alt="نانپوست" class="logo-white">
             </a>
         </div>
         <!--/-->
@@ -50,7 +50,8 @@
             <ul class="navbar-nav ml-auto mr-auto">
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">دسته&zwnj;بندی&zwnj;ها</a>
+                    <a class="nav-link dropdown-toggle" href="javascript:void(0)"
+                        data-toggle="dropdown">دسته&zwnj;بندی&zwnj;ها</a>
                     <ul class="dropdown-menu fade-up">
                         @foreach (var category in categories)
                         {
@@ -74,7 +75,8 @@
                             asp-route-userCId="@currentUser.CId"
                             asp-route-userName="@currentUser.FullName">
                             <div>
-                                <img src="~/images/users/thumb60/@currentUser.ImageName" alt="@currentUser.FullName" />
+                                <img src="~/images/users/thumb60/@currentUser.ImageName"
+                                    alt="@currentUser.FullName" />
                             </div>
                             <span>@currentUser.FullName</span>
                         </a>

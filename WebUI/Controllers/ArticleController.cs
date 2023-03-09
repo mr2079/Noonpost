@@ -75,7 +75,10 @@ public class ArticleController : Controller
         var model = await _articleService.EditArticleAsync(articleId);
         if (model == null) return NotFound();
 
-        return View(model);
+        if (User.Identity.IsAuthenticated && model.AuthorId == Guid.Parse(User.Identity.Name))
+            return View(model);
+
+        return Unauthorized();
     }
 
     [HttpPost]
