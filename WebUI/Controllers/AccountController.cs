@@ -89,10 +89,15 @@ public class AccountController : Controller
         };
         await HttpContext.SignInAsync(principal, properties);
 
-        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+        if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl) && !string.Equals(returnUrl, "/"))
             return Redirect(returnUrl);
 
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Index", "User",
+            new
+            {
+                userCId = user.CId,
+                userName = user.FullName.Replace(" ", "-")
+            });
     }
 
     [HttpPost]

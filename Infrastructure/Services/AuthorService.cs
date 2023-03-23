@@ -23,7 +23,7 @@ public class AuthorService : IAuthorService
     public async Task<int> AuthorArticlesCount(long authorCId)
     {
         var authorId = await GetAuthorIdByCId(authorCId);
-        return await _context.Articles.CountAsync(a => Equals(a.AuthorId, authorId));
+        return await _context.Articles.CountAsync(a => Equals(a.AuthorId, authorId) && a.IsAccepted);
     }
 
     public async Task<AuthorInfoViewModel> GetAuthorInfoAsync(long authorCId, int take, int skip)
@@ -33,7 +33,7 @@ public class AuthorService : IAuthorService
         var articles = await _context.Articles
             .Include(a => a.User)
             .Include(a => a.Category)
-            .Where(a => a.AuthorId == authorId)
+            .Where(a => a.AuthorId == authorId && a.IsAccepted)
             .OrderByDescending(a => a.CreateDate)
             .Skip(skip)
             .Take(take)

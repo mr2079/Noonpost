@@ -1,7 +1,7 @@
 ﻿@inject IUserService _userService;
 @inject IArticleService _articleService;
 @{
-    UserNavBarInfoViewModel currentUser = new() ;
+    UserNavBarInfoViewModel currentUser = new();
     if (User.Identity.IsAuthenticated)
     {
         currentUser = await _userService.GetUserInfoForNavigationBar(Guid.Parse(User.Identity.Name));
@@ -60,7 +60,7 @@
                                 asp-controller="Article"
                                 asp-action="Category"
                                 asp-route-categoryCId="@category.CId"
-                                asp-route-categoryTitle="@category.Title"> @category.Title </a>
+                                asp-route-categoryTitle="@category.Title.Replace(" ", "-")"> @category.Title </a>
                             </li>
                         }
                     </ul>
@@ -73,7 +73,7 @@
                             asp-controller="User" 
                             asp-action="Index"
                             asp-route-userCId="@currentUser.CId"
-                            asp-route-userName="@currentUser.FullName">
+                       asp-route-userName="@currentUser.FullName.Replace(" ", "-")">
                             <div>
                                 <img src="~/images/users/thumb60/@currentUser.ImageName"
                                     alt="@currentUser.FullName" />

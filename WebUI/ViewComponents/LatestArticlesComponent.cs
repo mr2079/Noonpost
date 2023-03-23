@@ -17,6 +17,7 @@ public class LatestArticlesComponent : ViewComponent
     public async Task<IViewComponentResult> InvokeAsync()
     {
         var articles = await _context.Articles
+            .Where(a => a.IsAccepted)
             .OrderByDescending(a => a.CreateDate)
             .Take(4)
             .Select(a => new LatestArticleViewModel() 

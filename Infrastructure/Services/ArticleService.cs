@@ -51,7 +51,7 @@ public class ArticleService : IArticleService
             .Where(a => a.CategoryId == cat.Id)
             .OrderByDescending(a => a.CreateDate);
 
-        return Tuple.Create(await articles.Skip(skip).Take(take).ToListAsync(), await articles.CountAsync());
+        return Tuple.Create(await articles.Skip(skip).Take(take).ToListAsync(), await articles.CountAsync(a => a.IsAccepted));
     }
 
     public async Task<Article> GetArticleForShowAsync(long articleCId, int take, int skip)
@@ -183,7 +183,7 @@ public class ArticleService : IArticleService
     }
 
     public async Task<int> ArticlesCountAsync()
-        => await _context.Articles.CountAsync();
+        => await _context.Articles.CountAsync(a => a.IsAccepted);
 
     public async Task<List<Article>> GetArticlesForSlider()
         => await _context.Articles
@@ -209,7 +209,7 @@ public class ArticleService : IArticleService
             .Include(a => a.Category)
             .Where(a => (a.Title.Contains(filter) || a.Tags.Contains(filter)) && a.IsAccepted);
 
-        return Tuple.Create(await articles.Skip(skip).Take(take).ToListAsync(), await articles.CountAsync());
+        return Tuple.Create(await articles.Skip(skip).Take(take).ToListAsync(), await articles.CountAsync(a => a.IsAccepted));
     }
 
     public async Task<Tuple<string, string>> SaveUploadedArticleImage(IFormFile image)

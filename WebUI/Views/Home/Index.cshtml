@@ -31,7 +31,7 @@
                                     <a asp-controller="Article"
                                    asp-action="Show"
                                    asp-route-articleCId="@slider.CId"
-                                   asp-route-articleTitle="@slider.Title">@slider.Title</a>
+                                   asp-route-articleTitle="@slider.Title.Replace(" ", "-")">@slider.Title</a>
                                 </h2>
 
                                 <div class="post-card-info">
@@ -40,7 +40,7 @@
                                             <a asp-controller="Author"
                                            asp-action="Index"
                                            asp-route-authorCId="@slider.User.CId"
-                                           asp-route-authorName="@slider.User.FullName">@slider.User.FullName</a>
+                                           asp-route-authorName="@slider.User.FullName.Replace(" ", "-")">@slider.User.FullName</a>
                                         </li>
                                         <li class="dot"></li>
                                         <li>@slider.CreateDate.ToShamsi()</li>
@@ -63,11 +63,11 @@
             {
                 <div class="col-lg-6 col-md-6">
                     <div class="post-card">
-                        <div class="post-card-image">
+                        <div class="post-card-image width-lg height-lg">
                             <a asp-controller="Article"
                            asp-action="Show"
                            asp-route-articleCId="@article.CId"
-                            asp-route-articleTitle="@article.Title">
+                           asp-route-articleTitle="@article.Title.Replace(" ", "-")">
                                 <img src="~/images/articles/thumb600/@article.ImageName" alt="@article.Title">
                             </a>
                         </div>
@@ -76,12 +76,12 @@
                                 asp-controller="Article"
                                 asp-action="Category"
                                 asp-route-categoryCId="@article.Category.CId"
-                                asp-route-categoryTitle="@article.Category.Title">@article.Category.Title</a>
+                           asp-route-categoryTitle="@article.Category.Title.Replace(" ", "-")">@article.Category.Title</a>
                             <h5>
-                                <a asp-controller="Article"
+                                <a class="ellipsis-1" asp-controller="Article"
                                asp-action="Show"
                                asp-route-articleCId="@article.CId"
-                               asp-route-articleTitle="@article.Title">@article.Title</a>
+                               asp-route-articleTitle="@article.Title.Replace(" ", "-")">@article.Title</a>
                             </h5>
                             <div class="short-description ellipsis-2">@Html.Raw(article.Text.Substring(0, 200))</div>
                             <div class="post-card-info">
@@ -91,7 +91,7 @@
                                             <a asp-controller="Author"
                                            asp-action="Index"
                                            asp-route-authorCId="@article.User.CId"
-                                           asp-route-authorName="@article.User.FullName">
+                                           asp-route-authorName="@article.User.FullName.Replace(" ", "-")">
                                                 <img src="~/images/users/thumb60/@article.User.ImageName"
                                                      alt="@article.User.FullName">
                                             </a>
@@ -101,7 +101,7 @@
                                         <a asp-controller="Author"
                                        asp-action="Index"
                                        asp-route-authorCId="@article.User.CId"
-                                       asp-route-authorName="@article.User.FullName">@article.User.FullName</a>
+                                       asp-route-authorName="@article.User.FullName.Replace(" ", "-")">@article.User.FullName</a>
                                     </li>
                                     <li class="dot"></li>
                                     <li>@article.CreateDate.ToShamsi()</li>

@@ -1495,6 +1495,9 @@ input:checked + .slider {
 }
 
     .post-card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
         border-radius: 20px;
         -webkit-transition: all 0.9s ease-in-out;
         transition: all 0.9s ease-in-out;
@@ -2834,3 +2837,35 @@ body.rtl {
         height: 100%;
         object-fit: cover;
     }
+
+.ellipsis-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ellipsis-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* post-card-image small */
+.width-sm {
+    width: 335px;
+}
+
+.height-sm {
+    height: 190px;
+}
+
+/* post-card-image big */
+.width-lg {
+    width: 550px;
+}
+
+.height-lg {
+    height: 300px;
+}
