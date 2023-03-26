@@ -43,7 +43,7 @@
                         <a asp-controller="Article"
                         asp-action="Show"
                         asp-route-articleCId="@article.CId"
-                        asp-route-articleTitle="@article.Title">
+                        asp-route-articleTitle="@article.Title.Replace(" ", "-")">
                             <img class="article-img" src="~/images/articles/thumb400/@article.ImageName" />
                         </a>
                     </td>
@@ -52,7 +52,7 @@
                         <div class="d-flex flex-column">
                             <a asp-controller="Author" asp-action="Index"
                            asp-route-authorCId="@article.User.CId"
-                            asp-route-authorName="@article.User.FullName">
+                            asp-route-authorName="@article.User.FullName.Replace(" ", "-")">
                                 <img class="author-img" src="~/images/users/thumb60/@article.User.ImageName" />
                             </a>
                             <span class="author-name">@article.User.FullName</span>

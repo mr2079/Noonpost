@@ -47,7 +47,7 @@
                             <a asp-controller="Article"
                             asp-action="Show"
                             asp-route-articleCId="@article.ArticleCId"
-                            asp-route-articleTitle="@article.ArticleTitle">
+                            asp-route-articleTitle="@article.ArticleTitle.Replace(" ", "-")">
                                 <img class="article-img" src="~/images/articles/thumb400/@article.ArticleImageName" />
                             </a>
                             <span class="article-title">@article.ArticleTitle</span>
@@ -60,7 +60,7 @@
                         </td>
                         <td>
                             <a class="btn btn-sm btn-info"
-                                href="/Article/@article.ArticleId#commentsList">دیدن دیدگاه&zwnj;ها</a>
+                                href="/Article/@article.ArticleCId/@article.ArticleTitle.Replace(" ", "-")#commentsList">دیدن دیدگاه&zwnj;ها</a>
                         </td>
                     </tr>
 

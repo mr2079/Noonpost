@@ -1495,9 +1495,9 @@ input:checked + .slider {
 }
 
     .post-card-image img {
-        width: 100%;
+        /*width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: cover;*/
         border-radius: 20px;
         -webkit-transition: all 0.9s ease-in-out;
         transition: all 0.9s ease-in-out;
@@ -2853,19 +2853,19 @@ body.rtl {
 }
 
 /* post-card-image small */
-.width-sm {
+/*.width-sm {
     width: 335px;
 }
 
 .height-sm {
     height: 190px;
-}
+}*/
 
 /* post-card-image big */
-.width-lg {
+/*.width-lg {
     width: 550px;
 }
 
 .height-lg {
     height: 300px;
-}
+}*/

@@ -262,14 +262,14 @@
                                 <a asp-controller="Author"
                                asp-action="Index"
                                asp-route-authorCId="@Model.User.CId"
-                               asp-route-authorName="@Model.User.FullName" class="image">
+                               asp-route-authorName="@Model.User.FullName.Replace(" ", "-")" class="image">
                                     <img src="~/images/users/thumb200/@Model.User.ImageName"
-                                         alt="@(Model.User.FirstName+" "+Model.User.LastName)">
+                                         alt="@Model.User.FullName">
                                 </a>
                             </div>
                         }
                         <h6>
-                            <span>@(Model.User.FirstName + " " + Model.User.LastName)</span>
+                            <span>@Model.User.FullName</span>
                         </h6>
                         @if (Model.User.Email != null)
                         {

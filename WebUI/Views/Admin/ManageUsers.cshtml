@@ -42,7 +42,7 @@
                         <div class="img-box user-img">
                             <a asp-controller="Author" asp-action="Index"
                                 asp-route-authorCId="@user.CId"
-                                asp-route-authorName="@user.FullName">
+                                asp-route-authorName="@user.FullName.Replace(" ", "-")">
                                 <img src="~/images/users/thumb60/@user.ImageName" />
                             </a>
                         </div>

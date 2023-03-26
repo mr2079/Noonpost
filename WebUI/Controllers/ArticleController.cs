@@ -170,6 +170,6 @@ public class ArticleController : Controller
         var result = await _articleService.GetArticlesByCategoryIdAsync(categoryCId, take, skip);
         var pagesCount = (result.Item2 + take - 1) / take;
 
-        return View(Tuple.Create(result.Item1, pagesCount, categoryCId, categoryTitle));
+        return View(Tuple.Create(result.Item1, pagesCount, categoryCId, categoryTitle.Replace("-", " ")));
     }
 }
