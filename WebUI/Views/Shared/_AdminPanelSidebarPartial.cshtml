@@ -13,8 +13,9 @@
 <!--widget-author-->
 <div class="widget">
     <div class="widget-author">
-        <a asp-controller="User" asp-action="Index" asp-route-userId="@User.Identity.Name" 
-            class="d-flex align-items-center justify-content-center mb-3">
+        <a asp-controller="User" asp-action="Index"
+           asp-route-userCId="@adminInfo.CId" asp-route-userName="@adminInfo.FullName.Replace(" ", "-")"
+           class="d-flex align-items-center justify-content-center mb-3">
             <div class="img-box admin-image-box">
                 <img src="~/images/users/thumb200/@adminInfo.ImageName" alt="@adminInfo.FullName">
             </div>

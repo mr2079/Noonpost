@@ -1,8 +1,5 @@
-﻿using Application.Context;
-using Infrastructure.Services.Interfaces;
+﻿using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace WebUI.Controllers;
 

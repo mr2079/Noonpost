@@ -46,6 +46,7 @@ public class AdminService : IAdminService
             .Where(u => Equals(u.Id, adminId))
             .Select(u => new AdminInfoViewModel
             {
+                CId = u.CId,
                 FullName = $"{u.FirstName} {u.LastName}",
                 ImageName = u.ImageName
             })

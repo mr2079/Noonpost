@@ -13,6 +13,7 @@ public class AdminDashboardViewModel
 
 public class AdminInfoViewModel
 {
+    public long CId { get; set; }
     public string FullName { get; set; } = string.Empty;
     public string ImageName { get; set; } = string.Empty;
 }

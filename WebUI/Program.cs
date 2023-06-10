@@ -2,7 +2,6 @@ using Application.Context;
 using Infrastructure.Services;
 using Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,7 +49,7 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 
-app.UseStatusCodePagesWithRedirects("/{0}");
+// app.UseStatusCodePagesWithRedirects("/{0}");
 
 app.UseStaticFiles();
 
