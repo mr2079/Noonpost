@@ -1,6 +1,5 @@
 using Application.Context;
-using Infrastructure.Services;
-using Infrastructure.Services.Interfaces;
+using Infrastructure.IoC;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,12 +32,7 @@ builder.Services.AddDbContext<NoonpostDbContext>(options =>
 #endregion
 
 #region IoC
-builder.Services.AddScoped<IArticleService, ArticleService>();
-builder.Services.AddScoped<ICommentService, CommentService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAuthorService, AuthorService>();
-builder.Services.AddScoped<IAdminService, AdminService>();
-builder.Services.AddTransient<IBaseService, BaseService>();
+builder.Services.AddInfrastructureServices();
 #endregion
 
 var app = builder.Build();
@@ -46,21 +40,24 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
-}
-
-app.UseStatusCodePages(async context =>
-{
-    switch (context.HttpContext.Response.StatusCode)
+    //app.UseExceptionHandler("/Home/Error");
+    app.UseStatusCodePages(async context =>
     {
-        case 401:
-            context.HttpContext.Response.Redirect("/401");
-            break;
-        default:
-            context.HttpContext.Response.Redirect("/404");
-            break;
-    }
-});
+        switch (context.HttpContext.Response.StatusCode)
+        {
+            case 401:
+                context.HttpContext.Response.Redirect("/401");
+                break;
+            default:
+                context.HttpContext.Response.Redirect("/404");
+                break;
+        }
+    });
+}
+else
+{
+    app.UseExceptionHandler("/Error");
+}
 
 app.UseStaticFiles();
 

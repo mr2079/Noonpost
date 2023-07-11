@@ -1,5 +1,7 @@
 ﻿using Infrastructure.Services.Interfaces;
+using Infrastructure.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace WebUI.Controllers;
 
@@ -46,5 +48,11 @@ public class HomeController : Controller
         var pageCount = (result.Item2 + take - 1) / take;
 
         return View(Tuple.Create(result.Item1, pageCount));
+    }
+
+    [HttpGet("/Error")]
+    public IActionResult Error()
+    {
+        return View(new ErrorViewModel() { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }
