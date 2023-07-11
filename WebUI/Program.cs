@@ -49,13 +49,24 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
 }
 
-// app.UseStatusCodePagesWithRedirects("/{0}");
+app.UseStatusCodePages(async context =>
+{
+    switch (context.HttpContext.Response.StatusCode)
+    {
+        case 401:
+            context.HttpContext.Response.Redirect("/401");
+            break;
+        default:
+            context.HttpContext.Response.Redirect("/404");
+            break;
+    }
+});
 
 app.UseStaticFiles();
 
-app.UseAuthentication();
-
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
