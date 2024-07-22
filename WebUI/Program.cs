@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
-#region Authentication
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -21,26 +19,25 @@ builder.Services.AddAuthentication(options =>
     options.LogoutPath = "/Account/Logout";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(43200);
 });
-#endregion
 
-#region Database Context
 var defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnectionString") ??
     throw new InvalidOperationException("Connection string 'DefaultConnectionString' not found.");
 
 builder.Services.AddDbContext<NoonpostDbContext>(options =>
     options.UseSqlServer(defaultConnectionString));
-#endregion
 
-#region IoC
 builder.Services.AddInfrastructureServices();
-#endregion
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<NoonpostDbContext>();
+    context.Database.Migrate();
+}
+
 if (!app.Environment.IsDevelopment())
 {
-    //app.UseExceptionHandler("/Home/Error");
     app.UseStatusCodePages(async context =>
     {
         switch (context.HttpContext.Response.StatusCode)

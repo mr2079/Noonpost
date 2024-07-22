@@ -19,7 +19,7 @@ public class RegisterViewModel
     [MinLength(2, ErrorMessage = "{0} نمی تواند کمتر از {1} کاراکتر باشد")]
     public string LastName { get; set; } = string.Empty;
 
-    [Display(Name = "شماره موبایل")]
+    [Display(Name = "نام کاربری")]
     [Required(ErrorMessage = "فیلد {0} الزامی می باشد")]
     public string Mobile { get; set; } = string.Empty;
 
@@ -42,7 +42,7 @@ public class RegisterViewModel
 
 public class LoginViewModel
 {
-    [Display(Name = "شماره موبایل")]
+    [Display(Name = "نام کاربری")]
     [Required(ErrorMessage = "فیلد {0} الزامی می باشد")]
     public string Mobile { get; set; } = string.Empty;
 

@@ -1,7 +1,7 @@
 ﻿using Application.Context;
 using Domain.Entites.User;
+using Domain.Security;
 using Infrastructure.Converter;
-using Infrastructure.Security;
 using Infrastructure.Services.Interfaces;
 using Infrastructure.ViewModels;
 using Microsoft.EntityFrameworkCore;

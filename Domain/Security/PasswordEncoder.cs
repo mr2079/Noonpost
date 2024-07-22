@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Infrastructure.Security;
+namespace Domain.Security;
 
 public static class PasswordEncoder
 {
