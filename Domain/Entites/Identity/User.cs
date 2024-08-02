@@ -24,6 +24,9 @@ public sealed class User : Entity
         LastName = lastName;
         ImageName = imageName;
         Description = description;
+        Email = email;
+        PhoneNumber = phoneNumber;
+        PasswordHash = passwordHash;
     }
 
     public string UserName { get; private set; }
@@ -48,9 +51,9 @@ public sealed class User : Entity
     public ICollection<Article> Articles { get; set; }
 
     public static User Create(
-        string? slug,
         string userName,
         string imageName,
+        string? slug = null,
         string? firstName = null,
         string? lastName = null,
         string? email = null,
