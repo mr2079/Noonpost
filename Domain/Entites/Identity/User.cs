@@ -10,10 +10,13 @@ public sealed class User : Entity
         Guid id,
         string? slug,
         string userName,
-        string firstName,
-        string lastName,
+        string? firstName,
+        string? lastName,
+        string? email,
+        string? phoneNumber,
         string imageName,
-        string? description) 
+        string? description,
+        string passwordHash) 
         : base(id, slug)
     {
         UserName = userName;
@@ -24,25 +27,35 @@ public sealed class User : Entity
     }
 
     public string UserName { get; private set; }
-    public string FirstName { get; private set; }
-    public string LastName { get; private set; }
-    [NotMapped] public string DisplayName
-        => $"{FirstName} {LastName}";
+    public string? FirstName { get; private set; }
+    public string? LastName { get; private set; }
+    public string? Email { get; private set; }
+    public string? PhoneNumber { get; private set; }
     public string ImageName { get; private set; }
     public string? Description { get; private set; }
+
+    public string PasswordHash { get; private set; }
+
+    [NotMapped]
+    public string? DisplayName
+        => string.IsNullOrWhiteSpace(FirstName)
+           && string.IsNullOrWhiteSpace(LastName)
+            ? $"{FirstName} {LastName}"
+            : null;
 
     public ICollection<UserRole> UserRoles { get; set; }
     public ICollection<Comment> Comments { get; set; }
     public ICollection<Article> Articles { get; set; }
 
     public static User Create(
-        
+        string? slug,
         string userName,
-        string firstName,
-        string lastName,
         string imageName,
-        string? description = null,
-        string? slug = null)
+        string? firstName = null,
+        string? lastName = null,
+        string? email = null,
+        string? phoneNumber = null,
+        string? description = null)
     {
         return new User(
             Guid.NewGuid(),
@@ -50,8 +63,11 @@ public sealed class User : Entity
             userName,
             firstName,
             lastName,
+            email,
+            phoneNumber,
             imageName,
-            description);
+            description,
+            string.Empty);
     }
 }
 
